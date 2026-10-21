@@ -1,728 +1,2109 @@
 <!DOCTYPE html>
-<html lang="ru" data-theme="light">
+<html lang="ru" class="light">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" id="metaTheme" content="#EDF1EB">
-<title>Купи, продай, услуги, отдам — Новороманово · Зимари · Алтай · Панфилово</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛒</text></svg>">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
-<style>
-/* ========== Material Design 3 tokens ========== */
-:root{
-  --surface:#F7FAF4; --surface-container:#EDF1EB; --surface-container-low:#F2F6F0;
-  --surface-container-high:#E7EBE5; --surface-variant:#DCE5DB;
-  --on-surface:#191C1A; --on-surface-variant:#424942;
-  --primary:#006D3F; --on-primary:#FFF; --primary-container:#8FF8B2; --on-primary-container:#00210F;
-  --secondary-container:#CDE8D5; --on-secondary-container:#072013;
-  --outline:#727971; --outline-variant:#C0C9BE;
-  --error:#BA1A1A; --on-error:#FFF; --error-container:#FFDAD6; --on-error-container:#410002;
-  --shadow:0 1px 3px rgba(0,0,0,.12),0 2px 6px rgba(0,0,0,.08);
-  --shadow-2:0 4px 12px rgba(0,0,0,.18);
-}
-[data-theme="dark"]{
-  --surface:#111412; --surface-container:#1D211E; --surface-container-low:#191D1A;
-  --surface-container-high:#282B28; --surface-variant:#414942;
-  --on-surface:#E1E3DE; --on-surface-variant:#C0C9BE;
-  --primary:#74DB96; --on-primary:#003920; --primary-container:#00522E; --on-primary-container:#8FF8B2;
-  --secondary-container:#374B3E; --on-secondary-container:#CDE8D5;
-  --outline:#8B938A; --outline-variant:#414942;
-  --error:#FFB4AB; --on-error:#690005; --error-container:#93000A; --on-error-container:#FFDAD6;
-  --shadow:0 1px 3px rgba(0,0,0,.5); --shadow-2:0 4px 14px rgba(0,0,0,.6);
-}
-*{box-sizing:border-box}
-html,body{margin:0;padding:0}
-body{font-family:Roboto,system-ui,sans-serif;background:var(--surface);color:var(--on-surface);font-size:15px;line-height:1.45;-webkit-tap-highlight-color:transparent}
-button{font:inherit;color:inherit}
-img{display:block}
-[hidden]{display:none!important}
-/* ========== Top app bar ========== */
-.topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--surface-container);box-shadow:var(--shadow)}
-.logo{width:38px;height:38px;border-radius:12px;background:var(--primary-container);color:var(--on-primary-container);display:grid;place-items:center;font-size:20px}
-.topbar h1{font-size:18px;font-weight:700;margin:0;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.icon-btn{width:42px;height:42px;border-radius:50%;border:none;background:transparent;color:var(--on-surface-variant);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;flex:none}
-.icon-btn:active{background:var(--surface-variant)}
-.icon-btn svg{width:24px;height:24px;fill:currentColor}
-.mode-badge{font-size:11px;padding:4px 10px;border-radius:8px;background:var(--surface-variant);color:var(--on-surface-variant);cursor:help;flex:none}
-/* ========== Layout ========== */
-main{max-width:1080px;margin:0 auto;padding:0 14px 130px}
-.view{display:none}.view.on{display:block;animation:fade .18s ease}
-@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1}}
-/* ========== Hero ========== */
-.hero{padding:22px 4px 6px}
-.hero h2{margin:0 0 6px;font-size:clamp(26px,6.4vw,44px);font-weight:900;letter-spacing:-.5px;line-height:1.08}
-.hero h2 em{font-style:normal;color:var(--primary)}
-.hero p{margin:0 0 14px;color:var(--on-surface-variant);font-size:15px}
-.search{display:flex;align-items:center;gap:10px;height:50px;border-radius:15px;background:var(--surface-container-high);padding:0 16px;margin:10px 0}
-.search svg{width:22px;height:22px;fill:var(--on-surface-variant);flex:none}
-.search input{flex:1;border:none;background:transparent;outline:none;font:inherit;color:var(--on-surface);min-width:0}
-.chips{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 10px;scrollbar-width:none}
-.chips::-webkit-scrollbar{display:none}
-.chip{height:34px;padding:0 16px;border-radius:10px;border:1px solid var(--outline-variant);background:transparent;color:var(--on-surface-variant);font-size:13.5px;cursor:pointer;flex:none;display:inline-flex;align-items:center}
-.chip.on{background:var(--secondary-container);color:var(--on-secondary-container);border-color:transparent;font-weight:500}
-/* ========== Cards grid ========== */
-.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(158px,1fr))}
-.card{position:relative;border-radius:16px;overflow:hidden;background:var(--surface-container-low);box-shadow:var(--shadow);cursor:pointer}
-.card-ph{aspect-ratio:4/3;background:var(--surface-variant);display:grid;place-items:center;color:var(--on-surface-variant)}
-.card-ph img{width:100%;height:100%;object-fit:cover}
-.card-ph svg{width:40px;height:40px;fill:currentColor}
-.card .fav{position:absolute;top:8px;right:8px;width:36px;height:36px;background:color-mix(in srgb,var(--surface) 75%,transparent);backdrop-filter:blur(6px);color:var(--on-surface-variant)}
-.card .fav.on{color:var(--error)}
-.card-body{padding:10px 12px 12px}
-.price{font-weight:700;font-size:16px}
-.price.free{color:var(--primary)}
-.card .title{font-size:14px;margin:2px 0 4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.card .meta{font-size:12px;color:var(--on-surface-variant)}
-.badge-type{display:inline-block;font-size:11px;padding:2px 8px;border-radius:6px;background:var(--secondary-container);color:var(--on-secondary-container);margin-bottom:4px}
-/* ========== Empty state ========== */
-.empty{text-align:center;padding:48px 20px;color:var(--on-surface-variant)}
-.empty .big{font-size:52px;margin-bottom:10px}
-.empty h3{color:var(--on-surface);margin:0 0 6px;font-size:20px}
-/* ========== Buttons ========== */
-.btn{border-radius:100px;height:44px;padding:0 24px;font-weight:500;font-size:14.5px;display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;cursor:pointer;text-decoration:none}
-.btn svg{width:20px;height:20px;fill:currentColor}
-.btn.filled{background:var(--primary);color:var(--on-primary)}
-.btn.tonal{background:var(--secondary-container);color:var(--on-secondary-container)}
-.btn.outlined{background:transparent;border:1px solid var(--outline);color:var(--primary)}
-.btn.text{background:transparent;color:var(--primary);padding:0 14px}
-.btn.danger{background:transparent;border:1px solid var(--error);color:var(--error)}
-.btn:active{filter:brightness(.92)}
-/* ========== Item view ========== */
-.backrow{display:flex;align-items:center;gap:6px;padding:10px 0 4px}
-.backrow b{font-size:17px}
-.swiper{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;border-radius:18px;margin:6px 0 4px;scrollbar-width:none}
-.swiper::-webkit-scrollbar{display:none}
-.swiper img,.swiper .noimg{flex:0 0 100%;scroll-snap-align:center;aspect-ratio:4/3;object-fit:cover;border-radius:18px;background:var(--surface-variant)}
-.swiper .noimg{display:grid;place-items:center;color:var(--on-surface-variant)}
-.item-price{font-size:24px;font-weight:900;margin:8px 0 2px}
-.item-title{font-size:19px;font-weight:700;margin:0 0 6px}
-.item-meta{color:var(--on-surface-variant);font-size:13.5px;margin-bottom:12px}
-.item-desc{white-space:pre-wrap;margin:0 0 16px;font-size:15.5px}
-.actions{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
-.actions .btn{flex:1;min-width:140px}
-.seller{display:flex;gap:12px;align-items:center;background:var(--surface-container);border-radius:16px;padding:12px 16px;margin:12px 0}
-.avatar{width:46px;height:46px;border-radius:50%;background:var(--primary-container);color:var(--on-primary-container);font-weight:700;display:grid;place-items:center;font-size:18px;flex:none}
-.seller .info{flex:1;min-width:0}
-.seller .name{font-weight:700}
-.stars{position:relative;display:inline-block;font-size:16px;line-height:1;color:var(--outline-variant)}
-.stars-fg{position:absolute;left:0;top:0;overflow:hidden;white-space:nowrap;color:#F5B300}
-.tip{display:flex;gap:10px;background:var(--surface-container);border-radius:16px;padding:12px 14px;font-size:13px;color:var(--on-surface-variant);margin:12px 0}
-.tip svg{width:20px;height:20px;fill:var(--primary);flex:none;margin-top:1px}
-/* ========== Sheets / dialogs ========== */
-.overlay{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
-.overlay.open{opacity:1;pointer-events:auto}
-.sheet{--sheet-bg:var(--surface-container-low);width:100%;max-width:640px;max-height:92vh;overflow-y:auto;background:var(--sheet-bg);border-radius:28px 28px 0 0;padding:6px 20px calc(26px + env(safe-area-inset-bottom));transform:translateY(40px);transition:transform .25s}
-.overlay.open .sheet{transform:none}
-.handle{width:34px;height:4px;border-radius:2px;background:var(--outline-variant);margin:8px auto 10px}
-.sheet h3{margin:4px 0 2px;font-size:20px;font-weight:700}
-.sheet .sub{color:var(--on-surface-variant);font-size:13.5px;margin:0 0 8px}
-@media(min-width:820px){.overlay{align-items:center}.sheet{border-radius:28px}}
-/* ========== Fields ========== */
-.field{position:relative;margin:16px 0 6px}
-.field input,.field textarea,.field select{width:100%;border:1px solid var(--outline);border-radius:14px;background:transparent;padding:15px 16px;font:inherit;color:var(--on-surface);outline:none;min-height:54px}
-.field textarea{min-height:110px;resize:vertical}
-.field select{appearance:none;background:var(--sheet-bg)}
-.field label{position:absolute;left:12px;top:16px;padding:0 5px;background:var(--sheet-bg);color:var(--on-surface-variant);pointer-events:none;transition:.15s;border-radius:4px}
-.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--primary);box-shadow:inset 0 0 0 1px var(--primary)}
-.field input:focus+label,.field textarea:focus+label,.field select:focus+label,
-.field input:not(:placeholder-shown)+label,.field textarea:not(:placeholder-shown)+label{top:-9px;font-size:12px;color:var(--primary)}
-.field select+label{top:-9px;font-size:12px;color:var(--on-surface-variant)}
-.field.err input,.field.err textarea{border-color:var(--error);box-shadow:inset 0 0 0 1px var(--error)}
-.hint{font-size:12.5px;color:var(--on-surface-variant);margin:2px 4px 0;display:flex;gap:6px;align-items:flex-start}
-.hint b{color:var(--primary)}
-.seg{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 2px}
-.seg .chip{height:38px}
-/* photos */
-.ph-row{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
-.ph-thumb{position:relative;width:76px;height:76px;border-radius:12px;overflow:hidden;background:var(--surface-variant)}
-.ph-thumb img{width:100%;height:100%;object-fit:cover}
-.ph-thumb button{position:absolute;top:3px;right:3px;width:24px;height:24px;border-radius:50%;border:none;background:rgba(0,0,0,.55);color:#fff;display:grid;place-items:center;cursor:pointer}
-.ph-thumb button svg{width:14px;height:14px;fill:currentColor}
-.ph-add{width:76px;height:76px;border-radius:12px;border:1.5px dashed var(--outline);background:transparent;color:var(--on-surface-variant);display:grid;place-items:center;cursor:pointer}
-.ph-add svg{width:26px;height:26px;fill:currentColor}
-/* checkbox */
-.check{display:flex;gap:12px;align-items:flex-start;margin:16px 0;cursor:pointer;font-size:14px}
-.check input{width:22px;height:22px;accent-color:var(--primary);margin:2px 0 0;flex:none}
-.check.err{color:var(--error)}
-/* ========== Bottom nav + FAB ========== */
-.bottomnav{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;align-items:flex-end;gap:2px;background:var(--surface-container);box-shadow:0 -2px 10px rgba(0,0,0,.12);padding:6px 6px calc(6px + env(safe-area-inset-bottom));max-width:640px;margin:0 auto;border-radius:22px 22px 0 0}
-.nav-btn{flex:1;border:none;background:transparent;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11.5px;color:var(--on-surface-variant);cursor:pointer;padding:4px 0;position:relative}
-.nav-btn .pill{width:56px;height:30px;border-radius:15px;display:grid;place-items:center}
-.nav-btn svg{width:22px;height:22px;fill:currentColor}
-.nav-btn.on{color:var(--on-surface);font-weight:500}
-.nav-btn.on .pill{background:var(--secondary-container);color:var(--on-secondary-container)}
-.badge{position:absolute;top:0;right:calc(50% - 20px);min-width:16px;height:16px;border-radius:8px;background:var(--error);color:var(--on-error);font-size:10px;display:grid;place-items:center;padding:0 4px}
-.fab-wrap{flex:0 0 74px;display:flex;justify-content:center;transform:translateY(-16px)}
-.fab{width:62px;height:62px;border-radius:20px;border:none;background:var(--primary-container);color:var(--on-primary-container);box-shadow:var(--shadow-2);display:grid;place-items:center;cursor:pointer}
-.fab svg{width:30px;height:30px;fill:currentColor}
-.fab.pulse{animation:pulse 1.6s infinite}
-@keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--primary) 45%,transparent)}70%{box-shadow:0 0 0 18px transparent}100%{box-shadow:0 0 0 0 transparent}}
-/* ========== Chats ========== */
-.chat-item{display:flex;gap:12px;align-items:center;padding:12px;border-radius:16px;background:var(--surface-container-low);margin-bottom:8px;cursor:pointer;box-shadow:var(--shadow)}
-.chat-item .avatar{background:var(--secondary-container);color:var(--on-secondary-container)}
-.chat-item .c1{flex:1;min-width:0}
-.chat-item .t{font-weight:700;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.chat-item .p{font-size:13px;color:var(--on-surface-variant);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.chat-item .time{font-size:11px;color:var(--on-surface-variant);flex:none}
-.msgs{display:flex;flex-direction:column;gap:8px;padding:10px 2px;min-height:40vh}
-.msg{max-width:80%;padding:10px 14px;border-radius:16px;font-size:14.5px;white-space:pre-wrap;word-break:break-word}
-.msg.in{background:var(--surface-container-high);border-bottom-left-radius:4px;align-self:flex-start}
-.msg.out{background:var(--primary-container);color:var(--on-primary-container);border-bottom-right-radius:4px;align-self:flex-end}
-.msg .who{display:block;font-size:11px;opacity:.7;margin-bottom:2px}
-.chat-input{position:sticky;bottom:0;display:flex;gap:8px;align-items:center;background:var(--surface);padding:8px 0}
-.chat-input input{flex:1;border:1px solid var(--outline);border-radius:24px;background:transparent;padding:12px 18px;font:inherit;color:var(--on-surface);outline:none;min-width:0}
-.chat-input input:focus{border-color:var(--primary)}
-.send{width:48px;height:48px;border-radius:50%;border:none;background:var(--primary);color:var(--on-primary);display:grid;place-items:center;cursor:pointer;flex:none}
-.send svg{width:22px;height:22px;fill:currentColor}
-.demo-note{font-size:12px;background:var(--error-container);color:var(--on-error-container);border-radius:12px;padding:8px 12px;margin:8px 0}
-/* ========== Profile ========== */
-.prof-head{display:flex;gap:14px;align-items:center;margin:16px 0}
-.prof-head .avatar{width:60px;height:60px;font-size:22px}
-.sect{font-size:13px;font-weight:700;color:var(--on-surface-variant);text-transform:uppercase;letter-spacing:.6px;margin:20px 0 8px}
-.row{display:flex;gap:10px;align-items:center;background:var(--surface-container-low);border-radius:14px;padding:12px 14px;margin-bottom:8px;box-shadow:var(--shadow)}
-.row .t{flex:1;min-width:0}
-.row .t b{display:block;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.row .t span{font-size:12.5px;color:var(--on-surface-variant)}
-/* ========== Snackbar ========== */
-#snack{position:fixed;left:50%;bottom:104px;transform:translateX(-50%) translateY(20px);z-index:99;background:var(--on-surface);color:var(--surface);border-radius:12px;padding:12px 18px;font-size:14px;opacity:0;pointer-events:none;transition:.25s;max-width:90vw;text-align:center}
-#snack.show{opacity:1;transform:translateX(-50%)}
-.rate-stars{display:flex;gap:6px;justify-content:center;margin:18px 0}
-.rate-stars button{border:none;background:transparent;font-size:40px;color:var(--outline-variant);cursor:pointer;line-height:1;padding:2px}
-.rate-stars button.on{color:#F5B300}
-.rules-list{margin:8px 0 8px;padding-left:20px;color:var(--on-surface-variant);font-size:14px}
-.rules-list li{margin:6px 0}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Купи • Продай • Услуга • Отдам — Новороманово, Зимари, Алтай, Панфилово</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Inter & Material Symbols Rounded -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+    <style>
+        :root {
+            /* Default MD3 Theme: Emerald / Rural Green */
+            --md-primary: #0f766e;
+            --md-on-primary: #ffffff;
+            --md-primary-container: #ccfbf1;
+            --md-on-primary-container: #042f2e;
+            --md-surface: #f8fafc;
+            --md-surface-card: #ffffff;
+            --md-surface-variant: #f1f5f9;
+            --md-text-main: #0f172a;
+            --md-text-muted: #64748b;
+            --md-outline: #e2e8f0;
+        }
+
+        html.theme-blue {
+            --md-primary: #1d4ed8;
+            --md-on-primary: #ffffff;
+            --md-primary-container: #dbeafe;
+            --md-on-primary-container: #1e3a8a;
+        }
+
+        html.theme-amber {
+            --md-primary: #b45309;
+            --md-on-primary: #ffffff;
+            --md-primary-container: #fef3c7;
+            --md-on-primary-container: #78350f;
+        }
+
+        html.theme-violet {
+            --md-primary: #6d28d9;
+            --md-on-primary: #ffffff;
+            --md-primary-container: #ede9fe;
+            --md-on-primary-container: #4c1d95;
+        }
+
+        html.dark {
+            --md-surface: #0b0f19;
+            --md-surface-card: #151c2c;
+            --md-surface-variant: #1e293b;
+            --md-text-main: #f8fafc;
+            --md-text-muted: #94a3b8;
+            --md-outline: #334155;
+            --md-primary-container: #134e4a;
+            --md-on-primary-container: #ccfbf1;
+        }
+
+        html.dark.theme-blue {
+            --md-primary: #3b82f6;
+            --md-primary-container: #1e3a8a;
+            --md-on-primary-container: #dbeafe;
+        }
+
+        html.dark.theme-amber {
+            --md-primary: #f59e0b;
+            --md-primary-container: #78350f;
+            --md-on-primary-container: #fef3c7;
+        }
+
+        html.dark.theme-violet {
+            --md-primary: #8b5cf6;
+            --md-primary-container: #4c1d95;
+            --md-on-primary-container: #ede9fe;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--md-surface);
+            color: var(--md-text-main);
+            -webkit-tap-highlight-color: transparent;
+            transition: background-color 0.25s ease, color 0.25s ease;
+        }
+
+        .material-symbols-rounded {
+            font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+            user-select: none;
+        }
+        .material-symbols-rounded.filled {
+            font-variation-settings: 'FILL' 1, 'wght' 600, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .md-surface-card {
+            background-color: var(--md-surface-card);
+            border-color: var(--md-outline);
+        }
+        .md-surface-variant {
+            background-color: var(--md-surface-variant);
+        }
+        .md-primary-bg {
+            background-color: var(--md-primary);
+            color: var(--md-on-primary);
+        }
+        .md-primary-container {
+            background-color: var(--md-primary-container);
+            color: var(--md-on-primary-container);
+        }
+        .md-text-muted {
+            color: var(--md-text-muted);
+        }
+
+        /* Hide scrollbars on horizontal pill containers */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Smooth Material 3 elevation & ripple feel */
+        .md-btn {
+            transition: transform 0.12s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.2s ease, opacity 0.2s ease;
+        }
+        .md-btn:active {
+            transform: scale(0.96);
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .animate-slide-up {
+            animation: slideUp 0.28s cubic-bezier(0.2, 0, 0, 1) forwards;
+        }
+    </style>
 </head>
-<body>
+<body class="min-h-screen pb-28 selection:bg-teal-500 selection:text-white">
 
-<header class="topbar">
-  <div class="logo">🛒</div>
-  <h1>Купи · Продай · Отдам</h1>
-  <span class="mode-badge" id="modeBadge" title="">демо</span>
-  <button class="icon-btn" id="btnTheme" title="Переключить тему"></button>
-</header>
+    <!-- MAIN APP CONTAINER (Mobile-first centered shell, expands cleanly on desktop) -->
+    <div class="max-w-3xl mx-auto min-h-screen flex flex-col relative">
 
-<main>
-  <!-- ================= ГЛАВНАЯ ================= -->
-  <section class="view on" id="view-home">
-    <div class="hero">
-      <h2>Купи, продай, услуги, <em>отдам!</em></h2>
-      <p>Новороманово · Зимари · Алтай · Панфилово — доска объявлений наших сёл. Выбирай своё село:</p>
+        <!-- TOP APP BAR -->
+        <header class="sticky top-0 z-30 backdrop-blur-md bg-opacity-90 md-surface-card border-b px-4 pt-3 pb-3 transition-colors">
+            <div class="flex items-center justify-between gap-2">
+                <!-- Brand & Main Title requested by user -->
+                <div class="flex items-center gap-2.5 min-w-0">
+                    <div class="w-10 h-10 rounded-2xl md-primary-bg flex items-center justify-center shadow-sm shrink-0">
+                        <span class="material-symbols-rounded filled text-2xl">storefront</span>
+                    </div>
+                    <div class="min-w-0">
+                        <h1 class="text-sm sm:text-base font-extrabold tracking-tight leading-tight truncate">
+                            Купи • Продай • Услуга • Отдам
+                        </h1>
+                        <p class="text-[11px] sm:text-xs md-text-muted truncate font-medium">
+                            Новороманово • Зимари • Алтай • Панфилово
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Right Actions: Theme Button & User Profile Chip -->
+                <div class="flex items-center gap-1.5 shrink-0">
+                    <button onclick="openThemeModal()" title="Тема оформления" class="md-btn w-10 h-10 rounded-full md-surface-variant flex items-center justify-center">
+                        <span class="material-symbols-rounded text-xl" id="themeIconHeader">palette</span>
+                    </button>
+                    <button onclick="openRegistrationModal(true)" class="md-btn flex items-center gap-1.5 pl-2.5 pr-3 py-1.5 rounded-full md-primary-container text-xs font-semibold">
+                        <span class="material-symbols-rounded filled text-base">person</span>
+                        <span id="headerUserName" class="max-w-[90px] truncate">Войти</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- VILLAGE SELECTOR BAR (Сёла) -->
+            <div class="mt-3 flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1" id="villageChipsContainer">
+                <!-- Populated dynamically via JS -->
+            </div>
+
+            <!-- SEARCH & CATEGORY FILTER BAR (Shown on Home View) -->
+            <div id="searchAndFilterSection" class="mt-2.5 space-y-2">
+                <div class="relative flex items-center">
+                    <span class="material-symbols-rounded absolute left-3.5 md-text-muted text-xl pointer-events-none">search</span>
+                    <input 
+                        type="text" 
+                        id="searchInput"
+                        oninput="handleSearchInput(this.value)"
+                        placeholder="Поиск: молоко, дрова, диван, ремонт..." 
+                        class="w-full pl-10 pr-10 py-2.5 rounded-2xl md-surface-variant text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 transition-all"
+                    >
+                    <button id="clearSearchBtn" onclick="handleSearchInput('')" class="hidden absolute right-3 md-text-muted hover:opacity-80">
+                        <span class="material-symbols-rounded text-lg">close</span>
+                    </button>
+                </div>
+
+                <!-- Deal Type / Category Chips -->
+                <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pt-0.5" id="categoryChipsContainer">
+                    <!-- Populated via JS -->
+                </div>
+            </div>
+        </header>
+
+        <!-- MAIN VIEWS AREA -->
+        <main class="flex-1 px-3 sm:px-4 pt-3">
+
+            <!-- VIEW 1: FEED (ОБЪЯВЛЕНИЯ) -->
+            <section id="view-feed" class="space-y-3">
+                <!-- Quick Helper Banner for first-time clarity -->
+                <div id="helperBanner" class="md-primary-container rounded-3xl p-3.5 flex items-start justify-between gap-3 shadow-sm">
+                    <div class="flex items-start gap-2.5">
+                        <span class="material-symbols-rounded filled text-2xl mt-0.5">tips_and_updates</span>
+                        <div class="text-xs leading-relaxed">
+                            <p class="font-bold text-sm">Удобно, как на Авито — только для наших сёл!</p>
+                            <p class="opacity-90 mt-0.5">Выбирайте своё село сверху, смотрите фото и цены или нажмите большую кнопку <b>«+ Выложить»</b> внизу экрана.</p>
+                        </div>
+                    </div>
+                    <button onclick="document.getElementById('helperBanner').classList.add('hidden')" class="opacity-70 hover:opacity-100 p-1">
+                        <span class="material-symbols-rounded text-lg">close</span>
+                    </button>
+                </div>
+
+                <!-- Status bar: count & active village -->
+                <div class="flex items-center justify-between px-1 text-xs md-text-muted font-medium">
+                    <span id="feedStatusText">Загрузка объявлений...</span>
+                    <button onclick="openSortMenu()" class="flex items-center gap-1 hover:underline font-semibold" id="sortLabelBtn">
+                        <span class="material-symbols-rounded text-base">swap_vert</span>
+                        <span id="currentSortLabel">Сначала новые</span>
+                    </button>
+                </div>
+
+                <!-- EMPTY STATE (Exact message requested by user) -->
+                <div id="emptyFeedState" class="hidden md-surface-card border rounded-3xl p-8 text-center my-4 shadow-sm">
+                    <div class="w-20 h-20 rounded-full md-primary-container mx-auto flex items-center justify-center mb-4">
+                        <span class="material-symbols-rounded filled text-4xl">campaign</span>
+                    </div>
+                    <h2 class="text-lg font-extrabold mb-1">Пока что нет продаж — выложи свой товар первый!</h2>
+                    <p class="text-xs md-text-muted max-w-xs mx-auto mb-5 leading-relaxed">
+                        В выбранной категории или селе ещё никто не разместил объявление. Станьте первым — это бесплатно и займёт 1 минуту!
+                    </p>
+                    <button onclick="openCreateAdModal()" class="md-btn md-primary-bg px-6 py-3.5 rounded-2xl font-bold text-sm inline-flex items-center gap-2 shadow-md">
+                        <span class="material-symbols-rounded filled">add_circle</span>
+                        Выложить товар первым
+                    </button>
+                </div>
+
+                <!-- PRODUCT GRID (2 columns on mobile like Avito for fast browsing!) -->
+                <div id="listingsGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 sm:gap-3.5 pb-6">
+                    <!-- Rendered dynamically -->
+                </div>
+            </section>
+
+            <!-- VIEW 2: FAVORITES (ИЗБРАННОЕ) -->
+            <section id="view-favorites" class="hidden space-y-3">
+                <div class="flex items-center justify-between px-1">
+                    <h2 class="text-lg font-extrabold">Избранные объявления</h2>
+                    <span class="text-xs md-text-muted" id="favCountLabel">0 шт.</span>
+                </div>
+                <div id="emptyFavState" class="md-surface-card border rounded-3xl p-8 text-center my-4">
+                    <span class="material-symbols-rounded text-4xl md-text-muted mb-2">favorite</span>
+                    <p class="font-bold text-sm">В избранном пока пусто</p>
+                    <p class="text-xs md-text-muted mt-1">Нажимайте на сердечко ❤️ на объявлениях, чтобы не потерять нужные товары.</p>
+                </div>
+                <div id="favoritesGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 sm:gap-3.5 pb-6"></div>
+            </section>
+
+            <!-- VIEW 3: CHATS (СООБЩЕНИЯ) -->
+            <section id="view-chats" class="hidden space-y-3">
+                <div class="flex items-center justify-between px-1">
+                    <div>
+                        <h2 class="text-lg font-extrabold">Ваши чаты</h2>
+                        <p class="text-xs md-text-muted">Переписка с односельчанами по объявлениям</p>
+                    </div>
+                </div>
+                <div id="chatsListContainer" class="space-y-2 pb-6">
+                    <!-- Rendered dynamically -->
+                </div>
+            </section>
+
+            <!-- VIEW 4: PROFILE & SETTINGS (ПРОФИЛЬ) -->
+            <section id="view-profile" class="hidden space-y-4 pb-8">
+                <!-- User Profile Card -->
+                <div class="md-surface-card border rounded-3xl p-5 shadow-sm">
+                    <div class="flex items-center justify-between gap-3">
+                        <div class="flex items-center gap-3.5">
+                            <div class="w-16 h-16 rounded-3xl md-primary-container flex items-center justify-center text-2xl font-black" id="profileAvatarLetters">
+                                А
+                            </div>
+                            <div>
+                                <h2 class="text-lg font-extrabold leading-tight" id="profileFullName">Гость</h2>
+                                <p class="text-xs md-text-muted mt-0.5" id="profileVillageBadge">Село: Все сёла</p>
+                                <!-- User Rating Display -->
+                                <div class="flex items-center gap-1 mt-1.5">
+                                    <span class="material-symbols-rounded filled text-amber-500 text-base">star</span>
+                                    <span class="text-xs font-bold" id="profileRatingValue">5.0</span>
+                                    <span class="text-xs md-text-muted" id="profileRatingCount">(нет оценок)</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button onclick="openRegistrationModal(true)" class="md-btn px-3.5 py-2 rounded-2xl md-surface-variant text-xs font-bold flex items-center gap-1">
+                            <span class="material-symbols-rounded text-base">edit</span>
+                            Изменить
+                        </button>
+                    </div>
+                    <div class="mt-3 pt-3 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-[11px] md-text-muted">
+                        <span>Ваш ID пользователя:</span>
+                        <code id="profileUserIdDisplay" class="font-mono select-all bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded">loading...</code>
+                    </div>
+                </div>
+
+                <!-- My Listings Section -->
+                <div class="space-y-2.5">
+                    <div class="flex items-center justify-between px-1">
+                        <h3 class="text-base font-extrabold">Мои объявления</h3>
+                        <button onclick="openCreateAdModal()" class="text-xs font-bold text-teal-600 dark:text-teal-400 flex items-center gap-1">
+                            <span class="material-symbols-rounded text-base">add</span> Добавить ещё
+                        </button>
+                    </div>
+                    <div id="myListingsContainer" class="space-y-2">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+
+                <!-- Rules & GitHub + Firebase Helper Section -->
+                <div class="md-surface-card border rounded-3xl p-4 space-y-3">
+                    <h3 class="text-sm font-extrabold flex items-center gap-2">
+                        <span class="material-symbols-rounded text-teal-600">verified_user</span>
+                        Полезное и настройки сайта
+                    </h3>
+                    
+                    <button onclick="openThemeModal()" class="w-full flex items-center justify-between p-3 rounded-2xl md-surface-variant text-left text-xs font-semibold">
+                        <span class="flex items-center gap-2.5">
+                            <span class="material-symbols-rounded text-lg">palette</span>
+                            Выбрать цвет и тему сайта (Светлая / Тёмная)
+                        </span>
+                        <span class="material-symbols-rounded text-base">chevron_right</span>
+                    </button>
+
+                    <button onclick="openRulesModal()" class="w-full flex items-center justify-between p-3 rounded-2xl md-surface-variant text-left text-xs font-semibold">
+                        <span class="flex items-center gap-2.5">
+                            <span class="material-symbols-rounded text-lg text-rose-500">gavel</span>
+                            Правила группы (Запрет алкоголя, табака и др.)
+                        </span>
+                        <span class="material-symbols-rounded text-base">chevron_right</span>
+                    </button>
+
+                    <button onclick="openGithubFirebaseModal()" class="w-full flex items-center justify-between p-3 rounded-2xl bg-amber-500/10 text-amber-800 dark:text-amber-300 border border-amber-500/20 text-left text-xs font-bold">
+                        <span class="flex items-center gap-2.5">
+                            <span class="material-symbols-rounded text-lg">cloud_upload</span>
+                            Инструкция: Как запустить на GitHub + Firebase
+                        </span>
+                        <span class="material-symbols-rounded text-base">chevron_right</span>
+                    </button>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- BOTTOM NAVIGATION BAR (Mobile Priority with Center "+" Button) -->
+        <nav class="fixed bottom-0 left-0 right-0 z-30 md-surface-card border-t backdrop-blur-lg bg-opacity-95">
+            <div class="max-w-3xl mx-auto px-2 h-20 flex items-center justify-around relative">
+                
+                <!-- Tab 1: Feed -->
+                <button onclick="switchTab('feed')" id="nav-feed" class="md-btn flex flex-col items-center justify-center w-16 py-1 group">
+                    <div class="px-4 py-1 rounded-full transition-colors md-primary-container" id="nav-pill-feed">
+                        <span class="material-symbols-rounded filled text-xl block">home</span>
+                    </div>
+                    <span class="text-[11px] font-bold mt-1">Главная</span>
+                </button>
+
+                <!-- Tab 2: Favorites -->
+                <button onclick="switchTab('favorites')" id="nav-favorites" class="md-btn flex flex-col items-center justify-center w-16 py-1 relative">
+                    <div class="px-4 py-1 rounded-full transition-colors" id="nav-pill-favorites">
+                        <span class="material-symbols-rounded text-xl block">favorite</span>
+                    </div>
+                    <span id="favBadgeNav" class="hidden absolute top-0.5 right-3 w-4 h-4 rounded-full bg-rose-500 text-white text-[10px] font-bold flex items-center justify-center">0</span>
+                    <span class="text-[11px] font-medium mt-1 md-text-muted">Избранное</span>
+                </button>
+
+                <!-- CENTER PLUS BUTTON (Выложить товар) -->
+                <div class="flex flex-col items-center -mt-6">
+                    <button onclick="openCreateAdModal()" class="md-btn w-14 h-14 rounded-2xl md-primary-bg shadow-lg shadow-teal-600/30 flex items-center justify-center border-4 border-white dark:border-slate-900">
+                        <span class="material-symbols-rounded text-3xl font-bold">add</span>
+                    </button>
+                    <span class="text-[11px] font-extrabold mt-1">Выложить</span>
+                </div>
+
+                <!-- Tab 3: Chats -->
+                <button onclick="switchTab('chats')" id="nav-chats" class="md-btn flex flex-col items-center justify-center w-16 py-1 relative">
+                    <div class="px-4 py-1 rounded-full transition-colors" id="nav-pill-chats">
+                        <span class="material-symbols-rounded text-xl block">chat</span>
+                    </div>
+                    <span id="chatBadgeNav" class="hidden absolute top-0.5 right-3 w-4 h-4 rounded-full bg-rose-500 text-white text-[10px] font-bold flex items-center justify-center">!</span>
+                    <span class="text-[11px] font-medium mt-1 md-text-muted">Чаты</span>
+                </button>
+
+                <!-- Tab 4: Profile -->
+                <button onclick="switchTab('profile')" id="nav-profile" class="md-btn flex flex-col items-center justify-center w-16 py-1">
+                    <div class="px-4 py-1 rounded-full transition-colors" id="nav-pill-profile">
+                        <span class="material-symbols-rounded text-xl block">person</span>
+                    </div>
+                    <span class="text-[11px] font-medium mt-1 md-text-muted">Профиль</span>
+                </button>
+
+            </div>
+        </nav>
+
     </div>
-    <div class="search">
-      <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 10-.7.7l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0A4.5 4.5 0 1114 9.5 4.5 4.5 0 019.5 14z"/></svg>
-      <input id="searchInput" type="search" placeholder="Поиск: картошка, велосипед, услуги…">
+
+    <!-- ========================================================= -->
+    <!-- MODAL 1: MINI-REGISTRATION (ИМЯ + ФАМИЛИЯ НЕ ОБЯЗАТЕЛЬНО) -->
+    <!-- ========================================================= -->
+    <div id="registrationModal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="md-surface-card border w-full max-w-md rounded-3xl p-6 shadow-2xl animate-slide-up">
+            <div class="w-14 h-14 rounded-2xl md-primary-container flex items-center justify-center mb-4">
+                <span class="material-symbols-rounded filled text-3xl">waving_hand</span>
+            </div>
+            <h2 class="text-xl font-extrabold">Добро пожаловать!</h2>
+            <p class="text-xs md-text-muted mt-1 leading-relaxed">
+                Представьтесь, чтобы односельчане знали, к кому обращаться. Сайт запомнит вас автоматически — пароли не нужны!
+            </p>
+
+            <form onsubmit="saveUserProfile(event)" class="mt-4 space-y-3.5">
+                <div>
+                    <label class="block text-xs font-bold mb-1">Как вас зовут? (Ваше имя) <span class="text-rose-500">*</span></label>
+                    <input 
+                        type="text" 
+                        id="regFirstName" 
+                        required 
+                        placeholder="Например: Иван или Елена"
+                        class="w-full px-4 py-3 rounded-2xl md-surface-variant text-sm font-medium focus:outline-none focus:ring-2 focus:ring-teal-500"
+                    >
+                    <p class="text-[11px] md-text-muted mt-1">💡 Подсказка: Настоящее имя вызывает больше доверия у соседей.</p>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold mb-1">
+                        Ваша фамилия <span class="font-normal md-text-muted">(не обязательно)</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        id="regLastName" 
+                        placeholder="Фамилия (не обязательно)"
+                        class="w-full px-4 py-3 rounded-2xl md-surface-variant text-sm font-medium focus:outline-none focus:ring-2 focus:ring-teal-500"
+                    >
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold mb-1">Ваше село по умолчанию</label>
+                    <select id="regHomeVillage" class="w-full px-4 py-3 rounded-2xl md-surface-variant text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-teal-500">
+                        <option value="Новороманово">🏡 Новороманово</option>
+                        <option value="Зимари">🌲 Зимари</option>
+                        <option value="Алтай">🌾 Алтай (п. Алтай)</option>
+                        <option value="Панфилово">🌻 Панфилово</option>
+                        <option value="Калманка / Соседние">🚗 Калманка / Соседние сёла</option>
+                    </select>
+                </div>
+
+                <div class="pt-2 flex gap-2">
+                    <button type="button" id="cancelRegBtn" onclick="closeRegistrationModal()" class="hidden w-1/3 py-3.5 rounded-2xl md-surface-variant font-bold text-xs">
+                        Отмена
+                    </button>
+                    <button type="submit" class="md-btn flex-1 py-3.5 rounded-2xl md-primary-bg font-bold text-sm shadow-md">
+                        Запомнить меня и войти
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
-    <div class="chips" id="villageChips"></div>
-    <div class="chips" id="typeChips"></div>
-    <div class="grid" id="grid"></div>
-    <div class="empty" id="emptyState" hidden>
-      <div class="big">🧺</div>
-      <h3 id="emptyTitle">Пока нет продаж — выложи свой товар первым!</h3>
-      <p id="emptyText">Нажми большую кнопку «+» внизу — это займёт минуту.</p>
-      <button class="btn filled" id="emptyBtn" style="margin-top:14px">Выложить товар</button>
+
+    <!-- ========================================================= -->
+    <!-- MODAL 2: CREATE AD (ВЫЛОЖИТЬ ТОВАР / УСЛУГУ / ОТДАМ)      -->
+    <!-- ========================================================= -->
+    <div id="createAdModal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
+        <div class="md-surface-card w-full max-w-lg max-h-[92vh] rounded-t-3xl sm:rounded-3xl flex flex-col shadow-2xl animate-slide-up overflow-hidden">
+            
+            <!-- Modal Header -->
+            <div class="px-5 py-4 border-b flex items-center justify-between shrink-0">
+                <div>
+                    <h2 class="text-lg font-extrabold">Новое объявление</h2>
+                    <p class="text-[11px] md-text-muted">Заполните поля с подсказками ниже</p>
+                </div>
+                <button onclick="closeCreateAdModal()" class="w-9 h-9 rounded-full md-surface-variant flex items-center justify-center">
+                    <span class="material-symbols-rounded">close</span>
+                </button>
+            </div>
+
+            <!-- Modal Form Body -->
+            <form id="createAdForm" onsubmit="submitNewAd(event)" class="p-5 overflow-y-auto space-y-4">
+                
+                <!-- 1. Village Selection -->
+                <div>
+                    <label class="block text-xs font-extrabold mb-1.5">1. Выберите село <span class="text-rose-500">*</span></label>
+                    <div class="grid grid-cols-2 gap-2" id="formVillageButtons">
+                        <button type="button" onclick="selectFormVillage('Новороманово')" data-village="Новороманово" class="form-village-btn py-2.5 px-3 rounded-2xl border text-xs font-bold flex items-center justify-center gap-1.5">
+                            🏡 Новороманово
+                        </button>
+                        <button type="button" onclick="selectFormVillage('Зимари')" data-village="Зимари" class="form-village-btn py-2.5 px-3 rounded-2xl border text-xs font-bold flex items-center justify-center gap-1.5">
+                            🌲 Зимари
+                        </button>
+                        <button type="button" onclick="selectFormVillage('Алтай')" data-village="Алтай" class="form-village-btn py-2.5 px-3 rounded-2xl border text-xs font-bold flex items-center justify-center gap-1.5">
+                            🌾 Алтай
+                        </button>
+                        <button type="button" onclick="selectFormVillage('Панфилово')" data-village="Панфилово" class="form-village-btn py-2.5 px-3 rounded-2xl border text-xs font-bold flex items-center justify-center gap-1.5">
+                            🌻 Панфилово
+                        </button>
+                    </div>
+                    <p class="text-[11px] md-text-muted mt-1">💡 Подсказка: Укажите село, где находится товар или оказывается услуга.</p>
+                </div>
+
+                <!-- 2. Photos (Up to 5) -->
+                <div>
+                    <div class="flex items-center justify-between mb-1.5">
+                        <label class="block text-xs font-extrabold">2. Фотографии (до 5 штук)</label>
+                        <span id="photoCounterBadge" class="text-[11px] font-bold md-text-muted">0 / 5 фото</span>
+                    </div>
+
+                    <div class="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar" id="photoPreviewStrip">
+                        <!-- Add Photo Trigger -->
+                        <label id="uploadPhotoLabel" class="w-20 h-20 rounded-2xl border-2 border-dashed border-teal-500/60 md-surface-variant flex flex-col items-center justify-center cursor-pointer shrink-0 hover:opacity-80">
+                            <span class="material-symbols-rounded text-2xl text-teal-600 dark:text-teal-400">add_a_photo</span>
+                            <span class="text-[10px] font-bold mt-0.5">Добавить</span>
+                            <input type="file" id="photoInput" accept="image/*" multiple onchange="handlePhotoUpload(event)" class="hidden">
+                        </label>
+                        <!-- Uploaded thumbnails go here -->
+                    </div>
+                    <p class="text-[11px] md-text-muted mt-1">💡 Подсказка: С фото товар покупают в 3 раза быстрее! Фото сжимаются автоматически.</p>
+                </div>
+
+                <!-- 3. Deal Type & Free / Exchange Buttons -->
+                <div>
+                    <label class="block text-xs font-extrabold mb-1.5">3. Что вы хотите сделать?</label>
+                    <div class="grid grid-cols-3 gap-1.5 mb-2">
+                        <button type="button" onclick="setDealMode('sell')" id="mode-sell" class="deal-mode-btn py-2 px-2 rounded-xl border text-xs font-bold">
+                            💰 Продать
+                        </button>
+                        <button type="button" onclick="setDealMode('service')" id="mode-service" class="deal-mode-btn py-2 px-2 rounded-xl border text-xs font-bold">
+                            🛠️ Услуга
+                        </button>
+                        <button type="button" onclick="setDealMode('buy')" id="mode-buy" class="deal-mode-btn py-2 px-2 rounded-xl border text-xs font-bold">
+                            🔍 Куплю / Ищу
+                        </button>
+                    </div>
+                    <!-- Separate buttons for Free or Exchange as specifically requested -->
+                    <div class="grid grid-cols-2 gap-2">
+                        <button type="button" onclick="setDealMode('free')" id="mode-free" class="deal-mode-btn py-2.5 px-3 rounded-2xl border text-xs font-extrabold flex items-center justify-center gap-1.5">
+                            🎁 Хочу отдать бесплатно
+                        </button>
+                        <button type="button" onclick="setDealMode('exchange')" id="mode-exchange" class="deal-mode-btn py-2.5 px-3 rounded-2xl border text-xs font-extrabold flex items-center justify-center gap-1.5">
+                            🔄 За обмен
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 4. Price in Rubles (Hidden if Free or Exchange) -->
+                <div id="priceFieldWrapper">
+                    <label class="block text-xs font-extrabold mb-1">4. Цена в рублях (₽) <span class="text-rose-500">*</span></label>
+                    <div class="relative">
+                        <input 
+                            type="number" 
+                            id="adPriceInput" 
+                            min="0"
+                            placeholder="Например: 500"
+                            class="w-full pl-4 pr-12 py-3 rounded-2xl md-surface-variant text-base font-extrabold focus:outline-none focus:ring-2 focus:ring-teal-500"
+                        >
+                        <span class="absolute right-4 top-3 font-extrabold text-sm md-text-muted">₽</span>
+                    </div>
+                    <p class="text-[11px] md-text-muted mt-1">💡 Подсказка: Если цена договорная, можете указать 0 или примерную сумму.</p>
+                </div>
+
+                <!-- Exchange wish field (Shown only if Exchange is selected) -->
+                <div id="exchangeFieldWrapper" class="hidden">
+                    <label class="block text-xs font-extrabold mb-1">На что хотите обменять?</label>
+                    <input 
+                        type="text" 
+                        id="adExchangeInput" 
+                        placeholder="Например: На картошку, зерно или детские вещи"
+                        class="w-full px-4 py-3 rounded-2xl md-surface-variant text-sm font-medium focus:outline-none focus:ring-2 focus:ring-teal-500"
+                    >
+                </div>
+
+                <!-- 5. Title & Description -->
+                <div>
+                    <label class="block text-xs font-extrabold mb-1">5. Название товара или услуги <span class="text-rose-500">*</span></label>
+                    <input 
+                        type="text" 
+                        id="adTitleInput" 
+                        required
+                        maxlength="70"
+                        placeholder="Например: Домашнее молоко 3л, вспашка огорода, куртка"
+                        class="w-full px-4 py-3 rounded-2xl md-surface-variant text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-teal-500"
+                    >
+                    <p class="text-[11px] md-text-muted mt-1">💡 Подсказка: Напишите коротко и понятно, чтобы сразу было видно в ленте.</p>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-extrabold mb-1">6. Подробное описание <span class="text-rose-500">*</span></label>
+                    <textarea 
+                        id="adDescInput" 
+                        required
+                        rows="3"
+                        placeholder="Опишите состояние, размеры, есть ли доставка по селу..."
+                        class="w-full px-4 py-3 rounded-2xl md-surface-variant text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+                    ></textarea>
+                </div>
+
+                <!-- 6. Phone Numbers (+7 required, optional 2nd number) -->
+                <div class="space-y-2.5 pt-1">
+                    <label class="block text-xs font-extrabold">7. Телефон для связи (начинается на +7) <span class="text-rose-500">*</span></label>
+                    <div>
+                        <input 
+                            type="tel" 
+                            id="adPhone1" 
+                            required
+                            value="+7 "
+                            oninput="enforcePlusSeven(this)"
+                            placeholder="+7 900 000-00-00"
+                            class="w-full px-4 py-3 rounded-2xl md-surface-variant text-sm font-bold tracking-wide focus:outline-none focus:ring-2 focus:ring-teal-500"
+                        >
+                    </div>
+
+                    <!-- Second Phone Toggle -->
+                    <button type="button" id="addSecondPhoneBtn" onclick="toggleSecondPhone(true)" class="text-xs font-bold text-teal-600 dark:text-teal-400 flex items-center gap-1">
+                        <span class="material-symbols-rounded text-base">add_call</span>
+                        + Указать второй номер телефона (если нужно)
+                    </button>
+
+                    <div id="secondPhoneWrapper" class="hidden space-y-1">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[11px] font-bold md-text-muted">Второй номер (запасной / WhatsApp):</span>
+                            <button type="button" onclick="toggleSecondPhone(false)" class="text-[11px] text-rose-500 font-bold">Убрать</button>
+                        </div>
+                        <input 
+                            type="tel" 
+                            id="adPhone2" 
+                            value="+7 "
+                            oninput="enforcePlusSeven(this)"
+                            placeholder="+7 999 000-00-00"
+                            class="w-full px-4 py-2.5 rounded-2xl md-surface-variant text-sm font-bold tracking-wide focus:outline-none focus:ring-2 focus:ring-teal-500"
+                        >
+                    </div>
+                    <p class="text-[11px] md-text-muted">💡 Подсказка: Покупатели смогут позвонить вам в один клик или написать в чат на сайте.</p>
+                </div>
+
+                <!-- 7. Mandatory Rules Checkbox (Запрет алкоголя и табака) -->
+                <div class="p-3.5 rounded-2xl bg-rose-500/10 border border-rose-500/30 space-y-2">
+                    <div class="flex items-start gap-2.5">
+                        <input 
+                            type="checkbox" 
+                            id="rulesAgreeCheckbox" 
+                            required
+                            class="mt-1 w-5 h-5 accent-teal-600 rounded cursor-pointer shrink-0"
+                        >
+                        <label for="rulesAgreeCheckbox" class="text-xs leading-snug cursor-pointer select-none">
+                            <span class="font-extrabold text-rose-600 dark:text-rose-400">Я согласен с правилами:</span> подтверждаю, что в объявлении <b>НЕТ алкоголя, самогона, спиртосодержащей продукции, табачных изделий, вейпов</b>, лекарств и других запрещённых законом товаров.
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" id="submitAdBtn" class="md-btn w-full py-4 rounded-2xl md-primary-bg font-extrabold text-sm shadow-lg flex items-center justify-center gap-2">
+                    <span class="material-symbols-rounded filled">publish</span>
+                    Опубликовать объявление
+                </button>
+            </form>
+        </div>
     </div>
-  </section>
 
-  <!-- ================= ОБЪЯВЛЕНИЕ ================= -->
-  <section class="view" id="view-item">
-    <div class="backrow"><button class="icon-btn" onclick="go('home')" id="btnBackItem"></button><b>Объявление</b></div>
-    <div id="itemBody"></div>
-  </section>
+    <!-- ========================================================= -->
+    <!-- MODAL 3: AD DETAILS (ПРОСМОТР ОБЪЯВЛЕНИЯ + ЧАТ / ЗВОНОК)  -->
+    <!-- ========================================================= -->
+    <div id="adDetailModal" class="hidden fixed inset-0 z-50 bg-black/65 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
+        <div class="md-surface-card w-full max-w-lg max-h-[94vh] rounded-t-3xl sm:rounded-3xl flex flex-col shadow-2xl animate-slide-up overflow-hidden">
+            
+            <!-- Top Bar over details -->
+            <div class="px-4 py-3 border-b flex items-center justify-between shrink-0">
+                <button onclick="closeAdDetailModal()" class="flex items-center gap-1 text-xs font-bold md-surface-variant px-3 py-2 rounded-full">
+                    <span class="material-symbols-rounded text-base">arrow_back</span>
+                    Назад
+                </button>
+                <div class="flex items-center gap-2">
+                    <button id="detailFavBtn" onclick="toggleFavoriteCurrentDetail()" class="w-9 h-9 rounded-full md-surface-variant flex items-center justify-center">
+                        <span class="material-symbols-rounded text-xl" id="detailFavIcon">favorite</span>
+                    </button>
+                </div>
+            </div>
 
-  <!-- ================= ИЗБРАННОЕ ================= -->
-  <section class="view" id="view-fav">
-    <div class="backrow"><b>Избранное</b></div>
-    <div class="grid" id="favGrid"></div>
-    <div class="empty" id="favEmpty"><div class="big">❤️</div><h3>Пока пусто</h3><p>Нажимай на сердечко на объявлении, чтобы сохранить его сюда.</p></div>
-  </section>
+            <!-- Scrollable Content -->
+            <div class="overflow-y-auto p-4 sm:p-5 space-y-4 flex-1" id="adDetailBody">
+                <!-- Populated dynamically via JS -->
+            </div>
 
-  <!-- ================= ЧАТЫ ================= -->
-  <section class="view" id="view-chats">
-    <div id="chatsListWrap">
-      <div class="backrow"><b>Чаты</b></div>
-      <div class="demo-note" id="chatDemoNote" hidden>⚠️ Демо‑режим: без Firebase чаты хранятся только на этом устройстве. Подключи Firebase (инструкция ниже в коде), чтобы переписываться между телефонами.</div>
-      <div id="chatsList"></div>
-      <div class="empty" id="chatsEmpty"><div class="big">💬</div><h3>Пока нет чатов</h3><p>Открой объявление и нажми «Чат», чтобы написать продавцу.</p></div>
+            <!-- Sticky Bottom Call & Chat Action Bar -->
+            <div class="p-3.5 border-t md-surface-card grid grid-cols-2 gap-2.5 shrink-0" id="adDetailActions">
+                <!-- Populated dynamically via JS -->
+            </div>
+        </div>
     </div>
-    <div id="chatPane" hidden>
-      <div class="backrow"><button class="icon-btn" id="btnBackChats"></button><b id="chatTitle"></b></div>
-      <div class="msgs" id="chatMsgs"></div>
-      <div class="chat-input">
-        <input id="chatInput" placeholder="Сообщение…" autocomplete="off">
-        <button class="send" id="btnSend" title="Отправить"></button>
-      </div>
+
+    <!-- ========================================================= -->
+    <!-- MODAL 4: ACTIVE CHAT WINDOW (Окно переписки)              -->
+    <!-- ========================================================= -->
+    <div id="chatConversationModal" class="hidden fixed inset-0 z-50 bg-black/65 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
+        <div class="md-surface-card w-full max-w-lg h-[90vh] sm:h-[82vh] rounded-t-3xl sm:rounded-3xl flex flex-col shadow-2xl animate-slide-up overflow-hidden">
+            
+            <!-- Chat Header -->
+            <div class="px-4 py-3 border-b flex items-center justify-between shrink-0">
+                <div class="flex items-center gap-2.5 min-w-0">
+                    <button onclick="closeChatModal()" class="w-9 h-9 rounded-full md-surface-variant flex items-center justify-center shrink-0">
+                        <span class="material-symbols-rounded">arrow_back</span>
+                    </button>
+                    <div class="min-w-0">
+                        <h3 class="text-sm font-extrabold truncate" id="chatPartnerName">Продавец</h3>
+                        <p class="text-[11px] md-text-muted truncate" id="chatListingTitle">По объявлению</p>
+                    </div>
+                </div>
+                <button onclick="openRateSellerFromChat()" class="px-3 py-1.5 rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-400 text-xs font-bold flex items-center gap-1 shrink-0">
+                    <span class="material-symbols-rounded filled text-sm">star</span>
+                    Оценить
+                </button>
+            </div>
+
+            <!-- Messages Stream -->
+            <div id="chatMessagesList" class="flex-1 overflow-y-auto p-4 space-y-2.5 md-surface-variant">
+                <!-- Messages populated dynamically -->
+            </div>
+
+            <!-- Message Input -->
+            <form onsubmit="sendChatMessage(event)" class="p-3 border-t md-surface-card flex items-center gap-2 shrink-0">
+                <input 
+                    type="text" 
+                    id="chatMessageInput" 
+                    required
+                    placeholder="Напишите сообщение..." 
+                    class="flex-1 px-4 py-3 rounded-2xl md-surface-variant text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+                >
+                <button type="submit" class="md-btn w-12 h-12 rounded-2xl md-primary-bg flex items-center justify-center shrink-0">
+                    <span class="material-symbols-rounded filled">send</span>
+                </button>
+            </form>
+        </div>
     </div>
-  </section>
 
-  <!-- ================= ПРОФИЛЬ ================= -->
-  <section class="view" id="view-profile">
-    <div class="prof-head">
-      <div class="avatar" id="profAvatar">?</div>
-      <div>
-        <div style="font-weight:700;font-size:18px" id="profName"></div>
-        <div style="color:var(--on-surface-variant);font-size:13.5px" id="profSub"></div>
-        <div id="profStars" style="margin-top:2px"></div>
-      </div>
+    <!-- ========================================================= -->
+    <!-- MODAL 5: RATE USER 1 TO 5 STARS (Оценить человека)        -->
+    <!-- ========================================================= -->
+    <div id="ratingModal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="md-surface-card border w-full max-w-sm rounded-3xl p-6 text-center shadow-2xl animate-slide-up">
+            <h3 class="text-lg font-extrabold">Оценить человека</h3>
+            <p class="text-xs md-text-muted mt-1" id="ratingTargetName">Продавец</p>
+
+            <!-- 1 to 5 Interactive Stars -->
+            <div class="flex items-center justify-center gap-2 my-5" id="starPickerContainer">
+                <button type="button" onclick="selectStarRating(1)" class="star-btn p-1"><span class="material-symbols-rounded filled text-4xl text-amber-400">star</span></button>
+                <button type="button" onclick="selectStarRating(2)" class="star-btn p-1"><span class="material-symbols-rounded filled text-4xl text-amber-400">star</span></button>
+                <button type="button" onclick="selectStarRating(3)" class="star-btn p-1"><span class="material-symbols-rounded filled text-4xl text-amber-400">star</span></button>
+                <button type="button" onclick="selectStarRating(4)" class="star-btn p-1"><span class="material-symbols-rounded filled text-4xl text-amber-400">star</span></button>
+                <button type="button" onclick="selectStarRating(5)" class="star-btn p-1"><span class="material-symbols-rounded filled text-4xl text-amber-400">star</span></button>
+            </div>
+            <p class="text-xs font-bold mb-3" id="starRatingText">5 звёзд — Отлично!</p>
+
+            <input 
+                type="text" 
+                id="ratingCommentInput" 
+                placeholder="Короткий отзыв (не обязательно)" 
+                class="w-full px-4 py-2.5 rounded-2xl md-surface-variant text-xs mb-4 focus:outline-none"
+            >
+
+            <div class="flex gap-2">
+                <button type="button" onclick="closeRatingModal()" class="flex-1 py-3 rounded-2xl md-surface-variant text-xs font-bold">Отмена</button>
+                <button type="button" onclick="submitRating()" class="md-btn flex-1 py-3 rounded-2xl md-primary-bg text-xs font-bold">Поставить оценку</button>
+            </div>
+        </div>
     </div>
-    <div class="sect">Тема оформления</div>
-    <div class="seg" id="themeSeg">
-      <button class="chip" data-mode="light">☀️ Светлая</button>
-      <button class="chip" data-mode="dark">🌙 Тёмная</button>
-      <button class="chip" data-mode="system">📱 Система</button>
+
+    <!-- ========================================================= -->
+    <!-- MODAL 6: THEME & COLOR PICKER (Выбор темы сайта)          -->
+    <!-- ========================================================= -->
+    <div id="themeModal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="md-surface-card border w-full max-w-sm rounded-3xl p-6 shadow-2xl animate-slide-up space-y-4">
+            <div class="flex items-center justify-between">
+                <h3 class="text-lg font-extrabold">Оформление сайта</h3>
+                <button onclick="closeThemeModal()" class="w-8 h-8 rounded-full md-surface-variant flex items-center justify-center">
+                    <span class="material-symbols-rounded text-lg">close</span>
+                </button>
+            </div>
+
+            <div>
+                <p class="text-xs font-bold md-text-muted mb-2">Режим экрана</p>
+                <div class="grid grid-cols-2 gap-2">
+                    <button onclick="setDarkMode(false)" class="py-3 px-4 rounded-2xl border md-surface-variant text-xs font-bold flex items-center justify-center gap-2">
+                        <span class="material-symbols-rounded text-amber-500">light_mode</span> Светлая
+                    </button>
+                    <button onclick="setDarkMode(true)" class="py-3 px-4 rounded-2xl border md-surface-variant text-xs font-bold flex items-center justify-center gap-2">
+                        <span class="material-symbols-rounded text-indigo-400">dark_mode</span> Тёмная
+                    </button>
+                </div>
+            </div>
+
+            <div>
+                <p class="text-xs font-bold md-text-muted mb-2">Цветовой стиль Material 3</p>
+                <div class="grid grid-cols-2 gap-2">
+                    <button onclick="setColorAccent('default')" class="py-2.5 px-3 rounded-2xl border text-xs font-bold flex items-center gap-2">
+                        <span class="w-4 h-4 rounded-full bg-teal-700 inline-block"></span> Изумрудный
+                    </button>
+                    <button onclick="setColorAccent('theme-blue')" class="py-2.5 px-3 rounded-2xl border text-xs font-bold flex items-center gap-2">
+                        <span class="w-4 h-4 rounded-full bg-blue-600 inline-block"></span> Синий Авито
+                    </button>
+                    <button onclick="setColorAccent('theme-amber')" class="py-2.5 px-3 rounded-2xl border text-xs font-bold flex items-center gap-2">
+                        <span class="w-4 h-4 rounded-full bg-amber-600 inline-block"></span> Тёплый Алтай
+                    </button>
+                    <button onclick="setColorAccent('theme-violet')" class="py-2.5 px-3 rounded-2xl border text-xs font-bold flex items-center gap-2">
+                        <span class="w-4 h-4 rounded-full bg-violet-600 inline-block"></span> Лавандовый
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="sect">Мои объявления</div>
-    <div id="myListings"></div>
-    <div class="sect">Действия</div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap">
-      <button class="btn tonal" id="btnEditProf">Изменить данные</button>
-      <button class="btn outlined" id="btnRules2">Правила</button>
-      <button class="btn text" id="btnSamples" hidden>Загрузить 3 примера</button>
-      <button class="btn danger" id="btnReset">Сбросить профиль</button>
+
+    <!-- ========================================================= -->
+    <!-- MODAL 7: RULES MODAL (Правила сообщества)                 -->
+    <!-- ========================================================= -->
+    <div id="rulesModal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="md-surface-card border w-full max-w-md rounded-3xl p-6 shadow-2xl animate-slide-up space-y-3">
+            <div class="flex items-center gap-2.5 text-rose-500">
+                <span class="material-symbols-rounded filled text-3xl">gavel</span>
+                <h3 class="text-lg font-extrabold">Правила нашей доски</h3>
+            </div>
+            <p class="text-xs leading-relaxed md-text-muted">
+                Чтобы сайт оставался безопасным и полезным для всех жителей сёл <b>Новороманово, Зимари, Алтай и Панфилово</b>, строго запрещено публиковать:
+            </p>
+            <ul class="text-xs space-y-2 font-medium list-disc pl-5">
+                <li><b>Алкогольную продукцию</b> любого вида (включая домашнее вино, пиво, самогон и спирт).</li>
+                <li><b>Табачные изделия</b>, сигареты, вейпы, электронные испарители и кальяны.</li>
+                <li>Рецептурные лекарства, оружие, взрывчатые вещества и браконьерские снасти.</li>
+                <li>Мошеннические схемы, спам и оскорбления односельчан.</li>
+            </ul>
+            <button onclick="closeRulesModal()" class="md-btn w-full py-3 rounded-2xl md-primary-bg text-xs font-bold mt-2">
+                Понятно, соблюдаю правила
+            </button>
+        </div>
     </div>
-    <div class="tip" style="margin-top:18px"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 15h-2v-6h2zm0-8h-2V7h2z"/></svg><div>Совет: встречайтесь в людном месте, не переводите предоплату незнакомцам. Запрещены: алкоголь, табак, вейпы, лекарства, оружие и другое (см. Правила).</div></div>
-  </section>
-</main>
 
-<!-- ================= НИЖНЯЯ НАВИГАЦИЯ ================= -->
-<nav class="bottomnav">
-  <button class="nav-btn on" data-view="home"><span class="pill"><svg viewBox="0 0 24 24"><path d="M12 3l9 8h-3v9h-5v-6h-2v6H6v-9H3z"/></svg></span>Главная</button>
-  <button class="nav-btn" data-view="fav"><span class="pill"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.78 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span>Избранное</button>
-  <div class="fab-wrap"><button class="fab" id="fabAdd" title="Выложить товар"><svg viewBox="0 0 24 24"><path d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6z"/></svg></button></div>
-  <button class="nav-btn" data-view="chats"><span class="pill"><svg viewBox="0 0 24 24"><path d="M4 4h16v12H8l-4 4z"/></svg></span>Чаты<span class="badge" id="chatsBadge" hidden></span></button>
-  <button class="nav-btn" data-view="profile"><span class="pill"><svg viewBox="0 0 24 24"><path d="M12 12a4 4 0 100-8 4 4 0 000 8zm0 2c-4 0-8 2-8 5v1h16v-1c0-3-4-5-8-5z"/></svg></span>Профиль</button>
-</nav>
+    <!-- ========================================================= -->
+    <!-- MODAL 8: GITHUB + FIREBASE SETUP GUIDE                    -->
+    <!-- ========================================================= -->
+    <div id="githubFirebaseModal" class="hidden fixed inset-0 z-50 bg-black/65 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="md-surface-card border w-full max-w-xl max-h-[90vh] rounded-3xl p-6 shadow-2xl animate-slide-up flex flex-col">
+            <div class="flex items-center justify-between pb-3 border-b">
+                <h3 class="text-base font-extrabold flex items-center gap-2">
+                    <span class="material-symbols-rounded text-amber-500">integration_instructions</span>
+                    Как запустить сайт на GitHub Pages + Firebase
+                </h3>
+                <button onclick="closeGithubFirebaseModal()" class="w-8 h-8 rounded-full md-surface-variant flex items-center justify-center">
+                    <span class="material-symbols-rounded">close</span>
+                </button>
+            </div>
+            <div class="overflow-y-auto py-4 space-y-3.5 text-xs leading-relaxed">
+                <div class="p-3 rounded-2xl md-surface-variant">
+                    <p class="font-extrabold text-sm mb-1">Шаг 1. Создайте бесплатную базу Firebase</p>
+                    <ol class="list-decimal pl-4 space-y-1">
+                        <li>Зайдите на <b>console.firebase.google.com</b> и нажмите <b>Create a project</b> (Создать проект).</li>
+                        <li>В меню слева откройте <b>Build → Authentication → Get started</b> и включите <b>Anonymous (Анонимный вход)</b>.</li>
+                        <li>В меню слева откройте <b>Build → Firestore Database → Create database</b> (выберите <i>Start in test mode</i>).</li>
+                        <li>Во вкладке <b>Rules (Правила Firestore)</b> вставьте:
+                            <pre class="bg-slate-900 text-teal-300 p-2 rounded-xl mt-1 overflow-x-auto text-[10px]">rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}</pre>
+                        </li>
+                    </ol>
+                </div>
 
-<!-- ================= РЕГИСТРАЦИЯ ================= -->
-<div class="overlay" id="sheetReg">
-  <div class="sheet">
-    <div class="handle"></div>
-    <h3>Добро пожаловать! 👋</h3>
-    <p class="sub">Мини‑регистрация: сайт запомнит тебя на этом устройстве.</p>
-    <div class="field"><input id="regName" placeholder=" " maxlength="30"><label>Ваше имя *</label></div>
-    <div class="hint">Обязательно только имя — так тебя увидят соседи.</div>
-    <div class="field"><input id="regSurname" placeholder=" " maxlength="30"><label>Фамилия (необязательно)</label></div>
-    <div class="hint">Можно пропустить — пиши, если хочешь.</div>
-    <div class="field"><select id="regVillage"><option value="" disabled selected></option></select><label>Твоё село *</label></div>
-    <div class="hint">Выбери село — объявления будут фильтроваться по нему.</div>
-    <div class="field"><input id="regPhone" placeholder=" " inputmode="tel"><label>Телефон (необязательно)</label></div>
-    <div class="hint">Начинается с <b>+7</b>. Понадобится для объявлений — можно указать позже.</div>
-    <button class="btn filled" style="width:100%;margin-top:14px" id="btnRegGo">Продолжить</button>
-  </div>
-</div>
+                <div class="p-3 rounded-2xl md-surface-variant">
+                    <p class="font-extrabold text-sm mb-1">Шаг 2. Скопируйте ключи firebaseConfig</p>
+                    <p>Нажмите на шестерёнку (Project Settings) → прокрутите вниз до <b>Your apps</b> → выберите значок веб-сайта <code>&lt;/&gt;</code>, зарегистрируйте приложение и скопируйте блок <code>firebaseConfig</code> в этот файл <code>index.html</code> (в блок <code>YOUR_GITHUB_FIREBASE_CONFIG</code> внизу кода).</p>
+                </div>
 
-<!-- ================= ВЫЛОЖИТЬ ТОВАР ================= -->
-<div class="overlay" id="sheetPost">
-  <div class="sheet">
-    <div class="handle"></div>
-    <h3>Новое объявление</h3>
-    <p class="sub">Заполни поля — подсказки помогут ничего не забыть.</p>
-    <div class="ph-row" id="phRow"></div>
-    <div class="hint">До <b>5 фото</b>. Первое фото станет обложкой. Нажми «+», чтобы прикрепить.</div>
-    <input type="file" id="photoInput" accept="image/*" multiple hidden>
-    <div class="field"><input id="postTitle" placeholder=" " maxlength="60"><label>Название *</label></div>
-    <div class="hint">Коротко и понятно: «Картошка домашняя», «Колка дров».</div>
-    <div class="field"><textarea id="postDesc" placeholder=" " maxlength="1000"></textarea><label>Описание *</label></div>
-    <div class="hint">Состояние, размер, количество — чем подробнее, тем быстрее купят.</div>
-    <div class="seg" id="typeSeg">
-      <button class="chip on" data-type="sell">💰 Продажа</button>
-      <button class="chip" data-type="free">🎁 Хочу отдать бесплатно</button>
-      <button class="chip" data-type="exchange">🔄 За обмен</button>
+                <div class="p-3 rounded-2xl md-surface-variant">
+                    <p class="font-extrabold text-sm mb-1">Шаг 3. Выложите на GitHub Pages (бесплатный хостинг)</p>
+                    <ol class="list-decimal pl-4 space-y-1">
+                        <li>Создайте публичный репозиторий на <b>github.com</b> (например, <code>selo-avito</code>).</li>
+                        <li>Загрузите этот файл под именем <b><code>index.html</code></b>.</li>
+                        <li>Зайдите в <b>Settings → Pages</b>, в разделе <b>Branch</b> выберите <code>main</code> и нажмите <b>Save</b>. Через 1 минуту ваш сайт будет доступен по ссылке для всех жителей!</li>
+                    </ol>
+                </div>
+            </div>
+            <button onclick="closeGithubFirebaseModal()" class="md-btn w-full py-3 rounded-2xl md-primary-bg text-xs font-bold shrink-0">
+                Отлично, понятно!
+            </button>
+        </div>
     </div>
-    <div class="hint" id="typeHint">Цена в рублях обязательна для продажи.</div>
-    <div class="field" id="priceField"><input id="postPrice" placeholder=" " inputmode="numeric"><label>Цена, ₽ *</label></div>
-    <div class="field"><select id="postVillage"></select><label>Село *</label></div>
-    <div class="hint">Где находится товар или где оказываешь услугу.</div>
-    <div class="field"><select id="postCat"></select><label>Категория</label></div>
-    <div class="field"><input id="postPhone1" placeholder=" " inputmode="tel"><label>Телефон для связи *</label></div>
-    <div class="hint">Формат <b>+7 (999) 123-45-67</b> — покупатели увидят его и кнопку «Позвонить».</div>
-    <div class="field"><input id="postPhone2" placeholder=" " inputmode="tel"><label>Второй номер (необязательно)</label></div>
-    <label class="check" id="rulesCheckWrap"><input type="checkbox" id="rulesCheck"><span>Я прочитал(а) <b style="color:var(--primary);text-decoration:underline" id="btnRulesOpen">правила</b>: товар НЕ является алкоголем, табаком, вейпами, лекарствами, оружием и другим запрещённым. *</span></label>
-    <button class="btn filled" style="width:100%" id="btnPublish">Опубликовать</button>
-  </div>
-</div>
 
-<!-- ================= ПРАВИЛА ================= -->
-<div class="overlay" id="sheetRules">
-  <div class="sheet">
-    <div class="handle"></div>
-    <h3>Правила площадки</h3>
-    <p class="sub">Запрещено выставлять:</p>
-    <ul class="rules-list">
-      <li>Алкоголь и любые спиртосодержащие продукты;</li>
-      <li>Табак, сигареты, вейпы, снюс, кальяны;</li>
-      <li>Лекарства и медицинские изделия;</li>
-      <li>Оружие, взрывчатые и опасные вещества;</li>
-      <li>Подделки, краденое, документы;</li>
-      <li>Контент 18+ и всё, что запрещено законом РФ.</li>
-    </ul>
-    <p class="sub">Будь вежливым, указывай честную цену и реальное село. Модератор может снять объявление, нарушающее правила.</p>
-    <button class="btn tonal" style="width:100%" onclick="closeSheet('sheetRules')">Понятно</button>
-  </div>
-</div>
+    <!-- ========================================================= -->
+    <!-- CUSTOM TOAST / SNACKBAR NOTIFICATION (No browser alerts!) -->
+    <!-- ========================================================= -->
+    <div id="toastContainer" class="fixed top-4 left-1/2 -translate-x-1/2 z-[60] pointer-events-none flex flex-col items-center gap-2 w-full max-w-sm px-4"></div>
 
-<!-- ================= ОЦЕНКА ================= -->
-<div class="overlay" id="sheetRate">
-  <div class="sheet">
-    <div class="handle"></div>
-    <h3>Оценить продавца</h3>
-    <p class="sub" id="rateWho"></p>
-    <div class="rate-stars" id="rateStars"></div>
-    <div class="hint" style="justify-content:center">От 1 до 5 звёзд: как прошла сделка?</div>
-    <button class="btn filled" style="width:100%;margin-top:14px" id="btnRateSend">Отправить оценку</button>
-  </div>
-</div>
+    <!-- ========================================================= -->
+    <!-- APPLICATION LOGIC & FIREBASE INTEGRATION                  -->
+    <!-- ========================================================= -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getDatabase, ref, set, get, push, update, remove, onValue } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
 
-<div id="snack"></div>
+        // ============================================================================
+        // ВАШИ КЛЮЧИ FIREBASE (ПРОЕКТ sqdqd-a593c + REALTIME DATABASE EUROPE-WEST1)
+        // ============================================================================
+        const YOUR_GITHUB_FIREBASE_CONFIG = {
+            apiKey: "AIzaSyDb2VJAzZ7fWIbltZC9mkBmYdy-s-CETzw",
+            authDomain: "sqdqd-a593c.firebaseapp.com",
+            databaseURL: "https://sqdqd-a593c-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "sqdqd-a593c",
+            storageBucket: "sqdqd-a593c.firebasestorage.app",
+            messagingSenderId: "459004141878",
+            appId: "1:459004141878:web:3efdff08dc40beeefcd397",
+            measurementId: "G-JJ2J1P57M6"
+        };
 
-<!-- ========== Firebase (compat). Загрузится сам, если вставишь конфиг ниже в JS ========== -->
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+        const VAPID_PUBLIC_KEY = "BFCn6TbaY2BLxOy1Ij3yQHutkSEEaCut4PAwliZa-1BlL7OTeHoDgYcY2dLGcEy-zJin5W5QvnQynLvtIpKCCkw";
 
-<script>
-/* =====================================================================
-   НАСТРОЙКА FIREBASE (шаги см. под кодом в ответе):
-   1) console.firebase.google.com → Add project
-   2) Authentication → Sign-in method → включить Anonymous
-   3) Firestore Database → Create database
-   4) Project settings → Your apps → Web app → скопировать config
-   5) ВСТАВИТЬ значения ниже. Пока apiKey пустой — сайт работает в
-      демо-режиме (все данные хранятся в этом браузере).
-===================================================================== */
-const FIREBASE_CONFIG = {
-  apiKey: "", authDomain: "", projectId: "",
-  storageBucket: "", messagingSenderId: "", appId: ""
-};
+        let rtdb = null;
+        let auth = null;
+        let currentUser = null;
+        let isCloudConnected = false;
 
-/* ================= Константы и состояние ================= */
-const VILLAGES = ['Новороманово','Зимари','Алтай','Панфилово'];
-const CATS = ['Продукты и хозяйство','Техника','Одежда и обувь','Дом и сад','Животные и скот','Услуги','Транспорт','Детям','Другое'];
-const TYPES = {sell:'Продажа', free:'Отдам бесплатно', exchange:'Обмен'};
-const $ = s => document.querySelector(s);
-const load = (k,d) => { try{ const v = JSON.parse(localStorage.getItem(k)); return v==null?d:v; }catch(e){ return d; } };
-const persist = (k,v) => localStorage.setItem(k, JSON.stringify(v));
+        // Global App State (Realtime Database Synced)
+        const state = {
+            userProfile: {
+                firstName: '',
+                lastName: '',
+                homeVillage: 'Новороманово',
+                registered: false
+            },
+            villages: ['Все сёла', 'Новороманово', 'Зимари', 'Алтай', 'Панфилово'],
+            selectedVillage: 'Все сёла',
+            categories: [
+                { id: 'all', label: 'Все', icon: 'apps' },
+                { id: 'sell', label: 'Продам', icon: 'shopping_bag' },
+                { id: 'free', label: 'Отдам даром', icon: 'redeem' },
+                { id: 'exchange', label: 'Обмен', icon: 'sync_alt' },
+                { id: 'service', label: 'Услуги', icon: 'handyman' },
+                { id: 'buy', label: 'Куплю / Ищу', icon: 'manage_search' }
+            ],
+            selectedCategory: 'all',
+            searchQuery: '',
+            sortOrder: 'newest', // 'newest' | 'cheapest'
+            listings: [],
+            favorites: new Set(),
+            chats: [],
+            messages: [],
+            ratings: [],
+            // Form state
+            formVillage: 'Новороманово',
+            formDealMode: 'sell',
+            formPhotos: [],
+            // Active Modal contexts
+            activeListingId: null,
+            activeChatId: null,
+            ratingTargetUserId: null,
+            ratingTargetUserName: '',
+            selectedStars: 5
+        };
 
-let user = load('kp_user', null);
-let themeMode = load('kp_theme','system');
-let listings = load('kp_listings', []);
-let chats = load('kp_chats', []);
-let ratings = load('kp_ratings', []);
-let favs = load('kp_favs', []);
-let filters = {village:'all', type:'all', q:''};
-let currentListingId = null, currentChatId = null, rateTarget = null, rateVal = 0;
-let postPhotos = [], postType = 'sell';
-let fbDB = null, fbUid = null;
+        // Custom MD3 Toast (replaces alert)
+        window.showToast = function(message, icon = 'check_circle') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'md-surface-card border shadow-xl px-4 py-3 rounded-2xl flex items-center gap-2.5 text-xs font-bold pointer-events-auto animate-slide-up';
+            toast.innerHTML = `
+                <span class="material-symbols-rounded filled text-teal-600 dark:text-teal-400 text-lg">${icon}</span>
+                <span>${escapeHtml(message)}</span>
+            `;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.25s ease';
+                setTimeout(() => toast.remove(), 250);
+            }, 3200);
+        };
 
-const ICON = {
-  heart:'<svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.78 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>',
-  img:'<svg viewBox="0 0 24 24"><path d="M21 19V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2zM8.5 13.5l2.5 3 3.5-4.5 4.5 6H4.5l4-5z"/></svg>',
-  plus:'<svg viewBox="0 0 24 24"><path d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6z"/></svg>',
-  close:'<svg viewBox="0 0 24 24"><path d="M18.3 5.7L12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7 2.9 18.3 9.2 12 2.9 5.7 4.3 4.3l6.3 6.3 6.3-6.3z"/></svg>',
-  back:'<svg viewBox="0 0 24 24"><path d="M20 11H7.8l5.6-5.6L12 4l-8 8 8 8 1.4-1.4L7.8 13H20z"/></svg>',
-  phone:'<svg viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.3 0 .7-.2 1l-2.3 2.2z"/></svg>',
-  chat:'<svg viewBox="0 0 24 24"><path d="M4 4h16v12H8l-4 4z"/></svg>',
-  send:'<svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>',
-  del:'<svg viewBox="0 0 24 24"><path d="M6 7h12l-1 14H7L6 7zm3-3h6l1 2h4v2H4V6h4l1-2z"/></svg>',
-  sun:'<svg viewBox="0 0 24 24"><path d="M12 8a4 4 0 100 8 4 4 0 000-8zm0-6h0l1 3h-2l1-3zm0 20l-1-3h2l-1 3zM2 12l3-1v2l-3-1zm20 0l-3 1v-2l3 1zM4.9 4.9l2.8 1.4-1.4 1.4L4.9 4.9zm14.2 14.2l-2.8-1.4 1.4-1.4 1.4 2.8zM19.1 4.9l-1.4 2.8-1.4-1.4 2.8-1.4zM4.9 19.1l1.4-2.8 1.4 1.4-2.8 1.4z"/></svg>',
-  moon:'<svg viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>'
-};
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
 
-/* ================= Утилиты ================= */
-const esc = s => String(s||'').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-const fmtPrice = n => new Intl.NumberFormat('ru-RU').format(n);
-const fullName = u => ((u?.name||'')+' '+(u?.surname||'')).trim();
-const myUid = () => fbUid || (user && user.id) || 'anon';
-function timeAgo(ts){ const d = Date.now()-ts, m = Math.floor(d/60000);
-  if(m<1) return 'только что'; if(m<60) return m+' мин назад';
-  const h = Math.floor(m/60); if(h<24) return h+' ч назад';
-  const dd = Math.floor(h/24); if(dd===1) return 'вчера'; if(dd<7) return dd+' дн назад';
-  return new Date(ts).toLocaleDateString('ru-RU'); }
-function fmtPhone(v){ let d=(v||'').replace(/\D/g,''); if(!d) return '';
-  if(d.startsWith('8')) d='7'+d.slice(1); if(!d.startsWith('7')) d='7'+d; d=d.slice(0,11);
-  let out='+7'; if(d.length>1) out+=' ('+d.slice(1,4); if(d.length>4) out+=') '+d.slice(4,7);
-  if(d.length>7) out+='-'+d.slice(7,9); if(d.length>9) out+='-'+d.slice(9,11); return out; }
-const phoneOK = v => (v||'').replace(/\D/g,'').length === 11;
-function priceLabel(l){ if(l.type==='free') return 'Бесплатно';
-  if(l.type==='exchange') return l.price ? 'Обмен · ≈'+fmtPrice(l.price)+' ₽' : 'Обмен';
-  return fmtPrice(l.price||0)+' ₽'; }
-function starsHTML(avg){ const pct = Math.max(0,Math.min(100, Math.round(avg/5*100)));
-  return '<span class="stars">★★★★★<span class="stars-fg" style="width:'+pct+'%">★★★★★</span></span>'; }
-function ratingOf(uid){ const rs = ratings.filter(r=>r.targetUid===uid);
-  if(!rs.length) return {avg:0,count:0};
-  return {avg: rs.reduce((s,r)=>s+r.stars,0)/rs.length, count: rs.length}; }
-let snackT; function snack(t){ const s=$('#snack'); s.textContent=t; s.classList.add('show');
-  clearTimeout(snackT); snackT=setTimeout(()=>s.classList.remove('show'), 3200); }
-function compress(file){ return new Promise((res,rej)=>{ const fr=new FileReader();
-  fr.onload=()=>{ const img=new Image();
-    img.onload=()=>{ const max=1000, k=Math.min(1,max/Math.max(img.width,img.height));
-      const w=Math.round(img.width*k), h=Math.round(img.height*k);
-      const c=document.createElement('canvas'); c.width=w; c.height=h;
-      c.getContext('2d').drawImage(img,0,0,w,h); res(c.toDataURL('image/jpeg',0.72)); };
-    img.onerror=rej; img.src=fr.result; };
-  fr.onerror=rej; fr.readAsDataURL(file); }); }
+        function formatPriceDisplay(item) {
+            if (item.dealMode === 'free') return 'Бесплатно 🎁';
+            if (item.dealMode === 'exchange') return item.exchangeFor ? `Обмен: ${item.exchangeFor}` : 'За обмен 🔄';
+            const num = Number(item.price) || 0;
+            if (num === 0) return 'Договорная';
+            return num.toLocaleString('ru-RU') + ' ₽';
+        }
 
-/* ================= Тема ================= */
-function resolvedTheme(){ if(themeMode==='system') return matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'; return themeMode; }
-function applyTheme(){ const t = resolvedTheme(); document.documentElement.dataset.theme = t;
-  $('#metaTheme').setAttribute('content', t==='dark' ? '#1D211E' : '#EDF1EB');
-  $('#btnTheme').innerHTML = t==='dark' ? ICON.sun : ICON.moon;
-  document.querySelectorAll('#themeSeg .chip').forEach(b=>b.classList.toggle('on', b.dataset.mode===themeMode)); }
-matchMedia('(prefers-color-scheme: dark)').addEventListener('change', ()=>{ if(themeMode==='system') applyTheme(); });
+        function formatDateRelative(timestamp) {
+            if (!timestamp) return 'Только что';
+            const diffSec = Math.floor((Date.now() - timestamp) / 1000);
+            if (diffSec < 60) return 'Только что';
+            if (diffSec < 3600) return `${Math.floor(diffSec / 60)} мин. назад`;
+            if (diffSec < 86400) return `${Math.floor(diffSec / 3600)} ч. назад`;
+            return new Date(timestamp).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
+        }
 
-/* ================= Sheets ================= */
-function openSheet(id, force){ const o=$('#'+id); if(force) o.dataset.force='1'; else delete o.dataset.force; o.classList.add('open'); }
-function closeSheet(id){ const o=$('#'+id); if(o.dataset.force) return; o.classList.remove('open'); }
-document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click', e=>{ if(e.target===o) closeSheet(o.id); }));
+        function getUserRatingStats(targetUserId) {
+            const userRatings = state.ratings.filter(r => r.targetUserId === targetUserId);
+            if (userRatings.length === 0) {
+                return { avg: '5.0', count: 0, label: 'Новичок (5.0★)' };
+            }
+            const sum = userRatings.reduce((acc, r) => acc + (Number(r.stars) || 5), 0);
+            const avg = (sum / userRatings.length).toFixed(1);
+            return { avg, count: userRatings.length, label: `${avg} ★ (${userRatings.length})` };
+        }
 
-/* ================= Навигация ================= */
-function go(v){ document.querySelectorAll('.view').forEach(s=>s.classList.remove('on'));
-  $('#view-'+v).classList.add('on');
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('on', b.dataset.view===v));
-  if(v==='chats'){ $('#chatPane').hidden = !currentChatId; $('#chatsListWrap').hidden = !!currentChatId; }
-  window.scrollTo(0,0); }
-document.querySelectorAll('.nav-btn').forEach(b=>b.onclick=()=>go(b.dataset.view));
+        async function initFirebase() {
+            try {
+                const app = initializeApp(YOUR_GITHUB_FIREBASE_CONFIG);
+                auth = getAuth(app);
+                rtdb = getDatabase(app);
 
-/* ================= Чипсы фильтров ================= */
-function buildChips(){
-  $('#villageChips').innerHTML = ['<button class="chip" data-v="all">🏡 Все сёла</button>']
-    .concat(VILLAGES.map(v=>'<button class="chip" data-v="'+v+'">'+v+'</button>')).join('');
-  $('#typeChips').innerHTML = ['<button class="chip" data-t="all">Все объявления</button>']
-    .concat(Object.keys(TYPES).map(t=>'<button class="chip" data-t="'+t+'">'+TYPES[t]+'</button>')).join('');
-  $('#villageChips').onclick = e=>{ const c=e.target.closest('.chip'); if(!c) return; filters.village=c.dataset.v; syncChips(); renderHome(); };
-  $('#typeChips').onclick = e=>{ const c=e.target.closest('.chip'); if(!c) return; filters.type=c.dataset.t; syncChips(); renderHome(); };
-  syncChips();
-}
-function syncChips(){ document.querySelectorAll('#villageChips .chip').forEach(c=>c.classList.toggle('on', c.dataset.v===filters.village));
-  document.querySelectorAll('#typeChips .chip').forEach(c=>c.classList.toggle('on', c.dataset.t===filters.type)); }
+                await signInAnonymously(auth);
 
-/* ================= Рендер объявлений ================= */
-function cardHTML(l){ const fav = favs.includes(l.id); const ph = l.photos && l.photos[0];
-  return '<article class="card" onclick="openListing(\''+l.id+'\')">'
-   + '<div class="card-ph">'+(ph ? '<img src="'+ph+'" alt="">' : ICON.img)+'</div>'
-   + '<button class="icon-btn fav'+(fav?' on':'')+'" onclick="toggleFav(\''+l.id+'\',event)">'+ICON.heart+'</button>'
-   + '<div class="card-body"><span class="badge-type">'+esc(l.village)+'</span>'
-   + '<div class="price'+(l.type==='free'?' free':'')+'">'+priceLabel(l)+'</div>'
-   + '<div class="title">'+esc(l.title)+'</div>'
-   + '<div class="meta">'+esc(l.cat||'')+' · '+timeAgo(l.createdAt)+'</div></div></article>'; }
-function filtered(){ return listings.filter(l =>
-  (filters.village==='all' || l.village===filters.village) &&
-  (filters.type==='all' || l.type===filters.type) &&
-  (!filters.q || (l.title+' '+l.desc).toLowerCase().includes(filters.q)) ); }
-function renderHome(){ const list = filtered();
-  $('#grid').innerHTML = list.map(cardHTML).join('');
-  const empty = $('#emptyState'); empty.hidden = list.length>0;
-  if(!list.length){ if(listings.length===0){ $('#emptyTitle').textContent='Пока нет продаж — выложи свой товар первым!';
-      $('#emptyText').textContent='Нажми большую кнопку «+» внизу — это займёт минуту.'; $('#emptyBtn').hidden=false; }
-    else { $('#emptyTitle').textContent='Ничего не найдено'; $('#emptyText').textContent='Попробуй изменить фильтры или поиск.'; $('#emptyBtn').hidden=true; } }
-  $('#fabAdd').classList.toggle('pulse', listings.length===0); }
-function toggleFav(id, ev){ ev.stopPropagation();
-  favs = favs.includes(id) ? favs.filter(f=>f!==id) : favs.concat(id);
-  persist('kp_favs', favs); renderHome(); renderFavs(); }
-function renderFavs(){ const list = listings.filter(l=>favs.includes(l.id));
-  $('#favGrid').innerHTML = list.map(cardHTML).join(''); $('#favEmpty').hidden = list.length>0; }
+                onAuthStateChanged(auth, async (user) => {
+                    if (!user) return;
+                    currentUser = user;
+                    isCloudConnected = true;
+                    document.getElementById('profileUserIdDisplay').textContent = user.uid;
 
-/* ================= Карточка объявления ================= */
-function openListing(id){ currentListingId = id; renderItem(); go('item'); }
-function renderItem(){ const l = listings.find(x=>x.id===currentListingId);
-  if(!l){ go('home'); return; }
-  const mine = l.ownerUid === myUid();
-  const r = ratingOf(l.ownerUid);
-  const photos = (l.photos && l.photos.length) ? l.photos.map(p=>'<img src="'+p+'" alt="">').join('')
-    : '<div class="noimg">'+ICON.img+'</div>';
-  let html = '<div class="swiper">'+photos+'</div>'
-   + '<div class="item-price'+(l.type==='free'?' free':'')+'" style="'+(l.type==='free'?'color:var(--primary)':'')+'">'+priceLabel(l)+'</div>'
-   + '<h2 class="item-title">'+esc(l.title)+'</h2>'
-   + '<div class="item-meta"><span class="badge-type">'+TYPES[l.type]+'</span> '+esc(l.village)+' · '+esc(l.cat||'Другое')+' · '+timeAgo(l.createdAt)+'</div>'
-   + '<p class="item-desc">'+esc(l.desc)+'</p>'
-   + '<div class="seller"><div class="avatar">'+esc((l.ownerName||'?')[0].toUpperCase())+'</div>'
-   + '<div class="info"><div class="name">'+esc(l.ownerName)+'</div>'
-   + '<div>'+(r.count ? starsHTML(r.avg)+' <span style="font-size:12.5px;color:var(--on-surface-variant)">'+r.avg.toFixed(1)+' · оценок: '+r.count+'</span>' : '<span style="font-size:12.5px;color:var(--on-surface-variant)">Пока без оценок</span>')+'</div></div></div>';
-  if(mine){ html += '<div class="tip"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 15h-2v-6h2zm0-8h-2V7h2z"/></svg><div>Это ваше объявление. Покупатели видят кнопки «Чат» и «Позвонить».</div></div>'
-    + '<div class="actions"><button class="btn danger" onclick="delListing(\''+l.id+'\')">'+ICON.del+' Удалить</button></div>'; }
-  else { html += '<div class="actions">'
-    + '<a class="btn filled" href="tel:'+esc((l.phones&&l.phones[0]||'').replace(/[^\d+]/g,''))+'">'+ICON.phone+' Позвонить</a>'
-    + '<button class="btn tonal" onclick="startChat(\''+l.id+'\')">'+ICON.chat+' Чат</button>'
-    + '<button class="btn outlined" onclick="openRate(\''+l.ownerUid+'\',\''+esc(l.ownerName)+'\')">★ Оценить</button></div>';
-    if(l.phones && l.phones[1]) html += '<div class="hint">Доп. номер: <b>'+esc(l.phones[1])+'</b></div>';
-    html += '<div class="tip"><svg viewBox="0 0 24 24"><path d="M12 1l9 4v6c0 5-3.8 9.7-9 11-5.2-1.3-9-6-9-11V5l9-4z"/></svg><div>Безопасность: встречайтесь в людном месте, не переводите предоплату незнакомцам.</div></div>'; }
-  $('#itemBody').innerHTML = html; }
-async function delListing(id){ if(!confirm('Удалить объявление?')) return;
-  if(fbDB){ await fbDB.collection('listings').doc(id).delete(); }
-  else { listings = listings.filter(l=>l.id!==id); persist('kp_listings', listings); renderAll(); }
-  snack('Объявление удалено'); go('home'); }
+                    await loadUserProfileFromCloud();
+                    startRealtimeListeners();
+                });
+            } catch (err) {
+                console.error("Firebase init error:", err);
+                currentUser = { uid: 'guest-' + Math.random().toString(36).substring(2, 7) };
+                document.getElementById('profileUserIdDisplay').textContent = currentUser.uid;
+                renderAll();
+                openRegistrationModal(false);
+            }
+        }
 
-/* ================= Регистрация ================= */
-function fillVillageSelects(){ const opts = VILLAGES.map(v=>'<option>'+v+'</option>').join('');
-  $('#regVillage').innerHTML = '<option value="" disabled selected></option>'+opts;
-  $('#postVillage').innerHTML = opts;
-  $('#postCat').innerHTML = CATS.map(c=>'<option>'+c+'</option>').join(''); }
-$('#btnRegGo').onclick = ()=>{ const name=$('#regName').value.trim(), v=$('#regVillage').value;
-  let ok=true; $('#regName').parentElement.classList.toggle('err', !name); ok = ok && !!name;
-  $('#regVillage').parentElement.classList.toggle('err', !v); ok = ok && !!v;
-  const ph=$('#regPhone').value.trim();
-  if(ph && !phoneOK(ph)){ $('#regPhone').parentElement.classList.add('err'); snack('Телефон должен начинаться с +7 и быть полным'); return; }
-  $('#regPhone').parentElement.classList.remove('err');
-  if(!ok){ snack('Заполни имя и село'); return; }
-  const old = user;
-  user = { id: old?.id || ('u'+Date.now().toString(36)+Math.random().toString(36).slice(2,7)),
-    name, surname: $('#regSurname').value.trim(), village: v, phone: ph ? fmtPhone(ph) : (old?.phone||'') };
-  persist('kp_user', user); closeSheetForce('sheetReg');
-  snack('Привет, '+user.name+'! Нажми «+», чтобы выложить первый товар 🎉');
-  renderProfile(); renderHome(); };
-function closeSheetForce(id){ const o=$('#'+id); delete o.dataset.force; o.classList.remove('open'); }
-$('#regPhone').addEventListener('input', e=>{ const v=e.target.value; if(v) e.target.value=fmtPhone(v); });
+        async function loadUserProfileFromCloud() {
+            if (!currentUser || !rtdb) return;
+            try {
+                const profileRef = ref(rtdb, `users/${currentUser.uid}/profile`);
+                const snap = await get(profileRef);
+                if (snap.exists()) {
+                    const data = snap.val();
+                    state.userProfile = {
+                        firstName: data.firstName || '',
+                        lastName: data.lastName || '',
+                        homeVillage: data.homeVillage || 'Новороманово',
+                        registered: true
+                    };
+                    if (Array.isArray(data.favorites)) {
+                        state.favorites = new Set(data.favorites);
+                    }
+                    updateProfileUI();
+                } else {
+                    openRegistrationModal(false);
+                }
+            } catch (e) {
+                console.error("Error loading user profile:", e);
+                openRegistrationModal(false);
+            }
+        }
 
-/* ================= Форма объявления ================= */
-$('#fabAdd').onclick = ()=>{ if(!user){ openSheet('sheetReg', true); return; } openPost(); };
-$('#emptyBtn').onclick = ()=>openSheet('sheetPost');
-function openPost(){ postPhotos=[]; postType='sell'; renderPreviews();
-  $('#postTitle').value=''; $('#postDesc').value=''; $('#postPrice').value='';
-  $('#postPhone1').value = user.phone||''; $('#postPhone2').value='';
-  $('#rulesCheck').checked=false; $('#rulesCheckWrap').classList.remove('err');
-  if(user.village) $('#postVillage').value=user.village;
-  document.querySelectorAll('#typeSeg .chip').forEach(c=>c.classList.toggle('on', c.dataset.type==='sell'));
-  $('#priceField').hidden=false; $('#typeHint').textContent='Цена в рублях обязательна для продажи.';
-  openSheet('sheetPost'); }
-$('#typeSeg').onclick = e=>{ const c=e.target.closest('.chip'); if(!c) return; postType=c.dataset.type;
-  document.querySelectorAll('#typeSeg .chip').forEach(x=>x.classList.toggle('on', x===c));
-  const need = postType==='sell'; $('#priceField').hidden=!need;
-  $('#typeHint').textContent = need ? 'Цена в рублях обязательна для продажи.'
-    : (postType==='free' ? 'Товар отдаётся бесплатно — цену указывать не нужно.' : 'Можно указать цену-ориентир для равноценного обмена.'); };
-$('#photoInput').addEventListener('change', async e=>{ const files=[...e.target.files];
-  for(const f of files){ if(postPhotos.length>=5){ snack('Максимум 5 фото'); break; }
-    try{ postPhotos.push(await compress(f)); }catch(err){ snack('Не удалось прочитать фото'); } }
-  e.target.value=''; renderPreviews(); });
-function renderPreviews(){ $('#phRow').innerHTML = postPhotos.map((p,i)=>
-    '<div class="ph-thumb"><img src="'+p+'"><button onclick="rmPhoto('+i+')">'+ICON.close+'</button></div>').join('')
-  + (postPhotos.length<5 ? '<button class="ph-add" onclick="document.getElementById(\'photoInput\').click()">'+ICON.plus+'</button>' : ''); }
-function rmPhoto(i){ postPhotos.splice(i,1); renderPreviews(); }
-['postPhone1','postPhone2'].forEach(id=>$('#'+id).addEventListener('input', e=>{ if(e.target.value) e.target.value=fmtPhone(e.target.value); }));
-$('#btnRulesOpen').onclick = e=>{ e.preventDefault(); openSheet('sheetRules'); };
-$('#btnRules2').onclick = ()=>openSheet('sheetRules');
-$('#btnPublish').onclick = async ()=>{
-  const title=$('#postTitle').value.trim(), desc=$('#postDesc').value.trim();
-  const price=$('#postPrice').value.replace(/\D/g,'');
-  const p1=$('#postPhone1').value.trim(), p2=$('#postPhone2').value.trim();
-  let bad=false;
-  $('#postTitle').parentElement.classList.toggle('err', !title); bad=bad||!title;
-  $('#postDesc').parentElement.classList.toggle('err', !desc); bad=bad||!desc;
-  const needPrice = postType==='sell';
-  $('#postPrice').parentElement.classList.toggle('err', needPrice && !price); bad = bad || (needPrice && !price);
-  const p1ok = phoneOK(p1); $('#postPhone1').parentElement.classList.toggle('err', !p1ok); bad=bad||!p1ok;
-  if(p2 && !phoneOK(p2)){ $('#postPhone2').parentElement.classList.add('err'); snack('Второй номер должен быть полным, с +7'); return; }
-  $('#postPhone2').parentElement.classList.remove('err');
-  if(!$('#rulesCheck').checked){ $('#rulesCheckWrap').classList.add('err'); snack('Нужно подтвердить правила галочкой'); return; }
-  $('#rulesCheckWrap').classList.remove('err');
-  if(bad){ snack('Проверь выделенные поля'); return; }
-  const l = { title, desc, type: postType, price: price?+price:null, village: $('#postVillage').value,
-    cat: $('#postCat').value, photos: postPhotos, phones: [fmtPhone(p1)].concat(p2?[fmtPhone(p2)]:[]),
-    ownerUid: myUid(), ownerName: fullName(user), createdAt: Date.now() };
-  if(fbDB){ await fbDB.collection('listings').add(l); }
-  else { l.id='l'+Date.now().toString(36)+Math.random().toString(36).slice(2,6); listings.unshift(l); persist('kp_listings', listings); renderAll(); }
-  closeSheetForce('sheetPost'); snack('Объявление опубликовано! 🎉'); go('home'); };
+        function startRealtimeListeners() {
+            if (!rtdb) return;
 
-/* ================= Чаты ================= */
-function myChats(){ return chats.filter(c=>c.buyerUid===myUid()||c.sellerUid===myUid())
-  .sort((a,b)=> (b.messages.length?b.messages[b.messages.length-1].ts:0)-(a.messages.length?a.messages[a.messages.length-1].ts:0)); }
-function renderChatsList(){ const list=myChats();
-  $('#chatsList').innerHTML = list.map(c=>{ const other = c.sellerUid===myUid()? c.buyerName : c.sellerName;
-    const last = c.messages.length ? c.messages[c.messages.length-1] : null;
-    return '<div class="chat-item" onclick="openChat(\''+c.id+'\')"><div class="avatar">'+esc((other||'?')[0].toUpperCase())+'</div>'
-     + '<div class="c1"><div class="t">'+esc(other)+'</div><div class="p">'+esc(c.listingTitle)+(last?' · '+esc(last.text):' · нет сообщений')+'</div></div>'
-     + '<div class="time">'+(last?timeAgo(last.ts):'')+'</div></div>'; }).join('');
-  $('#chatsEmpty').hidden = list.length>0;
-  const b=$('#chatsBadge'); b.hidden=!list.length; b.textContent=list.length||'';
-  $('#chatDemoNote').hidden = !!fbDB; }
-async function startChat(listingId){ const l=listings.find(x=>x.id===listingId); if(!l) return;
-  const id = listingId+'__'+myUid();
-  let c = chats.find(x=>x.id===id);
-  if(!c){ c = { id, listingId, listingTitle:l.title, buyerUid:myUid(), buyerName:fullName(user),
-      sellerUid:l.ownerUid, sellerName:l.ownerName, messages: [] };
-    if(fbDB){ await fbDB.collection('chats').doc(id).set(c); }
-    else { chats.push(c); persist('kp_chats', chats); } }
-  currentChatId=id; renderChatsList(); openChat(id); go('chats'); }
-function openChat(id){ currentChatId=id; $('#chatsListWrap').hidden=true; $('#chatPane').hidden=false; renderChat(); }
-$('#btnBackChats').onclick = ()=>{ currentChatId=null; $('#chatPane').hidden=true; $('#chatsListWrap').hidden=false; renderChatsList(); };
-function renderChat(){ const c=chats.find(x=>x.id===currentChatId); if(!c) return;
-  const other = c.sellerUid===myUid()? c.buyerName : c.sellerName;
-  $('#chatTitle').textContent = other+' · '+c.listingTitle;
-  $('#chatMsgs').innerHTML = c.messages.length ? c.messages.map(m=>
-    '<div class="msg '+(m.uid===myUid()?'out':'in')+'">'+(m.uid===myUid()?'':'<span class="who">'+esc(m.name)+'</span>')+esc(m.text)+'</div>').join('')
-    : '<div class="empty"><div class="big">👋</div><h3>Напиши первое сообщение</h3><p>Например: «Здравствуйте! Ещё продаётся?»</p></div>';
-  $('#chatMsgs').scrollTop = $('#chatMsgs').scrollHeight; }
-async function sendMsg(){ const t=$('#chatInput').value.trim(); if(!t||!currentChatId) return;
-  const m={uid:myUid(), name:fullName(user), text:t, ts:Date.now()};
-  if(fbDB){ await fbDB.collection('chats').doc(currentChatId).update({messages: firebase.firestore.FieldValue.arrayUnion(m)}); }
-  else { const c=chats.find(x=>x.id===currentChatId); c.messages.push(m); persist('kp_chats', chats); renderChat(); renderChatsList(); }
-  $('#chatInput').value=''; }
-$('#btnSend').onclick = sendMsg;
-$('#chatInput').addEventListener('keydown', e=>{ if(e.key==='Enter') sendMsg(); });
+            // 1. Слушаем объявления (listings)
+            const listingsRef = ref(rtdb, 'listings');
+            onValue(listingsRef, (snapshot) => {
+                const val = snapshot.val() || {};
+                const items = Object.keys(val).map(key => ({
+                    id: key,
+                    ...val[key]
+                }));
+                state.listings = items;
+                renderFeed();
+                renderFavorites();
+                renderMyListings();
+                if (state.activeListingId) {
+                    renderAdDetailContent(state.activeListingId);
+                }
+            }, (err) => console.error("Listings RTDB error:", err));
 
-/* ================= Рейтинг ================= */
-function openRate(uid, name){ rateTarget=uid; rateVal=0; $('#rateWho').textContent=name;
-  $('#rateStars').innerHTML=[1,2,3,4,5].map(i=>'<button data-s="'+i+'" onclick="pickStar('+i+')">★</button>').join('');
-  openSheet('sheetRate'); }
-function pickStar(i){ rateVal=i; document.querySelectorAll('#rateStars button').forEach(b=>b.classList.toggle('on', +b.dataset.s<=i)); }
-$('#btnRateSend').onclick = async ()=>{ if(!rateVal){ snack('Выбери от 1 до 5 звёзд'); return; }
-  const r={targetUid:rateTarget, raterUid:myUid(), stars:rateVal, ts:Date.now()};
-  if(fbDB){ await fbDB.collection('ratings').doc(rateTarget+'__'+myUid()).set(r); }
-  else { ratings = ratings.filter(x=>!(x.targetUid===rateTarget&&x.raterUid===myUid())); ratings.push(r); persist('kp_ratings', ratings); }
-  closeSheetForce('sheetRate'); snack('Спасибо за оценку!'); renderItem(); renderProfile(); };
+            // 2. Слушаем чаты (chats)
+            const chatsRef = ref(rtdb, 'chats');
+            onValue(chatsRef, (snapshot) => {
+                const val = snapshot.val() || {};
+                const allChats = Object.keys(val).map(key => ({
+                    id: key,
+                    ...val[key]
+                }));
+                const myId = currentUser ? currentUser.uid : '';
+                state.chats = allChats
+                    .filter(c => c.buyerId === myId || c.sellerId === myId)
+                    .sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+                renderChatsList();
+            }, (err) => console.error("Chats RTDB error:", err));
 
-/* ================= Профиль ================= */
-function renderProfile(){ if(!user) return;
-  $('#profAvatar').textContent=(user.name[0]||'?').toUpperCase();
-  $('#profName').textContent=fullName(user);
-  $('#profSub').textContent=(user.village||'')+(user.phone?' · '+user.phone:'');
-  const r=ratingOf(myUid());
-  $('#profStars').innerHTML = r.count ? starsHTML(r.avg)+' <span style="font-size:12.5px;color:var(--on-surface-variant)">'+r.avg.toFixed(1)+' ('+r.count+')</span>' : '<span style="font-size:12.5px;color:var(--on-surface-variant)">Пока без оценок</span>';
-  const mine=listings.filter(l=>l.ownerUid===myUid());
-  $('#myListings').innerHTML = mine.length ? mine.map(l=>'<div class="row"><div class="t"><b>'+esc(l.title)+'</b><span>'+priceLabel(l)+' · '+esc(l.village)+'</span></div>'
-    + '<button class="icon-btn" onclick="openListing(\''+l.id+'\')" title="Открыть">'+ICON.chat.replace('chat','eye')+'</button>'
-    + '<button class="icon-btn" style="color:var(--error)" onclick="delListing(\''+l.id+'\')">'+ICON.del+'</button></div>').join('')
-    : '<div class="hint">У тебя ещё нет объявлений.</div>';
-  $('#btnSamples').hidden = !!fbDB; applyTheme(); }
-$('#btnEditProf').onclick = ()=>{ if(!user) return; $('#regName').value=user.name; $('#regSurname').value=user.surname||'';
-  $('#regVillage').value=user.village||''; $('#regPhone').value=user.phone||''; openSheet('sheetReg'); };
-$('#themeSeg').onclick = e=>{ const c=e.target.closest('.chip'); if(!c) return;
-  themeMode=c.dataset.mode; persist('kp_theme', themeMode); applyTheme(); };
-$('#btnTheme').onclick = ()=>{ themeMode = resolvedTheme()==='dark'?'light':'dark'; persist('kp_theme', themeMode); applyTheme(); };
-$('#btnReset').onclick = ()=>{ if(!confirm('Сбросить профиль и выйти? Объявления останутся.')) return;
-  localStorage.removeItem('kp_user'); location.reload(); };
-$('#btnSamples').onclick = ()=>{ const now=Date.now();
-  const svg=(t,bg)=>'data:image/svg+xml;utf8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300"><rect width="400" height="300" fill="'+bg+'"/><text x="200" y="160" font-size="46" text-anchor="middle">'+t+'</text></svg>');
-  const s=[ {title:'Картошка домашняя, 10 кг', desc:'Свежая картошка со своего огорода, без химии. Самовывоз.', type:'sell', price:350, cat:'Продукты и хозяйство', ph:svg('🥔','#8BC34A')},
-    {title:'Отдам котят в добрые руки', desc:'Три котёнка, 2 месяца, к лотку приучены.', type:'free', price:null, cat:'Животные и скот', ph:svg('🐱','#FFB74D')},
-    {title:'Обмен: велосипед на мотоблок', desc:'Велосипед Stels, на ходу. Обмен на мотоблок с доплатой с вашей стороны.', type:'exchange', price:8000, cat:'Транспорт', ph:svg('🚲','#4FC3F7')} ];
-  s.forEach((x,i)=>{ listings.unshift({ id:'s'+now+i, ...x, village:user.village||VILLAGES[0], photos:[x.ph],
-    phones:[user.phone||'+7 (900) 000-00-00'], ownerUid:myUid(), ownerName:fullName(user), createdAt:now-i*60000 }); });
-  persist('kp_listings', listings); renderAll(); snack('Примеры добавлены — их можно удалить в профиле'); go('home'); };
+            // 3. Слушаем сообщения (messages)
+            const messagesRef = ref(rtdb, 'messages');
+            onValue(messagesRef, (snapshot) => {
+                const val = snapshot.val() || {};
+                const allMsgs = Object.keys(val).map(key => ({
+                    id: key,
+                    ...val[key]
+                }));
+                state.messages = allMsgs.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+                if (state.activeChatId) {
+                    renderChatMessages(state.activeChatId);
+                }
+            }, (err) => console.error("Messages RTDB error:", err));
 
-/* ================= Поиск ================= */
-$('#searchInput').addEventListener('input', e=>{ filters.q=e.target.value.trim().toLowerCase(); renderHome(); });
+            // 4. Слушаем оценки и рейтинг (ratings)
+            const ratingsRef = ref(rtdb, 'ratings');
+            onValue(ratingsRef, (snapshot) => {
+                const val = snapshot.val() || {};
+                const allRatings = Object.keys(val).map(key => ({
+                    id: key,
+                    ...val[key]
+                }));
+                state.ratings = allRatings;
+                updateProfileUI();
+                renderFeed();
+            }, (err) => console.error("Ratings RTDB error:", err));
+        }
 
-/* ================= Firebase (опционально) ================= */
-async function initFB(){ const badge=$('#modeBadge');
-  if(!FIREBASE_CONFIG.apiKey){ badge.textContent='демо'; badge.title='Демо-режим: данные хранятся на этом устройстве. Вставь конфиг Firebase в коде, чтобы синхронизировать между всеми.'; return; }
-  try{
-    firebase.initializeApp(FIREBASE_CONFIG);
-    await firebase.auth().signInAnonymously();
-    fbUid = firebase.auth().currentUser.uid;
-    fbDB = firebase.firestore();
-    fbDB.collection('listings').orderBy('createdAt','desc').onSnapshot(s=>{ listings=s.docs.map(d=>({id:d.id,...d.data()})); renderHome(); renderFavs(); renderProfile(); if(currentListingId) renderItem(); });
-    fbDB.collection('chats').onSnapshot(s=>{ chats=s.docs.map(d=>({id:d.id,...d.data()})); renderChatsList(); if(currentChatId) renderChat(); });
-    fbDB.collection('ratings').onSnapshot(s=>{ ratings=s.docs.map(d=>d.data()); renderProfile(); if(currentListingId) renderItem(); });
-    badge.textContent='online'; badge.title='Firebase подключён: данные синхронизируются между устройствами.';
-  }catch(e){ console.warn('Firebase error:', e); fbDB=null; badge.textContent='демо'; } }
+        function renderVillageChips() {
+            const container = document.getElementById('villageChipsContainer');
+            const icons = {
+                'Все сёла': 'public',
+                'Новороманово': 'cottage',
+                'Зимари': 'forest',
+                'Алтай': 'agriculture',
+                'Панфилово': 'wb_sunny'
+            };
+            container.innerHTML = state.villages.map(v => {
+                const active = state.selectedVillage === v;
+                return `
+                    <button 
+                        onclick="selectVillageFilter('${v}')" 
+                        class="md-btn px-3.5 py-2 rounded-2xl text-xs font-bold flex items-center gap-1.5 shrink-0 border transition-all ${
+                            active ? 'md-primary-bg border-transparent shadow-sm' : 'md-surface-card md-text-muted'
+                        }"
+                    >
+                        <span class="material-symbols-rounded text-base ${active ? 'filled' : ''}">${icons[v] || 'location_on'}</span>
+                        <span>${v}</span>
+                    </button>
+                `;
+            }).join('');
+        }
 
-/* ================= Старт ================= */
-function renderAll(){ renderHome(); renderFavs(); renderChatsList(); renderProfile(); }
-$('#btnBackItem').innerHTML = ICON.back; $('#btnBackChats').innerHTML = ICON.back; $('#btnSend').innerHTML = ICON.send;
-buildChips(); fillVillageSelects(); applyTheme(); renderAll(); initFB();
-if(!user) openSheet('sheetReg', true);
-else if(!listings.length) setTimeout(()=>snack('Нажми «+» внизу, чтобы выложить первый товар!'), 800);
-</script>
+        window.selectVillageFilter = function(village) {
+            state.selectedVillage = village;
+            renderVillageChips();
+            renderFeed();
+        };
+
+        function renderCategoryChips() {
+            const container = document.getElementById('categoryChipsContainer');
+            container.innerHTML = state.categories.map(cat => {
+                const active = state.selectedCategory === cat.id;
+                return `
+                    <button 
+                        onclick="selectCategoryFilter('${cat.id}')" 
+                        class="md-btn px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 shrink-0 transition-all ${
+                            active ? 'md-primary-container font-extrabold' : 'md-surface-variant md-text-muted'
+                        }"
+                    >
+                        <span class="material-symbols-rounded text-base ${active ? 'filled' : ''}">${cat.icon}</span>
+                        <span>${cat.label}</span>
+                    </button>
+                `;
+            }).join('');
+        }
+
+        window.selectCategoryFilter = function(catId) {
+            state.selectedCategory = catId;
+            renderCategoryChips();
+            renderFeed();
+        };
+
+        window.handleSearchInput = function(val) {
+            state.searchQuery = val.trim().toLowerCase();
+            const input = document.getElementById('searchInput');
+            if (input.value !== val) input.value = val;
+            document.getElementById('clearSearchBtn').classList.toggle('hidden', !state.searchQuery);
+            renderFeed();
+        };
+
+        window.openSortMenu = function() {
+            state.sortOrder = state.sortOrder === 'newest' ? 'cheapest' : 'newest';
+            document.getElementById('currentSortLabel').textContent = 
+                state.sortOrder === 'newest' ? 'Сначала новые' : 'Сначала дешевле';
+            renderFeed();
+        };
+
+        function getFilteredListings() {
+            return state.listings
+                .filter(item => {
+                    if (state.selectedVillage !== 'Все сёла' && item.village !== state.selectedVillage) {
+                        return false;
+                    }
+                    if (state.selectedCategory !== 'all' && item.dealMode !== state.selectedCategory) {
+                        return false;
+                    }
+                    if (state.searchQuery) {
+                        const hay = `${item.title || ''} ${item.description || ''} ${item.village || ''}`.toLowerCase();
+                        if (!hay.includes(state.searchQuery)) return false;
+                    }
+                    return true;
+                })
+                .sort((a, b) => {
+                    if (state.sortOrder === 'cheapest') {
+                        return (Number(a.price) || 0) - (Number(b.price) || 0);
+                    }
+                    return (b.createdAt || 0) - (a.createdAt || 0);
+                });
+        }
+
+        function createCardHtml(item) {
+            const isFav = state.favorites.has(item.id);
+            const hasPhoto = Array.isArray(item.photos) && item.photos.length > 0;
+            const photoCount = hasPhoto ? item.photos.length : 0;
+            const priceLabel = formatPriceDisplay(item);
+            const rating = getUserRatingStats(item.sellerId);
+
+            const badgeColors = {
+                sell: 'bg-teal-600 text-white',
+                free: 'bg-emerald-600 text-white',
+                exchange: 'bg-amber-600 text-white',
+                service: 'bg-indigo-600 text-white',
+                buy: 'bg-rose-600 text-white'
+            };
+            const badgeNames = {
+                sell: 'Продам',
+                free: 'Отдам даром',
+                exchange: 'Обмен',
+                service: 'Услуга',
+                buy: 'Куплю'
+            };
+
+            return `
+                <article onclick="openAdDetailModal('${item.id}')" class="md-surface-card border rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all cursor-pointer flex flex-col group">
+                    <div class="relative aspect-square w-full md-surface-variant overflow-hidden">
+                        ${hasPhoto ? `
+                            <img src="${item.photos[0]}" alt="${escapeHtml(item.title)}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy">
+                        ` : `
+                            <div class="w-full h-full flex flex-col items-center justify-center md-text-muted p-4 text-center">
+                                <span class="material-symbols-rounded text-4xl mb-1 opacity-60">image</span>
+                                <span class="text-[11px] font-medium opacity-75">Без фото</span>
+                            </div>
+                        `}
+                        
+                        <span class="absolute top-2.5 left-2.5 px-2.5 py-1 rounded-full text-[10px] font-extrabold shadow ${badgeColors[item.dealMode] || 'bg-teal-600 text-white'}">
+                            ${badgeNames[item.dealMode] || 'Товар'}
+                        </span>
+
+                        ${photoCount > 1 ? `
+                            <span class="absolute bottom-2 left-2.5 px-2 py-0.5 rounded-full bg-black/60 text-white text-[10px] font-bold flex items-center gap-1">
+                                <span class="material-symbols-rounded text-xs">photo_library</span> ${photoCount}
+                            </span>
+                        ` : ''}
+
+                        <button onclick="event.stopPropagation(); toggleFavorite('${item.id}')" class="w-8 h-8 rounded-full bg-white/90 dark:bg-slate-900/90 shadow flex items-center justify-center absolute top-2.5 right-2.5">
+                            <span class="material-symbols-rounded text-lg ${isFav ? 'filled text-rose-500' : 'text-slate-600 dark:text-slate-300'}">favorite</span>
+                        </button>
+                    </div>
+
+                    <div class="p-3 flex-1 flex flex-col justify-between">
+                        <div>
+                            <div class="text-sm sm:text-base font-extrabold leading-tight ${item.dealMode === 'free' ? 'text-emerald-600 dark:text-emerald-400' : ''}">
+                                ${escapeHtml(priceLabel)}
+                            </div>
+                            <h3 class="text-xs sm:text-sm font-semibold mt-1 line-clamp-2 leading-snug">
+                                ${escapeHtml(item.title)}
+                            </h3>
+                        </div>
+
+                        <div class="mt-2.5 pt-2 border-t border-slate-100 dark:border-slate-800 space-y-1">
+                            <div class="flex items-center justify-between text-[11px] md-text-muted">
+                                <span class="font-bold truncate flex items-center gap-0.5">
+                                    <span class="material-symbols-rounded text-xs">location_on</span>
+                                    ${escapeHtml(item.village)}
+                                </span>
+                                <span>${formatDateRelative(item.createdAt)}</span>
+                            </div>
+                            <div class="flex items-center justify-between text-[11px] md-text-muted">
+                                <span class="truncate">${escapeHtml(item.sellerName || 'Житель')}</span>
+                                <span class="font-bold text-amber-500 flex items-center gap-0.5">
+                                    ★ ${rating.avg}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            `;
+        }
+
+        function renderFeed() {
+            const filtered = getFilteredListings();
+            const grid = document.getElementById('listingsGrid');
+            const emptyState = document.getElementById('emptyFeedState');
+            const statusText = document.getElementById('feedStatusText');
+
+            statusText.textContent = `${state.selectedVillage}: найдено ${filtered.length} объ.`;
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '';
+                emptyState.classList.remove('hidden');
+            } else {
+                emptyState.classList.add('hidden');
+                grid.innerHTML = filtered.map(createCardHtml).join('');
+            }
+        }
+
+        function renderFavorites() {
+            const favItems = state.listings.filter(item => state.favorites.has(item.id));
+            const grid = document.getElementById('favoritesGrid');
+            const emptyState = document.getElementById('emptyFavState');
+            const countLabel = document.getElementById('favCountLabel');
+            const navBadge = document.getElementById('favBadgeNav');
+
+            countLabel.textContent = `${favItems.length} шт.`;
+            if (favItems.length > 0) {
+                navBadge.textContent = favItems.length;
+                navBadge.classList.remove('hidden');
+                emptyState.classList.add('hidden');
+                grid.innerHTML = favItems.map(createCardHtml).join('');
+            } else {
+                navBadge.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                grid.innerHTML = '';
+            }
+        }
+
+        window.toggleFavorite = async function(listingId) {
+            if (state.favorites.has(listingId)) {
+                state.favorites.delete(listingId);
+                showToast('Убрано из избранного', 'heart_broken');
+            } else {
+                state.favorites.add(listingId);
+                showToast('Добавлено в избранное ❤️', 'favorite');
+            }
+            renderFeed();
+            renderFavorites();
+            if (state.activeListingId === listingId) {
+                updateDetailFavIcon();
+            }
+
+            if (currentUser && rtdb && isCloudConnected) {
+                try {
+                    const profileRef = ref(rtdb, `users/${currentUser.uid}/profile`);
+                    await update(profileRef, {
+                        ...state.userProfile,
+                        favorites: Array.from(state.favorites)
+                    });
+                } catch (e) {
+                    console.error("Failed saving favorites:", e);
+                }
+            }
+        };
+
+        window.openRegistrationModal = function(allowCancel = true) {
+            document.getElementById('regFirstName').value = state.userProfile.firstName || '';
+            document.getElementById('regLastName').value = state.userProfile.lastName || '';
+            document.getElementById('regHomeVillage').value = state.userProfile.homeVillage || 'Новороманово';
+            document.getElementById('cancelRegBtn').classList.toggle('hidden', !allowCancel);
+            document.getElementById('registrationModal').classList.remove('hidden');
+        };
+
+        window.closeRegistrationModal = function() {
+            document.getElementById('registrationModal').classList.add('hidden');
+        };
+
+        window.saveUserProfile = async function(e) {
+            e.preventDefault();
+            const firstName = document.getElementById('regFirstName').value.trim();
+            const lastName = document.getElementById('regLastName').value.trim();
+            const homeVillage = document.getElementById('regHomeVillage').value;
+
+            if (!firstName) return;
+
+            state.userProfile = {
+                firstName,
+                lastName,
+                homeVillage,
+                registered: true
+            };
+
+            updateProfileUI();
+            closeRegistrationModal();
+            showToast(`Приятно познакомиться, ${firstName}!`, 'sentiment_satisfied');
+
+            if (currentUser && rtdb && isCloudConnected) {
+                try {
+                    const profileRef = ref(rtdb, `users/${currentUser.uid}/profile`);
+                    await set(profileRef, {
+                        firstName,
+                        lastName,
+                        homeVillage,
+                        favorites: Array.from(state.favorites),
+                        updatedAt: Date.now()
+                    });
+                } catch (err) {
+                    console.error("Save profile error:", err);
+                }
+            }
+        };
+
+        function updateProfileUI() {
+            const fullName = [state.userProfile.firstName, state.userProfile.lastName].filter(Boolean).join(' ') || 'Гость';
+            document.getElementById('headerUserName').textContent = state.userProfile.firstName || 'Войти';
+            document.getElementById('profileFullName').textContent = fullName;
+            document.getElementById('profileVillageBadge').textContent = `Родное село: ${state.userProfile.homeVillage || 'Новороманово'}`;
+            document.getElementById('profileAvatarLetters').textContent = (state.userProfile.firstName || 'Г')[0].toUpperCase();
+
+            if (currentUser) {
+                const stats = getUserRatingStats(currentUser.uid);
+                document.getElementById('profileRatingValue').textContent = stats.avg;
+                document.getElementById('profileRatingCount').textContent = stats.count > 0 ? `(${stats.count} оценок)` : '(пока нет оценок)';
+            }
+        }
+
+        // Photo Upload & Automatic Canvas Compression (Up to 5 photos)
+        window.handlePhotoUpload = async function(event) {
+            const files = Array.from(event.target.files || []);
+            if (!files.length) return;
+
+            const remainingSlots = 5 - state.formPhotos.length;
+            if (remainingSlots <= 0) {
+                showToast('Можно прикрепить максимум 5 фотографий', 'warning');
+                return;
+            }
+
+            const filesToProcess = files.slice(0, remainingSlots);
+            for (const file of filesToProcess) {
+                try {
+                    const compressedDataUrl = await compressImageFile(file, 720, 0.72);
+                    state.formPhotos.push(compressedDataUrl);
+                } catch (err) {
+                    console.error("Image compress error:", err);
+                }
+            }
+            event.target.value = '';
+            renderFormPhotos();
+        };
+
+        function compressImageFile(file, maxWidth = 720, quality = 0.72) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        let w = img.width;
+                        let h = img.height;
+                        if (w > maxWidth) {
+                            h = Math.round((h * maxWidth) / w);
+                            w = maxWidth;
+                        }
+                        canvas.width = w;
+                        canvas.height = h;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, w, h);
+                        resolve(canvas.toDataURL('image/jpeg', quality));
+                    };
+                    img.onerror = reject;
+                    img.src = e.target.result;
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function renderFormPhotos() {
+            const strip = document.getElementById('photoPreviewStrip');
+            const label = document.getElementById('uploadPhotoLabel');
+            document.getElementById('photoCounterBadge').textContent = `${state.formPhotos.length} / 5 фото`;
+
+            strip.querySelectorAll('.thumb-item').forEach(el => el.remove());
+
+            state.formPhotos.forEach((src, idx) => {
+                const div = document.createElement('div');
+                div.className = 'thumb-item relative w-20 h-20 rounded-2xl overflow-hidden border shrink-0';
+                div.innerHTML = `
+                    <img src="${src}" class="w-full h-full object-cover">
+                    <button type="button" onclick="removeFormPhoto(${idx})" class="w-6 h-6 rounded-full bg-black/70 text-white flex items-center justify-center absolute top-1 right-1">
+                        <span class="material-symbols-rounded text-sm">close</span>
+                    </button>
+                `;
+                strip.appendChild(div);
+            });
+
+            label.classList.toggle('hidden', state.formPhotos.length >= 5);
+        }
+
+        window.removeFormPhoto = function(idx) {
+            state.formPhotos.splice(idx, 1);
+            renderFormPhotos();
+        };
+
+        window.openCreateAdModal = function() {
+            if (!state.userProfile.firstName) {
+                openRegistrationModal(true);
+                showToast('Сначала укажите ваше имя', 'person');
+                return;
+            }
+            state.formPhotos = [];
+            renderFormPhotos();
+            selectFormVillage(state.userProfile.homeVillage && state.villages.includes(state.userProfile.homeVillage) ? state.userProfile.homeVillage : 'Новороманово');
+            setDealMode('sell');
+            document.getElementById('createAdForm').reset();
+            document.getElementById('adPhone1').value = '+7 ';
+            document.getElementById('adPhone2').value = '+7 ';
+            toggleSecondPhone(false);
+            document.getElementById('createAdModal').classList.remove('hidden');
+        };
+
+        window.closeCreateAdModal = function() {
+            document.getElementById('createAdModal').classList.add('hidden');
+        };
+
+        window.selectFormVillage = function(village) {
+            state.formVillage = village;
+            document.querySelectorAll('.form-village-btn').forEach(btn => {
+                const active = btn.dataset.village === village;
+                btn.className = `form-village-btn py-2.5 px-3 rounded-2xl border text-xs font-bold flex items-center justify-center gap-1.5 transition-all ${
+                    active ? 'md-primary-bg border-transparent shadow-sm' : 'md-surface-variant'
+                }`;
+            });
+        };
+
+        window.setDealMode = function(mode) {
+            state.formDealMode = mode;
+            document.querySelectorAll('.deal-mode-btn').forEach(btn => {
+                const active = btn.id === `mode-${mode}`;
+                btn.className = `deal-mode-btn py-2.5 px-3 rounded-2xl border text-xs font-extrabold flex items-center justify-center gap-1.5 transition-all ${
+                    active ? 'md-primary-container border-teal-600' : 'md-surface-variant opacity-80'
+                }`;
+            });
+
+            const priceWrapper = document.getElementById('priceFieldWrapper');
+            const priceInput = document.getElementById('adPriceInput');
+            const exchangeWrapper = document.getElementById('exchangeFieldWrapper');
+
+            if (mode === 'free') {
+                priceWrapper.classList.add('hidden');
+                exchangeWrapper.classList.add('hidden');
+                priceInput.required = false;
+            } else if (mode === 'exchange') {
+                priceWrapper.classList.add('hidden');
+                exchangeWrapper.classList.remove('hidden');
+                priceInput.required = false;
+            } else {
+                priceWrapper.classList.remove('hidden');
+                exchangeWrapper.classList.add('hidden');
+                priceInput.required = true;
+            }
+        };
+
+        window.enforcePlusSeven = function(input) {
+            let val = input.value;
+            if (!val.startsWith('+7')) {
+                val = '+7 ' + val.replace(/^\+?7?\s*/, '');
+            }
+            input.value = val;
+        };
+
+        window.toggleSecondPhone = function(show) {
+            document.getElementById('secondPhoneWrapper').classList.toggle('hidden', !show);
+            document.getElementById('addSecondPhoneBtn').classList.toggle('hidden', show);
+        };
+
+        window.submitNewAd = async function(event) {
+            event.preventDefault();
+
+            const title = document.getElementById('adTitleInput').value.trim();
+            const description = document.getElementById('adDescInput').value.trim();
+            const phone1 = document.getElementById('adPhone1').value.trim();
+            const hasSecond = !document.getElementById('secondPhoneWrapper').classList.contains('hidden');
+            const phone2 = hasSecond ? document.getElementById('adPhone2').value.trim() : '';
+            const rulesChecked = document.getElementById('rulesAgreeCheckbox').checked;
+
+            if (!rulesChecked) {
+                showToast('Необходимо согласиться с правилами (без алкоголя и табака)', 'gavel');
+                return;
+            }
+
+            if (phone1.replace(/\D/g, '').length < 11) {
+                showToast('Укажите полный номер телефона, начиная с +7', 'call');
+                return;
+            }
+
+            const newListing = {
+                title,
+                description,
+                village: state.formVillage,
+                dealMode: state.formDealMode,
+                price: (state.formDealMode === 'free' || state.formDealMode === 'exchange') ? 0 : Number(document.getElementById('adPriceInput').value || 0),
+                exchangeFor: state.formDealMode === 'exchange' ? document.getElementById('adExchangeInput').value.trim() : '',
+                photos: state.formPhotos,
+                phone1,
+                phone2: phone2.replace(/\D/g, '').length >= 11 ? phone2 : '',
+                sellerId: currentUser ? currentUser.uid : 'local-user',
+                sellerName: [state.userProfile.firstName, state.userProfile.lastName].filter(Boolean).join(' ') || 'Житель',
+                createdAt: Date.now()
+            };
+
+            const btn = document.getElementById('submitAdBtn');
+            btn.disabled = true;
+            btn.textContent = 'Публикуем...';
+
+            try {
+                if (rtdb && isCloudConnected) {
+                    const listingsRef = ref(rtdb, 'listings');
+                    await push(listingsRef, newListing);
+                } else {
+                    newListing.id = 'local-' + Date.now();
+                    state.listings.unshift(newListing);
+                    renderFeed();
+                    renderMyListings();
+                }
+                closeCreateAdModal();
+                showToast('Объявление опубликовано!', 'check_circle');
+            } catch (err) {
+                console.error("Error adding listing:", err);
+                showToast('Ошибка при публикации. Проверьте правила базы в Firebase.', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<span class="material-symbols-rounded filled">publish</span> Опубликовать объявление`;
+            }
+        };
+
+        window.openAdDetailModal = function(listingId) {
+            state.activeListingId = listingId;
+            renderAdDetailContent(listingId);
+            document.getElementById('adDetailModal').classList.remove('hidden');
+        };
+
+        window.closeAdDetailModal = function() {
+            state.activeListingId = null;
+            document.getElementById('adDetailModal').classList.add('hidden');
+        };
+
+        function updateDetailFavIcon() {
+            const isFav = state.favorites.has(state.activeListingId);
+            const icon = document.getElementById('detailFavIcon');
+            if (icon) {
+                icon.className = `material-symbols-rounded text-xl ${isFav ? 'filled text-rose-500' : ''}`;
+            }
+        }
+
+        window.toggleFavoriteCurrentDetail = function() {
+            if (state.activeListingId) {
+                toggleFavorite(state.activeListingId);
+            }
+        };
+
+        function renderAdDetailContent(listingId) {
+            const item = state.listings.find(l => l.id === listingId);
+            if (!item) return;
+
+            updateDetailFavIcon();
+            const body = document.getElementById('adDetailBody');
+            const actions = document.getElementById('adDetailActions');
+            const rating = getUserRatingStats(item.sellerId);
+            const photos = Array.isArray(item.photos) && item.photos.length > 0 ? item.photos : [];
+            const isOwner = currentUser && item.sellerId === currentUser.uid;
+
+            body.innerHTML = `
+                ${photos.length > 0 ? `
+                    <div class="space-y-2">
+                        <div class="aspect-video w-full rounded-3xl overflow-hidden md-surface-variant border">
+                            <img id="mainDetailPhoto" src="${photos[0]}" class="w-full h-full object-contain bg-black/5">
+                        </div>
+                        ${photos.length > 1 ? `
+                            <div class="flex items-center gap-2 overflow-x-auto no-scrollbar">
+                                ${photos.map((p) => `
+                                    <button onclick="document.getElementById('mainDetailPhoto').src='${p}'" class="w-16 h-16 rounded-2xl overflow-hidden border-2 border-teal-500 shrink-0">
+                                        <img src="${p}" class="w-full h-full object-cover">
+                                    </button>
+                                `).join('')}
+                            </div>
+                        ` : ''}
+                    </div>
+                ` : `
+                    <div class="py-8 rounded-3xl md-surface-variant text-center md-text-muted">
+                        <span class="material-symbols-rounded text-4xl">image</span>
+                        <p class="text-xs mt-1">Продавец не прикрепил фотографии</p>
+                    </div>
+                `}
+
+                <div>
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <span class="px-3 py-1 rounded-full md-primary-container text-xs font-extrabold">
+                            📍 Село ${escapeHtml(item.village)}
+                        </span>
+                        <span class="text-xs md-text-muted">${formatDateRelative(item.createdAt)}</span>
+                    </div>
+                    <div class="text-2xl font-black mt-2 ${item.dealMode === 'free' ? 'text-emerald-600 dark:text-emerald-400' : ''}">
+                        ${escapeHtml(formatPriceDisplay(item))}
+                    </div>
+                    <h2 class="text-lg font-extrabold mt-1 leading-snug">${escapeHtml(item.title)}</h2>
+                </div>
+
+                <div class="p-4 rounded-2xl md-surface-variant space-y-1">
+                    <h4 class="text-xs font-extrabold md-text-muted uppercase tracking-wider">Описание</h4>
+                    <p class="text-sm whitespace-pre-line leading-relaxed">${escapeHtml(item.description)}</p>
+                </div>
+
+                <div class="p-4 rounded-2xl border space-y-2">
+                    <h4 class="text-xs font-extrabold md-text-muted">Телефоны для связи:</h4>
+                    <div class="flex flex-wrap gap-2">
+                        <a href="tel:${escapeHtml(item.phone1)}" class="px-3.5 py-2 rounded-xl md-surface-variant text-xs font-extrabold flex items-center gap-1.5">
+                            <span class="material-symbols-rounded text-base text-teal-600">call</span>
+                            ${escapeHtml(item.phone1)}
+                        </a>
+                        ${item.phone2 ? `
+                            <a href="tel:${escapeHtml(item.phone2)}" class="px-3.5 py-2 rounded-xl md-surface-variant text-xs font-extrabold flex items-center gap-1.5">
+                                <span class="material-symbols-rounded text-base text-teal-600">call</span>
+                                ${escapeHtml(item.phone2)} (2-й номер)
+                            </a>
+                        ` : ''}
+                    </div>
+                </div>
+
+                <div class="p-4 rounded-3xl md-surface-variant flex items-center justify-between gap-3">
+                    <div class="flex items-center gap-3 min-w-0">
+                        <div class="w-12 h-12 rounded-2xl md-primary-bg flex items-center justify-center font-black text-lg shrink-0">
+                            ${escapeHtml((item.sellerName || 'Ж')[0].toUpperCase())}
+                        </div>
+                        <div class="min-w-0">
+                            <p class="text-sm font-extrabold truncate">${escapeHtml(item.sellerName || 'Житель села')}</p>
+                            <div class="flex items-center gap-1 text-xs mt-0.5">
+                                <span class="text-amber-500 font-extrabold">★ ${rating.avg}</span>
+                                <span class="md-text-muted">(${rating.count} оценок)</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="openRatingModal('${item.sellerId}', '${escapeHtml(item.sellerName || 'Продавец')}')" class="md-btn px-3.5 py-2 rounded-2xl bg-amber-500/15 text-amber-700 dark:text-amber-300 text-xs font-extrabold flex items-center gap-1 shrink-0">
+                        <span class="material-symbols-rounded filled text-base">star</span>
+                        Оценить (1-5★)
+                    </button>
+                </div>
+
+                ${isOwner ? `
+                    <button onclick="deleteListing('${item.id}')" class="w-full py-3 rounded-2xl bg-rose-500/10 text-rose-600 font-bold text-xs flex items-center justify-center gap-1.5">
+                        <span class="material-symbols-rounded text-base">delete</span>
+                        Удалить моё объявление (Товар продан)
+                    </button>
+                ` : ''}
+            `;
+
+            actions.innerHTML = `
+                <a href="tel:${escapeHtml(item.phone1)}" class="md-btn py-3.5 rounded-2xl bg-emerald-600 text-white font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-md">
+                    <span class="material-symbols-rounded filled text-lg">call</span>
+                    Позвонить
+                </a>
+                <button onclick="startChatFromListing('${item.id}')" class="md-btn py-3.5 rounded-2xl md-primary-bg font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-md">
+                    <span class="material-symbols-rounded filled text-lg">chat</span>
+                    Написать в чат
+                </button>
+            `;
+        }
+
+        window.deleteListing = async function(listingId) {
+            if (rtdb && isCloudConnected) {
+                try {
+                    await remove(ref(rtdb, `listings/${listingId}`));
+                } catch (e) {
+                    console.error("Delete error:", e);
+                }
+            } else {
+                state.listings = state.listings.filter(l => l.id !== listingId);
+                renderFeed();
+                renderMyListings();
+            }
+            closeAdDetailModal();
+            showToast('Объявление удалено', 'delete');
+        };
+
+        window.startChatFromListing = async function(listingId) {
+            const item = state.listings.find(l => l.id === listingId);
+            if (!item) return;
+
+            if (!state.userProfile.firstName) {
+                openRegistrationModal(true);
+                showToast('Представьтесь, чтобы начать чат', 'person');
+                return;
+            }
+
+            const myId = currentUser ? currentUser.uid : 'local-user';
+            if (item.sellerId === myId) {
+                showToast('Это ваше собственное объявление 😊', 'info');
+                return;
+            }
+
+            const deterministicChatId = `chat_${listingId}_${myId}`;
+            let existingChat = state.chats.find(c => c.id === deterministicChatId);
+
+            if (!existingChat) {
+                const newChat = {
+                    listingId: item.id,
+                    listingTitle: item.title,
+                    buyerId: myId,
+                    buyerName: [state.userProfile.firstName, state.userProfile.lastName].filter(Boolean).join(' '),
+                    sellerId: item.sellerId,
+                    sellerName: item.sellerName || 'Продавец',
+                    lastMessage: 'Чат открыт',
+                    updatedAt: Date.now()
+                };
+
+                if (rtdb && isCloudConnected) {
+                    await set(ref(rtdb, `chats/${deterministicChatId}`), newChat);
+                } else {
+                    state.chats.unshift({ id: deterministicChatId, ...newChat });
+                }
+            }
+
+            closeAdDetailModal();
+            openChatConversation(deterministicChatId, item.sellerName, item.title, item.sellerId);
+        };
+
+        window.openChatConversation = function(chatId, partnerName, listingTitle, partnerId) {
+            state.activeChatId = chatId;
+            state.ratingTargetUserId = partnerId;
+            state.ratingTargetUserName = partnerName;
+            document.getElementById('chatPartnerName').textContent = partnerName || 'Собеседник';
+            document.getElementById('chatListingTitle').textContent = listingTitle || 'Объявление';
+            renderChatMessages(chatId);
+            document.getElementById('chatConversationModal').classList.remove('hidden');
+        };
+
+        window.closeChatModal = function() {
+            state.activeChatId = null;
+            document.getElementById('chatConversationModal').classList.add('hidden');
+        };
+
+        function renderChatMessages(chatId) {
+            const container = document.getElementById('chatMessagesList');
+            const myId = currentUser ? currentUser.uid : 'local-user';
+            const msgs = state.messages.filter(m => m.chatId === chatId);
+
+            if (msgs.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-10 md-text-muted text-xs">
+                        <span class="material-symbols-rounded text-3xl mb-1">forum</span>
+                        <p class="font-bold">Начните диалог с односельчанином!</p>
+                        <p class="mt-0.5">Спросите, актуален ли товар и куда подойти.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = msgs.map(m => {
+                const isMine = m.senderId === myId;
+                return `
+                    <div class="flex ${isMine ? 'justify-end' : 'justify-start'}">
+                        <div class="max-w-[78%] px-4 py-2.5 rounded-2xl text-xs ${
+                            isMine ? 'md-primary-bg rounded-br-sm' : 'md-surface-card border rounded-bl-sm'
+                        }">
+                            <p class="font-bold text-[10px] opacity-75 mb-0.5">${escapeHtml(m.senderName)}</p>
+                            <p class="leading-relaxed">${escapeHtml(m.text)}</p>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            container.scrollTop = container.scrollHeight;
+        }
+
+        window.sendChatMessage = async function(e) {
+            e.preventDefault();
+            const input = document.getElementById('chatMessageInput');
+            const text = input.value.trim();
+            if (!text || !state.activeChatId) return;
+
+            const myId = currentUser ? currentUser.uid : 'local-user';
+            const myName = [state.userProfile.firstName, state.userProfile.lastName].filter(Boolean).join(' ') || 'Житель';
+
+            const msgData = {
+                chatId: state.activeChatId,
+                senderId: myId,
+                senderName: myName,
+                text,
+                createdAt: Date.now()
+            };
+
+            input.value = '';
+
+            if (rtdb && isCloudConnected) {
+                try {
+                    await push(ref(rtdb, 'messages'), msgData);
+                    await update(ref(rtdb, `chats/${state.activeChatId}`), {
+                        lastMessage: text,
+                        updatedAt: Date.now()
+                    });
+                } catch (err) {
+                    console.error("Send message error:", err);
+                }
+            } else {
+                state.messages.push({ id: 'm-' + Date.now(), ...msgData });
+                renderChatMessages(state.activeChatId);
+            }
+        };
+
+        function renderChatsList() {
+            const container = document.getElementById('chatsListContainer');
+            const myId = currentUser ? currentUser.uid : 'local-user';
+
+            if (state.chats.length === 0) {
+                container.innerHTML = `
+                    <div class="md-surface-card border rounded-3xl p-8 text-center my-4">
+                        <span class="material-symbols-rounded text-4xl md-text-muted mb-2">chat_bubble</span>
+                        <p class="font-bold text-sm">У вас пока нет активных чатов</p>
+                        <p class="text-xs md-text-muted mt-1">Откройте любое объявление и нажмите «Написать в чат».</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = state.chats.map(c => {
+                const isBuyer = c.buyerId === myId;
+                const partnerName = isBuyer ? c.sellerName : c.buyerName;
+                const partnerId = isBuyer ? c.sellerId : c.buyerId;
+                return `
+                    <div onclick="openChatConversation('${c.id}', '${escapeHtml(partnerName)}', '${escapeHtml(c.listingTitle)}', '${partnerId}')" class="md-surface-card border rounded-2xl p-3.5 flex items-center justify-between gap-3 cursor-pointer hover:shadow-sm">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <div class="w-12 h-12 rounded-2xl md-primary-container flex items-center justify-center font-black text-base shrink-0">
+                                ${escapeHtml((partnerName || 'С')[0].toUpperCase())}
+                            </div>
+                            <div class="min-w-0">
+                                <p class="text-sm font-extrabold truncate">${escapeHtml(partnerName)}</p>
+                                <p class="text-[11px] font-semibold text-teal-600 dark:text-teal-400 truncate">Объявление: ${escapeHtml(c.listingTitle)}</p>
+                                <p class="text-xs md-text-muted truncate mt-0.5">${escapeHtml(c.lastMessage || '')}</p>
+                            </div>
+                        </div>
+                        <span class="material-symbols-rounded md-text-muted">chevron_right</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // 1 to 5 Star Rating System
+        window.openRatingModal = function(targetUserId, targetUserName) {
+            state.ratingTargetUserId = targetUserId;
+            state.ratingTargetUserName = targetUserName;
+            document.getElementById('ratingTargetName').textContent = targetUserName;
+            document.getElementById('ratingCommentInput').value = '';
+            selectStarRating(5);
+            document.getElementById('ratingModal').classList.remove('hidden');
+        };
+
+        window.openRateSellerFromChat = function() {
+            if (state.ratingTargetUserId) {
+                openRatingModal(state.ratingTargetUserId, state.ratingTargetUserName || 'Собеседник');
+            }
+        };
+
+        window.closeRatingModal = function() {
+            document.getElementById('ratingModal').classList.add('hidden');
+        };
+
+        window.selectStarRating = function(stars) {
+            state.selectedStars = stars;
+            const labels = {
+                1: '1 звезда — Плохо',
+                2: '2 звезды — Так себе',
+                3: '3 звезды — Нормально',
+                4: '4 звезды — Хорошо',
+                5: '5 звёзд — Отличный продавец!'
+            };
+            document.getElementById('starRatingText').textContent = labels[stars];
+            const buttons = document.querySelectorAll('#starPickerContainer .star-btn span');
+            buttons.forEach((icon, idx) => {
+                if (idx < stars) {
+                    icon.className = 'material-symbols-rounded filled text-4xl text-amber-400';
+                } else {
+                    icon.className = 'material-symbols-rounded text-4xl md-text-muted opacity-40';
+                }
+            });
+        };
+
+        window.submitRating = async function() {
+            if (!state.ratingTargetUserId) return;
+            const myId = currentUser ? currentUser.uid : 'local-user';
+            const ratingDocId = `rate_${state.ratingTargetUserId}_${myId}`;
+            const ratingData = {
+                targetUserId: state.ratingTargetUserId,
+                raterId: myId,
+                stars: state.selectedStars,
+                comment: document.getElementById('ratingCommentInput').value.trim(),
+                createdAt: Date.now()
+            };
+
+            if (rtdb && isCloudConnected) {
+                try {
+                    await set(ref(rtdb, `ratings/${ratingDocId}`), ratingData);
+                } catch (e) {
+                    console.error("Rating save error:", e);
+                }
+            } else {
+                state.ratings.push(ratingData);
+                renderFeed();
+            }
+
+            closeRatingModal();
+            showToast(`Вы поставили оценку ${state.selectedStars} ★!`, 'star');
+        };
+
+        function renderMyListings() {
+            const container = document.getElementById('myListingsContainer');
+            const myId = currentUser ? currentUser.uid : 'local-user';
+            const mine = state.listings.filter(l => l.sellerId === myId);
+
+            if (mine.length === 0) {
+                container.innerHTML = `
+                    <div class="md-surface-card border rounded-2xl p-5 text-center text-xs md-text-muted">
+                        Вы ещё не выложили ни одного товара. Нажмите кнопку «+ Выложить» внизу!
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = mine.map(item => `
+                <div class="md-surface-card border rounded-2xl p-3 flex items-center justify-between gap-3">
+                    <div onclick="openAdDetailModal('${item.id}')" class="flex items-center gap-3 min-w-0 cursor-pointer flex-1">
+                        <div class="w-12 h-12 rounded-xl md-surface-variant overflow-hidden shrink-0 flex items-center justify-center">
+                            ${item.photos && item.photos[0] ? `<img src="${item.photos[0]}" class="w-full h-full object-cover">` : `<span class="material-symbols-rounded md-text-muted">inventory_2</span>`}
+                        </div>
+                        <div class="min-w-0">
+                            <p class="text-xs font-extrabold truncate">${escapeHtml(item.title)}</p>
+                            <p class="text-[11px] font-bold text-teal-600">${escapeHtml(formatPriceDisplay(item))} • ${escapeHtml(item.village)}</p>
+                        </div>
+                    </div>
+                    <button onclick="deleteListing('${item.id}')" class="px-3 py-1.5 rounded-xl bg-rose-500/10 text-rose-500 text-xs font-bold shrink-0">
+                        Удалить
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        window.switchTab = function(tabName) {
+            const tabs = ['feed', 'favorites', 'chats', 'profile'];
+            tabs.forEach(t => {
+                document.getElementById(`view-${t}`).classList.toggle('hidden', t !== tabName);
+                const pill = document.getElementById(`nav-pill-${t}`);
+                const icon = pill.querySelector('span');
+                if (t === tabName) {
+                    pill.classList.add('md-primary-container');
+                    icon.classList.add('filled');
+                } else {
+                    pill.classList.remove('md-primary-container');
+                    icon.classList.remove('filled');
+                }
+            });
+            document.getElementById('searchAndFilterSection').classList.toggle('hidden', tabName !== 'feed');
+        };
+
+        // Modals & Theme controls
+        window.openThemeModal = () => document.getElementById('themeModal').classList.remove('hidden');
+        window.closeThemeModal = () => document.getElementById('themeModal').classList.add('hidden');
+        window.openRulesModal = () => document.getElementById('rulesModal').classList.remove('hidden');
+        window.closeRulesModal = () => document.getElementById('rulesModal').classList.add('hidden');
+        window.openGithubFirebaseModal = () => document.getElementById('githubFirebaseModal').classList.remove('hidden');
+        window.closeGithubFirebaseModal = () => document.getElementById('githubFirebaseModal').classList.add('hidden');
+
+        window.setDarkMode = function(isDark) {
+            document.documentElement.classList.toggle('dark', isDark);
+            showToast(isDark ? 'Включена тёмная тема 🌙' : 'Включена светлая тема ☀️', 'palette');
+        };
+
+        window.setColorAccent = function(themeClass) {
+            document.documentElement.classList.remove('theme-blue', 'theme-amber', 'theme-violet');
+            if (themeClass !== 'default') {
+                document.documentElement.classList.add(themeClass);
+            }
+            showToast('Цветовая палитра обновлена!', 'brush');
+        };
+
+        function renderAll() {
+            renderVillageChips();
+            renderCategoryChips();
+            renderFeed();
+            renderFavorites();
+            renderChatsList();
+            renderMyListings();
+            updateProfileUI();
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            renderAll();
+            initFirebase();
+        });
+    </script>
 </body>
 </html>
