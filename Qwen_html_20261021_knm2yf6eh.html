@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" id="metaTheme" content="#EDF1EB">
+<title>Купи, продай, услуги, отдам — Новороманово · Зимари · Алтай · Панфилово</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛒</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+/* ========== Material Design 3 tokens ========== */
+:root{
+  --surface:#F7FAF4; --surface-container:#EDF1EB; --surface-container-low:#F2F6F0;
+  --surface-container-high:#E7EBE5; --surface-variant:#DCE5DB;
+  --on-surface:#191C1A; --on-surface-variant:#424942;
+  --primary:#006D3F; --on-primary:#FFF; --primary-container:#8FF8B2; --on-primary-container:#00210F;
+  --secondary-container:#CDE8D5; --on-secondary-container:#072013;
+  --outline:#727971; --outline-variant:#C0C9BE;
+  --error:#BA1A1A; --on-error:#FFF; --error-container:#FFDAD6; --on-error-container:#410002;
+  --shadow:0 1px 3px rgba(0,0,0,.12),0 2px 6px rgba(0,0,0,.08);
+  --shadow-2:0 4px 12px rgba(0,0,0,.18);
+}
+[data-theme="dark"]{
+  --surface:#111412; --surface-container:#1D211E; --surface-container-low:#191D1A;
+  --surface-container-high:#282B28; --surface-variant:#414942;
+  --on-surface:#E1E3DE; --on-surface-variant:#C0C9BE;
+  --primary:#74DB96; --on-primary:#003920; --primary-container:#00522E; --on-primary-container:#8FF8B2;
+  --secondary-container:#374B3E; --on-secondary-container:#CDE8D5;
+  --outline:#8B938A; --outline-variant:#414942;
+  --error:#FFB4AB; --on-error:#690005; --error-container:#93000A; --on-error-container:#FFDAD6;
+  --shadow:0 1px 3px rgba(0,0,0,.5); --shadow-2:0 4px 14px rgba(0,0,0,.6);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:Roboto,system-ui,sans-serif;background:var(--surface);color:var(--on-surface);font-size:15px;line-height:1.45;-webkit-tap-highlight-color:transparent}
+button{font:inherit;color:inherit}
+img{display:block}
+[hidden]{display:none!important}
+/* ========== Top app bar ========== */
+.topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--surface-container);box-shadow:var(--shadow)}
+.logo{width:38px;height:38px;border-radius:12px;background:var(--primary-container);color:var(--on-primary-container);display:grid;place-items:center;font-size:20px}
+.topbar h1{font-size:18px;font-weight:700;margin:0;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.icon-btn{width:42px;height:42px;border-radius:50%;border:none;background:transparent;color:var(--on-surface-variant);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;flex:none}
+.icon-btn:active{background:var(--surface-variant)}
+.icon-btn svg{width:24px;height:24px;fill:currentColor}
+.mode-badge{font-size:11px;padding:4px 10px;border-radius:8px;background:var(--surface-variant);color:var(--on-surface-variant);cursor:help;flex:none}
+/* ========== Layout ========== */
+main{max-width:1080px;margin:0 auto;padding:0 14px 130px}
+.view{display:none}.view.on{display:block;animation:fade .18s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1}}
+/* ========== Hero ========== */
+.hero{padding:22px 4px 6px}
+.hero h2{margin:0 0 6px;font-size:clamp(26px,6.4vw,44px);font-weight:900;letter-spacing:-.5px;line-height:1.08}
+.hero h2 em{font-style:normal;color:var(--primary)}
+.hero p{margin:0 0 14px;color:var(--on-surface-variant);font-size:15px}
+.search{display:flex;align-items:center;gap:10px;height:50px;border-radius:15px;background:var(--surface-container-high);padding:0 16px;margin:10px 0}
+.search svg{width:22px;height:22px;fill:var(--on-surface-variant);flex:none}
+.search input{flex:1;border:none;background:transparent;outline:none;font:inherit;color:var(--on-surface);min-width:0}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 10px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{height:34px;padding:0 16px;border-radius:10px;border:1px solid var(--outline-variant);background:transparent;color:var(--on-surface-variant);font-size:13.5px;cursor:pointer;flex:none;display:inline-flex;align-items:center}
+.chip.on{background:var(--secondary-container);color:var(--on-secondary-container);border-color:transparent;font-weight:500}
+/* ========== Cards grid ========== */
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(158px,1fr))}
+.card{position:relative;border-radius:16px;overflow:hidden;background:var(--surface-container-low);box-shadow:var(--shadow);cursor:pointer}
+.card-ph{aspect-ratio:4/3;background:var(--surface-variant);display:grid;place-items:center;color:var(--on-surface-variant)}
+.card-ph img{width:100%;height:100%;object-fit:cover}
+.card-ph svg{width:40px;height:40px;fill:currentColor}
+.card .fav{position:absolute;top:8px;right:8px;width:36px;height:36px;background:color-mix(in srgb,var(--surface) 75%,transparent);backdrop-filter:blur(6px);color:var(--on-surface-variant)}
+.card .fav.on{color:var(--error)}
+.card-body{padding:10px 12px 12px}
+.price{font-weight:700;font-size:16px}
+.price.free{color:var(--primary)}
+.card .title{font-size:14px;margin:2px 0 4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card .meta{font-size:12px;color:var(--on-surface-variant)}
+.badge-type{display:inline-block;font-size:11px;padding:2px 8px;border-radius:6px;background:var(--secondary-container);color:var(--on-secondary-container);margin-bottom:4px}
+/* ========== Empty state ========== */
+.empty{text-align:center;padding:48px 20px;color:var(--on-surface-variant)}
+.empty .big{font-size:52px;margin-bottom:10px}
+.empty h3{color:var(--on-surface);margin:0 0 6px;font-size:20px}
+/* ========== Buttons ========== */
+.btn{border-radius:100px;height:44px;padding:0 24px;font-weight:500;font-size:14.5px;display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;cursor:pointer;text-decoration:none}
+.btn svg{width:20px;height:20px;fill:currentColor}
+.btn.filled{background:var(--primary);color:var(--on-primary)}
+.btn.tonal{background:var(--secondary-container);color:var(--on-secondary-container)}
+.btn.outlined{background:transparent;border:1px solid var(--outline);color:var(--primary)}
+.btn.text{background:transparent;color:var(--primary);padding:0 14px}
+.btn.danger{background:transparent;border:1px solid var(--error);color:var(--error)}
+.btn:active{filter:brightness(.92)}
+/* ========== Item view ========== */
+.backrow{display:flex;align-items:center;gap:6px;padding:10px 0 4px}
+.backrow b{font-size:17px}
+.swiper{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;border-radius:18px;margin:6px 0 4px;scrollbar-width:none}
+.swiper::-webkit-scrollbar{display:none}
+.swiper img,.swiper .noimg{flex:0 0 100%;scroll-snap-align:center;aspect-ratio:4/3;object-fit:cover;border-radius:18px;background:var(--surface-variant)}
+.swiper .noimg{display:grid;place-items:center;color:var(--on-surface-variant)}
+.item-price{font-size:24px;font-weight:900;margin:8px 0 2px}
+.item-title{font-size:19px;font-weight:700;margin:0 0 6px}
+.item-meta{color:var(--on-surface-variant);font-size:13.5px;margin-bottom:12px}
+.item-desc{white-space:pre-wrap;margin:0 0 16px;font-size:15.5px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
+.actions .btn{flex:1;min-width:140px}
+.seller{display:flex;gap:12px;align-items:center;background:var(--surface-container);border-radius:16px;padding:12px 16px;margin:12px 0}
+.avatar{width:46px;height:46px;border-radius:50%;background:var(--primary-container);color:var(--on-primary-container);font-weight:700;display:grid;place-items:center;font-size:18px;flex:none}
+.seller .info{flex:1;min-width:0}
+.seller .name{font-weight:700}
+.stars{position:relative;display:inline-block;font-size:16px;line-height:1;color:var(--outline-variant)}
+.stars-fg{position:absolute;left:0;top:0;overflow:hidden;white-space:nowrap;color:#F5B300}
+.tip{display:flex;gap:10px;background:var(--surface-container);border-radius:16px;padding:12px 14px;font-size:13px;color:var(--on-surface-variant);margin:12px 0}
+.tip svg{width:20px;height:20px;fill:var(--primary);flex:none;margin-top:1px}
+/* ========== Sheets / dialogs ========== */
+.overlay{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
+.overlay.open{opacity:1;pointer-events:auto}
+.sheet{--sheet-bg:var(--surface-container-low);width:100%;max-width:640px;max-height:92vh;overflow-y:auto;background:var(--sheet-bg);border-radius:28px 28px 0 0;padding:6px 20px calc(26px + env(safe-area-inset-bottom));transform:translateY(40px);transition:transform .25s}
+.overlay.open .sheet{transform:none}
+.handle{width:34px;height:4px;border-radius:2px;background:var(--outline-variant);margin:8px auto 10px}
+.sheet h3{margin:4px 0 2px;font-size:20px;font-weight:700}
+.sheet .sub{color:var(--on-surface-variant);font-size:13.5px;margin:0 0 8px}
+@media(min-width:820px){.overlay{align-items:center}.sheet{border-radius:28px}}
+/* ========== Fields ========== */
+.field{position:relative;margin:16px 0 6px}
+.field input,.field textarea,.field select{width:100%;border:1px solid var(--outline);border-radius:14px;background:transparent;padding:15px 16px;font:inherit;color:var(--on-surface);outline:none;min-height:54px}
+.field textarea{min-height:110px;resize:vertical}
+.field select{appearance:none;background:var(--sheet-bg)}
+.field label{position:absolute;left:12px;top:16px;padding:0 5px;background:var(--sheet-bg);color:var(--on-surface-variant);pointer-events:none;transition:.15s;border-radius:4px}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--primary);box-shadow:inset 0 0 0 1px var(--primary)}
+.field input:focus+label,.field textarea:focus+label,.field select:focus+label,
+.field input:not(:placeholder-shown)+label,.field textarea:not(:placeholder-shown)+label{top:-9px;font-size:12px;color:var(--primary)}
+.field select+label{top:-9px;font-size:12px;color:var(--on-surface-variant)}
+.field.err input,.field.err textarea{border-color:var(--error);box-shadow:inset 0 0 0 1px var(--error)}
+.hint{font-size:12.5px;color:var(--on-surface-variant);margin:2px 4px 0;display:flex;gap:6px;align-items:flex-start}
+.hint b{color:var(--primary)}
+.seg{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 2px}
+.seg .chip{height:38px}
+/* photos */
+.ph-row{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.ph-thumb{position:relative;width:76px;height:76px;border-radius:12px;overflow:hidden;background:var(--surface-variant)}
+.ph-thumb img{width:100%;height:100%;object-fit:cover}
+.ph-thumb button{position:absolute;top:3px;right:3px;width:24px;height:24px;border-radius:50%;border:none;background:rgba(0,0,0,.55);color:#fff;display:grid;place-items:center;cursor:pointer}
+.ph-thumb button svg{width:14px;height:14px;fill:currentColor}
+.ph-add{width:76px;height:76px;border-radius:12px;border:1.5px dashed var(--outline);background:transparent;color:var(--on-surface-variant);display:grid;place-items:center;cursor:pointer}
+.ph-add svg{width:26px;height:26px;fill:currentColor}
+/* checkbox */
+.check{display:flex;gap:12px;align-items:flex-start;margin:16px 0;cursor:pointer;font-size:14px}
+.check input{width:22px;height:22px;accent-color:var(--primary);margin:2px 0 0;flex:none}
+.check.err{color:var(--error)}
+/* ========== Bottom nav + FAB ========== */
+.bottomnav{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;align-items:flex-end;gap:2px;background:var(--surface-container);box-shadow:0 -2px 10px rgba(0,0,0,.12);padding:6px 6px calc(6px + env(safe-area-inset-bottom));max-width:640px;margin:0 auto;border-radius:22px 22px 0 0}
+.nav-btn{flex:1;border:none;background:transparent;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11.5px;color:var(--on-surface-variant);cursor:pointer;padding:4px 0;position:relative}
+.nav-btn .pill{width:56px;height:30px;border-radius:15px;display:grid;place-items:center}
+.nav-btn svg{width:22px;height:22px;fill:currentColor}
+.nav-btn.on{color:var(--on-surface);font-weight:500}
+.nav-btn.on .pill{background:var(--secondary-container);color:var(--on-secondary-container)}
+.badge{position:absolute;top:0;right:calc(50% - 20px);min-width:16px;height:16px;border-radius:8px;background:var(--error);color:var(--on-error);font-size:10px;display:grid;place-items:center;padding:0 4px}
+.fab-wrap{flex:0 0 74px;display:flex;justify-content:center;transform:translateY(-16px)}
+.fab{width:62px;height:62px;border-radius:20px;border:none;background:var(--primary-container);color:var(--on-primary-container);box-shadow:var(--shadow-2);display:grid;place-items:center;cursor:pointer}
+.fab svg{width:30px;height:30px;fill:currentColor}
+.fab.pulse{animation:pulse 1.6s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--primary) 45%,transparent)}70%{box-shadow:0 0 0 18px transparent}100%{box-shadow:0 0 0 0 transparent}}
+/* ========== Chats ========== */
+.chat-item{display:flex;gap:12px;align-items:center;padding:12px;border-radius:16px;background:var(--surface-container-low);margin-bottom:8px;cursor:pointer;box-shadow:var(--shadow)}
+.chat-item .avatar{background:var(--secondary-container);color:var(--on-secondary-container)}
+.chat-item .c1{flex:1;min-width:0}
+.chat-item .t{font-weight:700;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chat-item .p{font-size:13px;color:var(--on-surface-variant);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chat-item .time{font-size:11px;color:var(--on-surface-variant);flex:none}
+.msgs{display:flex;flex-direction:column;gap:8px;padding:10px 2px;min-height:40vh}
+.msg{max-width:80%;padding:10px 14px;border-radius:16px;font-size:14.5px;white-space:pre-wrap;word-break:break-word}
+.msg.in{background:var(--surface-container-high);border-bottom-left-radius:4px;align-self:flex-start}
+.msg.out{background:var(--primary-container);color:var(--on-primary-container);border-bottom-right-radius:4px;align-self:flex-end}
+.msg .who{display:block;font-size:11px;opacity:.7;margin-bottom:2px}
+.chat-input{position:sticky;bottom:0;display:flex;gap:8px;align-items:center;background:var(--surface);padding:8px 0}
+.chat-input input{flex:1;border:1px solid var(--outline);border-radius:24px;background:transparent;padding:12px 18px;font:inherit;color:var(--on-surface);outline:none;min-width:0}
+.chat-input input:focus{border-color:var(--primary)}
+.send{width:48px;height:48px;border-radius:50%;border:none;background:var(--primary);color:var(--on-primary);display:grid;place-items:center;cursor:pointer;flex:none}
+.send svg{width:22px;height:22px;fill:currentColor}
+.demo-note{font-size:12px;background:var(--error-container);color:var(--on-error-container);border-radius:12px;padding:8px 12px;margin:8px 0}
+/* ========== Profile ========== */
+.prof-head{display:flex;gap:14px;align-items:center;margin:16px 0}
+.prof-head .avatar{width:60px;height:60px;font-size:22px}
+.sect{font-size:13px;font-weight:700;color:var(--on-surface-variant);text-transform:uppercase;letter-spacing:.6px;margin:20px 0 8px}
+.row{display:flex;gap:10px;align-items:center;background:var(--surface-container-low);border-radius:14px;padding:12px 14px;margin-bottom:8px;box-shadow:var(--shadow)}
+.row .t{flex:1;min-width:0}
+.row .t b{display:block;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .t span{font-size:12.5px;color:var(--on-surface-variant)}
+/* ========== Snackbar ========== */
+#snack{position:fixed;left:50%;bottom:104px;transform:translateX(-50%) translateY(20px);z-index:99;background:var(--on-surface);color:var(--surface);border-radius:12px;padding:12px 18px;font-size:14px;opacity:0;pointer-events:none;transition:.25s;max-width:90vw;text-align:center}
+#snack.show{opacity:1;transform:translateX(-50%)}
+.rate-stars{display:flex;gap:6px;justify-content:center;margin:18px 0}
+.rate-stars button{border:none;background:transparent;font-size:40px;color:var(--outline-variant);cursor:pointer;line-height:1;padding:2px}
+.rate-stars button.on{color:#F5B300}
+.rules-list{margin:8px 0 8px;padding-left:20px;color:var(--on-surface-variant);font-size:14px}
+.rules-list li{margin:6px 0}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="logo">🛒</div>
+  <h1>Купи · Продай · Отдам</h1>
+  <span class="mode-badge" id="modeBadge" title="">демо</span>
+  <button class="icon-btn" id="btnTheme" title="Переключить тему"></button>
+</header>
+
+<main>
+  <!-- ================= ГЛАВНАЯ ================= -->
+  <section class="view on" id="view-home">
+    <div class="hero">
+      <h2>Купи, продай, услуги, <em>отдам!</em></h2>
+      <p>Новороманово · Зимари · Алтай · Панфилово — доска объявлений наших сёл. Выбирай своё село:</p>
+    </div>
+    <div class="search">
+      <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 10-.7.7l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0A4.5 4.5 0 1114 9.5 4.5 4.5 0 019.5 14z"/></svg>
+      <input id="searchInput" type="search" placeholder="Поиск: картошка, велосипед, услуги…">
+    </div>
+    <div class="chips" id="villageChips"></div>
+    <div class="chips" id="typeChips"></div>
+    <div class="grid" id="grid"></div>
+    <div class="empty" id="emptyState" hidden>
+      <div class="big">🧺</div>
+      <h3 id="emptyTitle">Пока нет продаж — выложи свой товар первым!</h3>
+      <p id="emptyText">Нажми большую кнопку «+» внизу — это займёт минуту.</p>
+      <button class="btn filled" id="emptyBtn" style="margin-top:14px">Выложить товар</button>
+    </div>
+  </section>
+
+  <!-- ================= ОБЪЯВЛЕНИЕ ================= -->
+  <section class="view" id="view-item">
+    <div class="backrow"><button class="icon-btn" onclick="go('home')" id="btnBackItem"></button><b>Объявление</b></div>
+    <div id="itemBody"></div>
+  </section>
+
+  <!-- ================= ИЗБРАННОЕ ================= -->
+  <section class="view" id="view-fav">
+    <div class="backrow"><b>Избранное</b></div>
+    <div class="grid" id="favGrid"></div>
+    <div class="empty" id="favEmpty"><div class="big">❤️</div><h3>Пока пусто</h3><p>Нажимай на сердечко на объявлении, чтобы сохранить его сюда.</p></div>
+  </section>
+
+  <!-- ================= ЧАТЫ ================= -->
+  <section class="view" id="view-chats">
+    <div id="chatsListWrap">
+      <div class="backrow"><b>Чаты</b></div>
+      <div class="demo-note" id="chatDemoNote" hidden>⚠️ Демо‑режим: без Firebase чаты хранятся только на этом устройстве. Подключи Firebase (инструкция ниже в коде), чтобы переписываться между телефонами.</div>
+      <div id="chatsList"></div>
+      <div class="empty" id="chatsEmpty"><div class="big">💬</div><h3>Пока нет чатов</h3><p>Открой объявление и нажми «Чат», чтобы написать продавцу.</p></div>
+    </div>
+    <div id="chatPane" hidden>
+      <div class="backrow"><button class="icon-btn" id="btnBackChats"></button><b id="chatTitle"></b></div>
+      <div class="msgs" id="chatMsgs"></div>
+      <div class="chat-input">
+        <input id="chatInput" placeholder="Сообщение…" autocomplete="off">
+        <button class="send" id="btnSend" title="Отправить"></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ПРОФИЛЬ ================= -->
+  <section class="view" id="view-profile">
+    <div class="prof-head">
+      <div class="avatar" id="profAvatar">?</div>
+      <div>
+        <div style="font-weight:700;font-size:18px" id="profName"></div>
+        <div style="color:var(--on-surface-variant);font-size:13.5px" id="profSub"></div>
+        <div id="profStars" style="margin-top:2px"></div>
+      </div>
+    </div>
+    <div class="sect">Тема оформления</div>
+    <div class="seg" id="themeSeg">
+      <button class="chip" data-mode="light">☀️ Светлая</button>
+      <button class="chip" data-mode="dark">🌙 Тёмная</button>
+      <button class="chip" data-mode="system">📱 Система</button>
+    </div>
+    <div class="sect">Мои объявления</div>
+    <div id="myListings"></div>
+    <div class="sect">Действия</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn tonal" id="btnEditProf">Изменить данные</button>
+      <button class="btn outlined" id="btnRules2">Правила</button>
+      <button class="btn text" id="btnSamples" hidden>Загрузить 3 примера</button>
+      <button class="btn danger" id="btnReset">Сбросить профиль</button>
+    </div>
+    <div class="tip" style="margin-top:18px"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 15h-2v-6h2zm0-8h-2V7h2z"/></svg><div>Совет: встречайтесь в людном месте, не переводите предоплату незнакомцам. Запрещены: алкоголь, табак, вейпы, лекарства, оружие и другое (см. Правила).</div></div>
+  </section>
+</main>
+
+<!-- ================= НИЖНЯЯ НАВИГАЦИЯ ================= -->
+<nav class="bottomnav">
+  <button class="nav-btn on" data-view="home"><span class="pill"><svg viewBox="0 0 24 24"><path d="M12 3l9 8h-3v9h-5v-6h-2v6H6v-9H3z"/></svg></span>Главная</button>
+  <button class="nav-btn" data-view="fav"><span class="pill"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.78 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span>Избранное</button>
+  <div class="fab-wrap"><button class="fab" id="fabAdd" title="Выложить товар"><svg viewBox="0 0 24 24"><path d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6z"/></svg></button></div>
+  <button class="nav-btn" data-view="chats"><span class="pill"><svg viewBox="0 0 24 24"><path d="M4 4h16v12H8l-4 4z"/></svg></span>Чаты<span class="badge" id="chatsBadge" hidden></span></button>
+  <button class="nav-btn" data-view="profile"><span class="pill"><svg viewBox="0 0 24 24"><path d="M12 12a4 4 0 100-8 4 4 0 000 8zm0 2c-4 0-8 2-8 5v1h16v-1c0-3-4-5-8-5z"/></svg></span>Профиль</button>
+</nav>
+
+<!-- ================= РЕГИСТРАЦИЯ ================= -->
+<div class="overlay" id="sheetReg">
+  <div class="sheet">
+    <div class="handle"></div>
+    <h3>Добро пожаловать! 👋</h3>
+    <p class="sub">Мини‑регистрация: сайт запомнит тебя на этом устройстве.</p>
+    <div class="field"><input id="regName" placeholder=" " maxlength="30"><label>Ваше имя *</label></div>
+    <div class="hint">Обязательно только имя — так тебя увидят соседи.</div>
+    <div class="field"><input id="regSurname" placeholder=" " maxlength="30"><label>Фамилия (необязательно)</label></div>
+    <div class="hint">Можно пропустить — пиши, если хочешь.</div>
+    <div class="field"><select id="regVillage"><option value="" disabled selected></option></select><label>Твоё село *</label></div>
+    <div class="hint">Выбери село — объявления будут фильтроваться по нему.</div>
+    <div class="field"><input id="regPhone" placeholder=" " inputmode="tel"><label>Телефон (необязательно)</label></div>
+    <div class="hint">Начинается с <b>+7</b>. Понадобится для объявлений — можно указать позже.</div>
+    <button class="btn filled" style="width:100%;margin-top:14px" id="btnRegGo">Продолжить</button>
+  </div>
+</div>
+
+<!-- ================= ВЫЛОЖИТЬ ТОВАР ================= -->
+<div class="overlay" id="sheetPost">
+  <div class="sheet">
+    <div class="handle"></div>
+    <h3>Новое объявление</h3>
+    <p class="sub">Заполни поля — подсказки помогут ничего не забыть.</p>
+    <div class="ph-row" id="phRow"></div>
+    <div class="hint">До <b>5 фото</b>. Первое фото станет обложкой. Нажми «+», чтобы прикрепить.</div>
+    <input type="file" id="photoInput" accept="image/*" multiple hidden>
+    <div class="field"><input id="postTitle" placeholder=" " maxlength="60"><label>Название *</label></div>
+    <div class="hint">Коротко и понятно: «Картошка домашняя», «Колка дров».</div>
+    <div class="field"><textarea id="postDesc" placeholder=" " maxlength="1000"></textarea><label>Описание *</label></div>
+    <div class="hint">Состояние, размер, количество — чем подробнее, тем быстрее купят.</div>
+    <div class="seg" id="typeSeg">
+      <button class="chip on" data-type="sell">💰 Продажа</button>
+      <button class="chip" data-type="free">🎁 Хочу отдать бесплатно</button>
+      <button class="chip" data-type="exchange">🔄 За обмен</button>
+    </div>
+    <div class="hint" id="typeHint">Цена в рублях обязательна для продажи.</div>
+    <div class="field" id="priceField"><input id="postPrice" placeholder=" " inputmode="numeric"><label>Цена, ₽ *</label></div>
+    <div class="field"><select id="postVillage"></select><label>Село *</label></div>
+    <div class="hint">Где находится товар или где оказываешь услугу.</div>
+    <div class="field"><select id="postCat"></select><label>Категория</label></div>
+    <div class="field"><input id="postPhone1" placeholder=" " inputmode="tel"><label>Телефон для связи *</label></div>
+    <div class="hint">Формат <b>+7 (999) 123-45-67</b> — покупатели увидят его и кнопку «Позвонить».</div>
+    <div class="field"><input id="postPhone2" placeholder=" " inputmode="tel"><label>Второй номер (необязательно)</label></div>
+    <label class="check" id="rulesCheckWrap"><input type="checkbox" id="rulesCheck"><span>Я прочитал(а) <b style="color:var(--primary);text-decoration:underline" id="btnRulesOpen">правила</b>: товар НЕ является алкоголем, табаком, вейпами, лекарствами, оружием и другим запрещённым. *</span></label>
+    <button class="btn filled" style="width:100%" id="btnPublish">Опубликовать</button>
+  </div>
+</div>
+
+<!-- ================= ПРАВИЛА ================= -->
+<div class="overlay" id="sheetRules">
+  <div class="sheet">
+    <div class="handle"></div>
+    <h3>Правила площадки</h3>
+    <p class="sub">Запрещено выставлять:</p>
+    <ul class="rules-list">
+      <li>Алкоголь и любые спиртосодержащие продукты;</li>
+      <li>Табак, сигареты, вейпы, снюс, кальяны;</li>
+      <li>Лекарства и медицинские изделия;</li>
+      <li>Оружие, взрывчатые и опасные вещества;</li>
+      <li>Подделки, краденое, документы;</li>
+      <li>Контент 18+ и всё, что запрещено законом РФ.</li>
+    </ul>
+    <p class="sub">Будь вежливым, указывай честную цену и реальное село. Модератор может снять объявление, нарушающее правила.</p>
+    <button class="btn tonal" style="width:100%" onclick="closeSheet('sheetRules')">Понятно</button>
+  </div>
+</div>
+
+<!-- ================= ОЦЕНКА ================= -->
+<div class="overlay" id="sheetRate">
+  <div class="sheet">
+    <div class="handle"></div>
+    <h3>Оценить продавца</h3>
+    <p class="sub" id="rateWho"></p>
+    <div class="rate-stars" id="rateStars"></div>
+    <div class="hint" style="justify-content:center">От 1 до 5 звёзд: как прошла сделка?</div>
+    <button class="btn filled" style="width:100%;margin-top:14px" id="btnRateSend">Отправить оценку</button>
+  </div>
+</div>
+
+<div id="snack"></div>
+
+<!-- ========== Firebase (compat). Загрузится сам, если вставишь конфиг ниже в JS ========== -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<script>
+/* =====================================================================
+   НАСТРОЙКА FIREBASE (шаги см. под кодом в ответе):
+   1) console.firebase.google.com → Add project
+   2) Authentication → Sign-in method → включить Anonymous
+   3) Firestore Database → Create database
+   4) Project settings → Your apps → Web app → скопировать config
+   5) ВСТАВИТЬ значения ниже. Пока apiKey пустой — сайт работает в
+      демо-режиме (все данные хранятся в этом браузере).
+===================================================================== */
+const FIREBASE_CONFIG = {
+  apiKey: "", authDomain: "", projectId: "",
+  storageBucket: "", messagingSenderId: "", appId: ""
+};
+
+/* ================= Константы и состояние ================= */
+const VILLAGES = ['Новороманово','Зимари','Алтай','Панфилово'];
+const CATS = ['Продукты и хозяйство','Техника','Одежда и обувь','Дом и сад','Животные и скот','Услуги','Транспорт','Детям','Другое'];
+const TYPES = {sell:'Продажа', free:'Отдам бесплатно', exchange:'Обмен'};
+const $ = s => document.querySelector(s);
+const load = (k,d) => { try{ const v = JSON.parse(localStorage.getItem(k)); return v==null?d:v; }catch(e){ return d; } };
+const persist = (k,v) => localStorage.setItem(k, JSON.stringify(v));
+
+let user = load('kp_user', null);
+let themeMode = load('kp_theme','system');
+let listings = load('kp_listings', []);
+let chats = load('kp_chats', []);
+let ratings = load('kp_ratings', []);
+let favs = load('kp_favs', []);
+let filters = {village:'all', type:'all', q:''};
+let currentListingId = null, currentChatId = null, rateTarget = null, rateVal = 0;
+let postPhotos = [], postType = 'sell';
+let fbDB = null, fbUid = null;
+
+const ICON = {
+  heart:'<svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.78 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>',
+  img:'<svg viewBox="0 0 24 24"><path d="M21 19V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2zM8.5 13.5l2.5 3 3.5-4.5 4.5 6H4.5l4-5z"/></svg>',
+  plus:'<svg viewBox="0 0 24 24"><path d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6z"/></svg>',
+  close:'<svg viewBox="0 0 24 24"><path d="M18.3 5.7L12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7 2.9 18.3 9.2 12 2.9 5.7 4.3 4.3l6.3 6.3 6.3-6.3z"/></svg>',
+  back:'<svg viewBox="0 0 24 24"><path d="M20 11H7.8l5.6-5.6L12 4l-8 8 8 8 1.4-1.4L7.8 13H20z"/></svg>',
+  phone:'<svg viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.3 0 .7-.2 1l-2.3 2.2z"/></svg>',
+  chat:'<svg viewBox="0 0 24 24"><path d="M4 4h16v12H8l-4 4z"/></svg>',
+  send:'<svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>',
+  del:'<svg viewBox="0 0 24 24"><path d="M6 7h12l-1 14H7L6 7zm3-3h6l1 2h4v2H4V6h4l1-2z"/></svg>',
+  sun:'<svg viewBox="0 0 24 24"><path d="M12 8a4 4 0 100 8 4 4 0 000-8zm0-6h0l1 3h-2l1-3zm0 20l-1-3h2l-1 3zM2 12l3-1v2l-3-1zm20 0l-3 1v-2l3 1zM4.9 4.9l2.8 1.4-1.4 1.4L4.9 4.9zm14.2 14.2l-2.8-1.4 1.4-1.4 1.4 2.8zM19.1 4.9l-1.4 2.8-1.4-1.4 2.8-1.4zM4.9 19.1l1.4-2.8 1.4 1.4-2.8 1.4z"/></svg>',
+  moon:'<svg viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>'
+};
+
+/* ================= Утилиты ================= */
+const esc = s => String(s||'').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const fmtPrice = n => new Intl.NumberFormat('ru-RU').format(n);
+const fullName = u => ((u?.name||'')+' '+(u?.surname||'')).trim();
+const myUid = () => fbUid || (user && user.id) || 'anon';
+function timeAgo(ts){ const d = Date.now()-ts, m = Math.floor(d/60000);
+  if(m<1) return 'только что'; if(m<60) return m+' мин назад';
+  const h = Math.floor(m/60); if(h<24) return h+' ч назад';
+  const dd = Math.floor(h/24); if(dd===1) return 'вчера'; if(dd<7) return dd+' дн назад';
+  return new Date(ts).toLocaleDateString('ru-RU'); }
+function fmtPhone(v){ let d=(v||'').replace(/\D/g,''); if(!d) return '';
+  if(d.startsWith('8')) d='7'+d.slice(1); if(!d.startsWith('7')) d='7'+d; d=d.slice(0,11);
+  let out='+7'; if(d.length>1) out+=' ('+d.slice(1,4); if(d.length>4) out+=') '+d.slice(4,7);
+  if(d.length>7) out+='-'+d.slice(7,9); if(d.length>9) out+='-'+d.slice(9,11); return out; }
+const phoneOK = v => (v||'').replace(/\D/g,'').length === 11;
+function priceLabel(l){ if(l.type==='free') return 'Бесплатно';
+  if(l.type==='exchange') return l.price ? 'Обмен · ≈'+fmtPrice(l.price)+' ₽' : 'Обмен';
+  return fmtPrice(l.price||0)+' ₽'; }
+function starsHTML(avg){ const pct = Math.max(0,Math.min(100, Math.round(avg/5*100)));
+  return '<span class="stars">★★★★★<span class="stars-fg" style="width:'+pct+'%">★★★★★</span></span>'; }
+function ratingOf(uid){ const rs = ratings.filter(r=>r.targetUid===uid);
+  if(!rs.length) return {avg:0,count:0};
+  return {avg: rs.reduce((s,r)=>s+r.stars,0)/rs.length, count: rs.length}; }
+let snackT; function snack(t){ const s=$('#snack'); s.textContent=t; s.classList.add('show');
+  clearTimeout(snackT); snackT=setTimeout(()=>s.classList.remove('show'), 3200); }
+function compress(file){ return new Promise((res,rej)=>{ const fr=new FileReader();
+  fr.onload=()=>{ const img=new Image();
+    img.onload=()=>{ const max=1000, k=Math.min(1,max/Math.max(img.width,img.height));
+      const w=Math.round(img.width*k), h=Math.round(img.height*k);
+      const c=document.createElement('canvas'); c.width=w; c.height=h;
+      c.getContext('2d').drawImage(img,0,0,w,h); res(c.toDataURL('image/jpeg',0.72)); };
+    img.onerror=rej; img.src=fr.result; };
+  fr.onerror=rej; fr.readAsDataURL(file); }); }
+
+/* ================= Тема ================= */
+function resolvedTheme(){ if(themeMode==='system') return matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'; return themeMode; }
+function applyTheme(){ const t = resolvedTheme(); document.documentElement.dataset.theme = t;
+  $('#metaTheme').setAttribute('content', t==='dark' ? '#1D211E' : '#EDF1EB');
+  $('#btnTheme').innerHTML = t==='dark' ? ICON.sun : ICON.moon;
+  document.querySelectorAll('#themeSeg .chip').forEach(b=>b.classList.toggle('on', b.dataset.mode===themeMode)); }
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', ()=>{ if(themeMode==='system') applyTheme(); });
+
+/* ================= Sheets ================= */
+function openSheet(id, force){ const o=$('#'+id); if(force) o.dataset.force='1'; else delete o.dataset.force; o.classList.add('open'); }
+function closeSheet(id){ const o=$('#'+id); if(o.dataset.force) return; o.classList.remove('open'); }
+document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click', e=>{ if(e.target===o) closeSheet(o.id); }));
+
+/* ================= Навигация ================= */
+function go(v){ document.querySelectorAll('.view').forEach(s=>s.classList.remove('on'));
+  $('#view-'+v).classList.add('on');
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('on', b.dataset.view===v));
+  if(v==='chats'){ $('#chatPane').hidden = !currentChatId; $('#chatsListWrap').hidden = !!currentChatId; }
+  window.scrollTo(0,0); }
+document.querySelectorAll('.nav-btn').forEach(b=>b.onclick=()=>go(b.dataset.view));
+
+/* ================= Чипсы фильтров ================= */
+function buildChips(){
+  $('#villageChips').innerHTML = ['<button class="chip" data-v="all">🏡 Все сёла</button>']
+    .concat(VILLAGES.map(v=>'<button class="chip" data-v="'+v+'">'+v+'</button>')).join('');
+  $('#typeChips').innerHTML = ['<button class="chip" data-t="all">Все объявления</button>']
+    .concat(Object.keys(TYPES).map(t=>'<button class="chip" data-t="'+t+'">'+TYPES[t]+'</button>')).join('');
+  $('#villageChips').onclick = e=>{ const c=e.target.closest('.chip'); if(!c) return; filters.village=c.dataset.v; syncChips(); renderHome(); };
+  $('#typeChips').onclick = e=>{ const c=e.target.closest('.chip'); if(!c) return; filters.type=c.dataset.t; syncChips(); renderHome(); };
+  syncChips();
+}
+function syncChips(){ document.querySelectorAll('#villageChips .chip').forEach(c=>c.classList.toggle('on', c.dataset.v===filters.village));
+  document.querySelectorAll('#typeChips .chip').forEach(c=>c.classList.toggle('on', c.dataset.t===filters.type)); }
+
+/* ================= Рендер объявлений ================= */
+function cardHTML(l){ const fav = favs.includes(l.id); const ph = l.photos && l.photos[0];
+  return '<article class="card" onclick="openListing(\''+l.id+'\')">'
+   + '<div class="card-ph">'+(ph ? '<img src="'+ph+'" alt="">' : ICON.img)+'</div>'
+   + '<button class="icon-btn fav'+(fav?' on':'')+'" onclick="toggleFav(\''+l.id+'\',event)">'+ICON.heart+'</button>'
+   + '<div class="card-body"><span class="badge-type">'+esc(l.village)+'</span>'
+   + '<div class="price'+(l.type==='free'?' free':'')+'">'+priceLabel(l)+'</div>'
+   + '<div class="title">'+esc(l.title)+'</div>'
+   + '<div class="meta">'+esc(l.cat||'')+' · '+timeAgo(l.createdAt)+'</div></div></article>'; }
+function filtered(){ return listings.filter(l =>
+  (filters.village==='all' || l.village===filters.village) &&
+  (filters.type==='all' || l.type===filters.type) &&
+  (!filters.q || (l.title+' '+l.desc).toLowerCase().includes(filters.q)) ); }
+function renderHome(){ const list = filtered();
+  $('#grid').innerHTML = list.map(cardHTML).join('');
+  const empty = $('#emptyState'); empty.hidden = list.length>0;
+  if(!list.length){ if(listings.length===0){ $('#emptyTitle').textContent='Пока нет продаж — выложи свой товар первым!';
+      $('#emptyText').textContent='Нажми большую кнопку «+» внизу — это займёт минуту.'; $('#emptyBtn').hidden=false; }
+    else { $('#emptyTitle').textContent='Ничего не найдено'; $('#emptyText').textContent='Попробуй изменить фильтры или поиск.'; $('#emptyBtn').hidden=true; } }
+  $('#fabAdd').classList.toggle('pulse', listings.length===0); }
+function toggleFav(id, ev){ ev.stopPropagation();
+  favs = favs.includes(id) ? favs.filter(f=>f!==id) : favs.concat(id);
+  persist('kp_favs', favs); renderHome(); renderFavs(); }
+function renderFavs(){ const list = listings.filter(l=>favs.includes(l.id));
+  $('#favGrid').innerHTML = list.map(cardHTML).join(''); $('#favEmpty').hidden = list.length>0; }
+
+/* ================= Карточка объявления ================= */
+function openListing(id){ currentListingId = id; renderItem(); go('item'); }
+function renderItem(){ const l = listings.find(x=>x.id===currentListingId);
+  if(!l){ go('home'); return; }
+  const mine = l.ownerUid === myUid();
+  const r = ratingOf(l.ownerUid);
+  const photos = (l.photos && l.photos.length) ? l.photos.map(p=>'<img src="'+p+'" alt="">').join('')
+    : '<div class="noimg">'+ICON.img+'</div>';
+  let html = '<div class="swiper">'+photos+'</div>'
+   + '<div class="item-price'+(l.type==='free'?' free':'')+'" style="'+(l.type==='free'?'color:var(--primary)':'')+'">'+priceLabel(l)+'</div>'
+   + '<h2 class="item-title">'+esc(l.title)+'</h2>'
+   + '<div class="item-meta"><span class="badge-type">'+TYPES[l.type]+'</span> '+esc(l.village)+' · '+esc(l.cat||'Другое')+' · '+timeAgo(l.createdAt)+'</div>'
+   + '<p class="item-desc">'+esc(l.desc)+'</p>'
+   + '<div class="seller"><div class="avatar">'+esc((l.ownerName||'?')[0].toUpperCase())+'</div>'
+   + '<div class="info"><div class="name">'+esc(l.ownerName)+'</div>'
+   + '<div>'+(r.count ? starsHTML(r.avg)+' <span style="font-size:12.5px;color:var(--on-surface-variant)">'+r.avg.toFixed(1)+' · оценок: '+r.count+'</span>' : '<span style="font-size:12.5px;color:var(--on-surface-variant)">Пока без оценок</span>')+'</div></div></div>';
+  if(mine){ html += '<div class="tip"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 15h-2v-6h2zm0-8h-2V7h2z"/></svg><div>Это ваше объявление. Покупатели видят кнопки «Чат» и «Позвонить».</div></div>'
+    + '<div class="actions"><button class="btn danger" onclick="delListing(\''+l.id+'\')">'+ICON.del+' Удалить</button></div>'; }
+  else { html += '<div class="actions">'
+    + '<a class="btn filled" href="tel:'+esc((l.phones&&l.phones[0]||'').replace(/[^\d+]/g,''))+'">'+ICON.phone+' Позвонить</a>'
+    + '<button class="btn tonal" onclick="startChat(\''+l.id+'\')">'+ICON.chat+' Чат</button>'
+    + '<button class="btn outlined" onclick="openRate(\''+l.ownerUid+'\',\''+esc(l.ownerName)+'\')">★ Оценить</button></div>';
+    if(l.phones && l.phones[1]) html += '<div class="hint">Доп. номер: <b>'+esc(l.phones[1])+'</b></div>';
+    html += '<div class="tip"><svg viewBox="0 0 24 24"><path d="M12 1l9 4v6c0 5-3.8 9.7-9 11-5.2-1.3-9-6-9-11V5l9-4z"/></svg><div>Безопасность: встречайтесь в людном месте, не переводите предоплату незнакомцам.</div></div>'; }
+  $('#itemBody').innerHTML = html; }
+async function delListing(id){ if(!confirm('Удалить объявление?')) return;
+  if(fbDB){ await fbDB.collection('listings').doc(id).delete(); }
+  else { listings = listings.filter(l=>l.id!==id); persist('kp_listings', listings); renderAll(); }
+  snack('Объявление удалено'); go('home'); }
+
+/* ================= Регистрация ================= */
+function fillVillageSelects(){ const opts = VILLAGES.map(v=>'<option>'+v+'</option>').join('');
+  $('#regVillage').innerHTML = '<option value="" disabled selected></option>'+opts;
+  $('#postVillage').innerHTML = opts;
+  $('#postCat').innerHTML = CATS.map(c=>'<option>'+c+'</option>').join(''); }
+$('#btnRegGo').onclick = ()=>{ const name=$('#regName').value.trim(), v=$('#regVillage').value;
+  let ok=true; $('#regName').parentElement.classList.toggle('err', !name); ok = ok && !!name;
+  $('#regVillage').parentElement.classList.toggle('err', !v); ok = ok && !!v;
+  const ph=$('#regPhone').value.trim();
+  if(ph && !phoneOK(ph)){ $('#regPhone').parentElement.classList.add('err'); snack('Телефон должен начинаться с +7 и быть полным'); return; }
+  $('#regPhone').parentElement.classList.remove('err');
+  if(!ok){ snack('Заполни имя и село'); return; }
+  const old = user;
+  user = { id: old?.id || ('u'+Date.now().toString(36)+Math.random().toString(36).slice(2,7)),
+    name, surname: $('#regSurname').value.trim(), village: v, phone: ph ? fmtPhone(ph) : (old?.phone||'') };
+  persist('kp_user', user); closeSheetForce('sheetReg');
+  snack('Привет, '+user.name+'! Нажми «+», чтобы выложить первый товар 🎉');
+  renderProfile(); renderHome(); };
+function closeSheetForce(id){ const o=$('#'+id); delete o.dataset.force; o.classList.remove('open'); }
+$('#regPhone').addEventListener('input', e=>{ const v=e.target.value; if(v) e.target.value=fmtPhone(v); });
+
+/* ================= Форма объявления ================= */
+$('#fabAdd').onclick = ()=>{ if(!user){ openSheet('sheetReg', true); return; } openPost(); };
+$('#emptyBtn').onclick = ()=>openSheet('sheetPost');
+function openPost(){ postPhotos=[]; postType='sell'; renderPreviews();
+  $('#postTitle').value=''; $('#postDesc').value=''; $('#postPrice').value='';
+  $('#postPhone1').value = user.phone||''; $('#postPhone2').value='';
+  $('#rulesCheck').checked=false; $('#rulesCheckWrap').classList.remove('err');
+  if(user.village) $('#postVillage').value=user.village;
+  document.querySelectorAll('#typeSeg .chip').forEach(c=>c.classList.toggle('on', c.dataset.type==='sell'));
+  $('#priceField').hidden=false; $('#typeHint').textContent='Цена в рублях обязательна для продажи.';
+  openSheet('sheetPost'); }
+$('#typeSeg').onclick = e=>{ const c=e.target.closest('.chip'); if(!c) return; postType=c.dataset.type;
+  document.querySelectorAll('#typeSeg .chip').forEach(x=>x.classList.toggle('on', x===c));
+  const need = postType==='sell'; $('#priceField').hidden=!need;
+  $('#typeHint').textContent = need ? 'Цена в рублях обязательна для продажи.'
+    : (postType==='free' ? 'Товар отдаётся бесплатно — цену указывать не нужно.' : 'Можно указать цену-ориентир для равноценного обмена.'); };
+$('#photoInput').addEventListener('change', async e=>{ const files=[...e.target.files];
+  for(const f of files){ if(postPhotos.length>=5){ snack('Максимум 5 фото'); break; }
+    try{ postPhotos.push(await compress(f)); }catch(err){ snack('Не удалось прочитать фото'); } }
+  e.target.value=''; renderPreviews(); });
+function renderPreviews(){ $('#phRow').innerHTML = postPhotos.map((p,i)=>
+    '<div class="ph-thumb"><img src="'+p+'"><button onclick="rmPhoto('+i+')">'+ICON.close+'</button></div>').join('')
+  + (postPhotos.length<5 ? '<button class="ph-add" onclick="document.getElementById(\'photoInput\').click()">'+ICON.plus+'</button>' : ''); }
+function rmPhoto(i){ postPhotos.splice(i,1); renderPreviews(); }
+['postPhone1','postPhone2'].forEach(id=>$('#'+id).addEventListener('input', e=>{ if(e.target.value) e.target.value=fmtPhone(e.target.value); }));
+$('#btnRulesOpen').onclick = e=>{ e.preventDefault(); openSheet('sheetRules'); };
+$('#btnRules2').onclick = ()=>openSheet('sheetRules');
+$('#btnPublish').onclick = async ()=>{
+  const title=$('#postTitle').value.trim(), desc=$('#postDesc').value.trim();
+  const price=$('#postPrice').value.replace(/\D/g,'');
+  const p1=$('#postPhone1').value.trim(), p2=$('#postPhone2').value.trim();
+  let bad=false;
+  $('#postTitle').parentElement.classList.toggle('err', !title); bad=bad||!title;
+  $('#postDesc').parentElement.classList.toggle('err', !desc); bad=bad||!desc;
+  const needPrice = postType==='sell';
+  $('#postPrice').parentElement.classList.toggle('err', needPrice && !price); bad = bad || (needPrice && !price);
+  const p1ok = phoneOK(p1); $('#postPhone1').parentElement.classList.toggle('err', !p1ok); bad=bad||!p1ok;
+  if(p2 && !phoneOK(p2)){ $('#postPhone2').parentElement.classList.add('err'); snack('Второй номер должен быть полным, с +7'); return; }
+  $('#postPhone2').parentElement.classList.remove('err');
+  if(!$('#rulesCheck').checked){ $('#rulesCheckWrap').classList.add('err'); snack('Нужно подтвердить правила галочкой'); return; }
+  $('#rulesCheckWrap').classList.remove('err');
+  if(bad){ snack('Проверь выделенные поля'); return; }
+  const l = { title, desc, type: postType, price: price?+price:null, village: $('#postVillage').value,
+    cat: $('#postCat').value, photos: postPhotos, phones: [fmtPhone(p1)].concat(p2?[fmtPhone(p2)]:[]),
+    ownerUid: myUid(), ownerName: fullName(user), createdAt: Date.now() };
+  if(fbDB){ await fbDB.collection('listings').add(l); }
+  else { l.id='l'+Date.now().toString(36)+Math.random().toString(36).slice(2,6); listings.unshift(l); persist('kp_listings', listings); renderAll(); }
+  closeSheetForce('sheetPost'); snack('Объявление опубликовано! 🎉'); go('home'); };
+
+/* ================= Чаты ================= */
+function myChats(){ return chats.filter(c=>c.buyerUid===myUid()||c.sellerUid===myUid())
+  .sort((a,b)=> (b.messages.length?b.messages[b.messages.length-1].ts:0)-(a.messages.length?a.messages[a.messages.length-1].ts:0)); }
+function renderChatsList(){ const list=myChats();
+  $('#chatsList').innerHTML = list.map(c=>{ const other = c.sellerUid===myUid()? c.buyerName : c.sellerName;
+    const last = c.messages.length ? c.messages[c.messages.length-1] : null;
+    return '<div class="chat-item" onclick="openChat(\''+c.id+'\')"><div class="avatar">'+esc((other||'?')[0].toUpperCase())+'</div>'
+     + '<div class="c1"><div class="t">'+esc(other)+'</div><div class="p">'+esc(c.listingTitle)+(last?' · '+esc(last.text):' · нет сообщений')+'</div></div>'
+     + '<div class="time">'+(last?timeAgo(last.ts):'')+'</div></div>'; }).join('');
+  $('#chatsEmpty').hidden = list.length>0;
+  const b=$('#chatsBadge'); b.hidden=!list.length; b.textContent=list.length||'';
+  $('#chatDemoNote').hidden = !!fbDB; }
+async function startChat(listingId){ const l=listings.find(x=>x.id===listingId); if(!l) return;
+  const id = listingId+'__'+myUid();
+  let c = chats.find(x=>x.id===id);
+  if(!c){ c = { id, listingId, listingTitle:l.title, buyerUid:myUid(), buyerName:fullName(user),
+      sellerUid:l.ownerUid, sellerName:l.ownerName, messages: [] };
+    if(fbDB){ await fbDB.collection('chats').doc(id).set(c); }
+    else { chats.push(c); persist('kp_chats', chats); } }
+  currentChatId=id; renderChatsList(); openChat(id); go('chats'); }
+function openChat(id){ currentChatId=id; $('#chatsListWrap').hidden=true; $('#chatPane').hidden=false; renderChat(); }
+$('#btnBackChats').onclick = ()=>{ currentChatId=null; $('#chatPane').hidden=true; $('#chatsListWrap').hidden=false; renderChatsList(); };
+function renderChat(){ const c=chats.find(x=>x.id===currentChatId); if(!c) return;
+  const other = c.sellerUid===myUid()? c.buyerName : c.sellerName;
+  $('#chatTitle').textContent = other+' · '+c.listingTitle;
+  $('#chatMsgs').innerHTML = c.messages.length ? c.messages.map(m=>
+    '<div class="msg '+(m.uid===myUid()?'out':'in')+'">'+(m.uid===myUid()?'':'<span class="who">'+esc(m.name)+'</span>')+esc(m.text)+'</div>').join('')
+    : '<div class="empty"><div class="big">👋</div><h3>Напиши первое сообщение</h3><p>Например: «Здравствуйте! Ещё продаётся?»</p></div>';
+  $('#chatMsgs').scrollTop = $('#chatMsgs').scrollHeight; }
+async function sendMsg(){ const t=$('#chatInput').value.trim(); if(!t||!currentChatId) return;
+  const m={uid:myUid(), name:fullName(user), text:t, ts:Date.now()};
+  if(fbDB){ await fbDB.collection('chats').doc(currentChatId).update({messages: firebase.firestore.FieldValue.arrayUnion(m)}); }
+  else { const c=chats.find(x=>x.id===currentChatId); c.messages.push(m); persist('kp_chats', chats); renderChat(); renderChatsList(); }
+  $('#chatInput').value=''; }
+$('#btnSend').onclick = sendMsg;
+$('#chatInput').addEventListener('keydown', e=>{ if(e.key==='Enter') sendMsg(); });
+
+/* ================= Рейтинг ================= */
+function openRate(uid, name){ rateTarget=uid; rateVal=0; $('#rateWho').textContent=name;
+  $('#rateStars').innerHTML=[1,2,3,4,5].map(i=>'<button data-s="'+i+'" onclick="pickStar('+i+')">★</button>').join('');
+  openSheet('sheetRate'); }
+function pickStar(i){ rateVal=i; document.querySelectorAll('#rateStars button').forEach(b=>b.classList.toggle('on', +b.dataset.s<=i)); }
+$('#btnRateSend').onclick = async ()=>{ if(!rateVal){ snack('Выбери от 1 до 5 звёзд'); return; }
+  const r={targetUid:rateTarget, raterUid:myUid(), stars:rateVal, ts:Date.now()};
+  if(fbDB){ await fbDB.collection('ratings').doc(rateTarget+'__'+myUid()).set(r); }
+  else { ratings = ratings.filter(x=>!(x.targetUid===rateTarget&&x.raterUid===myUid())); ratings.push(r); persist('kp_ratings', ratings); }
+  closeSheetForce('sheetRate'); snack('Спасибо за оценку!'); renderItem(); renderProfile(); };
+
+/* ================= Профиль ================= */
+function renderProfile(){ if(!user) return;
+  $('#profAvatar').textContent=(user.name[0]||'?').toUpperCase();
+  $('#profName').textContent=fullName(user);
+  $('#profSub').textContent=(user.village||'')+(user.phone?' · '+user.phone:'');
+  const r=ratingOf(myUid());
+  $('#profStars').innerHTML = r.count ? starsHTML(r.avg)+' <span style="font-size:12.5px;color:var(--on-surface-variant)">'+r.avg.toFixed(1)+' ('+r.count+')</span>' : '<span style="font-size:12.5px;color:var(--on-surface-variant)">Пока без оценок</span>';
+  const mine=listings.filter(l=>l.ownerUid===myUid());
+  $('#myListings').innerHTML = mine.length ? mine.map(l=>'<div class="row"><div class="t"><b>'+esc(l.title)+'</b><span>'+priceLabel(l)+' · '+esc(l.village)+'</span></div>'
+    + '<button class="icon-btn" onclick="openListing(\''+l.id+'\')" title="Открыть">'+ICON.chat.replace('chat','eye')+'</button>'
+    + '<button class="icon-btn" style="color:var(--error)" onclick="delListing(\''+l.id+'\')">'+ICON.del+'</button></div>').join('')
+    : '<div class="hint">У тебя ещё нет объявлений.</div>';
+  $('#btnSamples').hidden = !!fbDB; applyTheme(); }
+$('#btnEditProf').onclick = ()=>{ if(!user) return; $('#regName').value=user.name; $('#regSurname').value=user.surname||'';
+  $('#regVillage').value=user.village||''; $('#regPhone').value=user.phone||''; openSheet('sheetReg'); };
+$('#themeSeg').onclick = e=>{ const c=e.target.closest('.chip'); if(!c) return;
+  themeMode=c.dataset.mode; persist('kp_theme', themeMode); applyTheme(); };
+$('#btnTheme').onclick = ()=>{ themeMode = resolvedTheme()==='dark'?'light':'dark'; persist('kp_theme', themeMode); applyTheme(); };
+$('#btnReset').onclick = ()=>{ if(!confirm('Сбросить профиль и выйти? Объявления останутся.')) return;
+  localStorage.removeItem('kp_user'); location.reload(); };
+$('#btnSamples').onclick = ()=>{ const now=Date.now();
+  const svg=(t,bg)=>'data:image/svg+xml;utf8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300"><rect width="400" height="300" fill="'+bg+'"/><text x="200" y="160" font-size="46" text-anchor="middle">'+t+'</text></svg>');
+  const s=[ {title:'Картошка домашняя, 10 кг', desc:'Свежая картошка со своего огорода, без химии. Самовывоз.', type:'sell', price:350, cat:'Продукты и хозяйство', ph:svg('🥔','#8BC34A')},
+    {title:'Отдам котят в добрые руки', desc:'Три котёнка, 2 месяца, к лотку приучены.', type:'free', price:null, cat:'Животные и скот', ph:svg('🐱','#FFB74D')},
+    {title:'Обмен: велосипед на мотоблок', desc:'Велосипед Stels, на ходу. Обмен на мотоблок с доплатой с вашей стороны.', type:'exchange', price:8000, cat:'Транспорт', ph:svg('🚲','#4FC3F7')} ];
+  s.forEach((x,i)=>{ listings.unshift({ id:'s'+now+i, ...x, village:user.village||VILLAGES[0], photos:[x.ph],
+    phones:[user.phone||'+7 (900) 000-00-00'], ownerUid:myUid(), ownerName:fullName(user), createdAt:now-i*60000 }); });
+  persist('kp_listings', listings); renderAll(); snack('Примеры добавлены — их можно удалить в профиле'); go('home'); };
+
+/* ================= Поиск ================= */
+$('#searchInput').addEventListener('input', e=>{ filters.q=e.target.value.trim().toLowerCase(); renderHome(); });
+
+/* ================= Firebase (опционально) ================= */
+async function initFB(){ const badge=$('#modeBadge');
+  if(!FIREBASE_CONFIG.apiKey){ badge.textContent='демо'; badge.title='Демо-режим: данные хранятся на этом устройстве. Вставь конфиг Firebase в коде, чтобы синхронизировать между всеми.'; return; }
+  try{
+    firebase.initializeApp(FIREBASE_CONFIG);
+    await firebase.auth().signInAnonymously();
+    fbUid = firebase.auth().currentUser.uid;
+    fbDB = firebase.firestore();
+    fbDB.collection('listings').orderBy('createdAt','desc').onSnapshot(s=>{ listings=s.docs.map(d=>({id:d.id,...d.data()})); renderHome(); renderFavs(); renderProfile(); if(currentListingId) renderItem(); });
+    fbDB.collection('chats').onSnapshot(s=>{ chats=s.docs.map(d=>({id:d.id,...d.data()})); renderChatsList(); if(currentChatId) renderChat(); });
+    fbDB.collection('ratings').onSnapshot(s=>{ ratings=s.docs.map(d=>d.data()); renderProfile(); if(currentListingId) renderItem(); });
+    badge.textContent='online'; badge.title='Firebase подключён: данные синхронизируются между устройствами.';
+  }catch(e){ console.warn('Firebase error:', e); fbDB=null; badge.textContent='демо'; } }
+
+/* ================= Старт ================= */
+function renderAll(){ renderHome(); renderFavs(); renderChatsList(); renderProfile(); }
+$('#btnBackItem').innerHTML = ICON.back; $('#btnBackChats').innerHTML = ICON.back; $('#btnSend').innerHTML = ICON.send;
+buildChips(); fillVillageSelects(); applyTheme(); renderAll(); initFB();
+if(!user) openSheet('sheetReg', true);
+else if(!listings.length) setTimeout(()=>snack('Нажми «+» внизу, чтобы выложить первый товар!'), 800);
+</script>
+</body>
+</html>
