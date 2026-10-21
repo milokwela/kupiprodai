@@ -345,14 +345,6 @@
                         </span>
                         <span class="material-symbols-rounded text-base">chevron_right</span>
                     </button>
-
-                    <button onclick="openGithubFirebaseModal()" class="w-full flex items-center justify-between p-3 rounded-2xl bg-amber-500/10 text-amber-800 dark:text-amber-300 border border-amber-500/20 text-left text-xs font-bold">
-                        <span class="flex items-center gap-2.5">
-                            <span class="material-symbols-rounded text-lg">cloud_upload</span>
-                            Инструкция: Как запустить на GitHub + Firebase
-                        </span>
-                        <span class="material-symbols-rounded text-base">chevron_right</span>
-                    </button>
                 </div>
             </section>
 
@@ -839,60 +831,6 @@
             </ul>
             <button onclick="closeRulesModal()" class="md-btn w-full py-3 rounded-2xl md-primary-bg text-xs font-bold mt-2">
                 Понятно, соблюдаю правила
-            </button>
-        </div>
-    </div>
-
-    <!-- ========================================================= -->
-    <!-- MODAL 8: GITHUB + FIREBASE SETUP GUIDE                    -->
-    <!-- ========================================================= -->
-    <div id="githubFirebaseModal" class="hidden fixed inset-0 z-50 bg-black/65 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="md-surface-card border w-full max-w-xl max-h-[90vh] rounded-3xl p-6 shadow-2xl animate-slide-up flex flex-col">
-            <div class="flex items-center justify-between pb-3 border-b">
-                <h3 class="text-base font-extrabold flex items-center gap-2">
-                    <span class="material-symbols-rounded text-amber-500">integration_instructions</span>
-                    Как запустить сайт на GitHub Pages + Firebase
-                </h3>
-                <button onclick="closeGithubFirebaseModal()" class="w-8 h-8 rounded-full md-surface-variant flex items-center justify-center">
-                    <span class="material-symbols-rounded">close</span>
-                </button>
-            </div>
-            <div class="overflow-y-auto py-4 space-y-3.5 text-xs leading-relaxed">
-                <div class="p-3 rounded-2xl md-surface-variant">
-                    <p class="font-extrabold text-sm mb-1">Шаг 1. Создайте бесплатную базу Firebase</p>
-                    <ol class="list-decimal pl-4 space-y-1">
-                        <li>Зайдите на <b>console.firebase.google.com</b> и нажмите <b>Create a project</b> (Создать проект).</li>
-                        <li>В меню слева откройте <b>Build → Authentication → Get started</b> и включите <b>Anonymous (Анонимный вход)</b>.</li>
-                        <li>В меню слева откройте <b>Build → Firestore Database → Create database</b> (выберите <i>Start in test mode</i>).</li>
-                        <li>Во вкладке <b>Rules (Правила Firestore)</b> вставьте:
-                            <pre class="bg-slate-900 text-teal-300 p-2 rounded-xl mt-1 overflow-x-auto text-[10px]">rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write: if request.auth != null;
-    }
-  }
-}</pre>
-                        </li>
-                    </ol>
-                </div>
-
-                <div class="p-3 rounded-2xl md-surface-variant">
-                    <p class="font-extrabold text-sm mb-1">Шаг 2. Скопируйте ключи firebaseConfig</p>
-                    <p>Нажмите на шестерёнку (Project Settings) → прокрутите вниз до <b>Your apps</b> → выберите значок веб-сайта <code>&lt;/&gt;</code>, зарегистрируйте приложение и скопируйте блок <code>firebaseConfig</code> в этот файл <code>index.html</code> (в блок <code>YOUR_GITHUB_FIREBASE_CONFIG</code> внизу кода).</p>
-                </div>
-
-                <div class="p-3 rounded-2xl md-surface-variant">
-                    <p class="font-extrabold text-sm mb-1">Шаг 3. Выложите на GitHub Pages (бесплатный хостинг)</p>
-                    <ol class="list-decimal pl-4 space-y-1">
-                        <li>Создайте публичный репозиторий на <b>github.com</b> (например, <code>selo-avito</code>).</li>
-                        <li>Загрузите этот файл под именем <b><code>index.html</code></b>.</li>
-                        <li>Зайдите в <b>Settings → Pages</b>, в разделе <b>Branch</b> выберите <code>main</code> и нажмите <b>Save</b>. Через 1 минуту ваш сайт будет доступен по ссылке для всех жителей!</li>
-                    </ol>
-                </div>
-            </div>
-            <button onclick="closeGithubFirebaseModal()" class="md-btn w-full py-3 rounded-2xl md-primary-bg text-xs font-bold shrink-0">
-                Отлично, понятно!
             </button>
         </div>
     </div>
@@ -2074,8 +2012,6 @@ service cloud.firestore {
         window.closeThemeModal = () => document.getElementById('themeModal').classList.add('hidden');
         window.openRulesModal = () => document.getElementById('rulesModal').classList.remove('hidden');
         window.closeRulesModal = () => document.getElementById('rulesModal').classList.add('hidden');
-        window.openGithubFirebaseModal = () => document.getElementById('githubFirebaseModal').classList.remove('hidden');
-        window.closeGithubFirebaseModal = () => document.getElementById('githubFirebaseModal').classList.add('hidden');
 
         window.setDarkMode = function(isDark) {
             document.documentElement.classList.toggle('dark', isDark);
