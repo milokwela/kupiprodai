@@ -206,6 +206,66 @@
   #vCount{color:#fff;font-weight:600;font-size:14px}
 
   #toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(96px + env(safe-area-inset-bottom));background:#1f2d2b;color:#fff;padding:12px 18px;border-radius:14px;z-index:90;font-weight:600;font-size:14px;max-width:90%;box-shadow:0 6px 18px rgba(0,0,0,.25);text-align:center}
+  /* ---------- Анимации и «живость» ---------- */
+  @keyframes pop{from{opacity:0;transform:translateY(14px) scale(.96)}to{opacity:1;transform:none}}
+  @keyframes fade{from{opacity:0}to{opacity:1}}
+  @keyframes viewin{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  @keyframes pill{from{transform:scaleX(.4);opacity:.3}to{transform:none;opacity:1}}
+  @keyframes heart{0%{transform:scale(1)}35%{transform:scale(1.5)}70%{transform:scale(.9)}100%{transform:scale(1)}}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+  @keyframes shimmer{from{background-position:200% 0}to{background-position:-200% 0}}
+  @keyframes toastin{from{opacity:0;transform:translate(-50%,14px)}to{opacity:1;transform:translate(-50%,0)}}
+  @keyframes fabin{from{opacity:0;transform:scale(.6) translateY(24px)}to{opacity:1;transform:none}}
+  .view.enter{animation:viewin .28s ease both}
+  .grid.anim .card{animation:pop .42s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i,0)*45ms)}
+  .card{transition:transform .15s,box-shadow .2s}
+  @media(hover:hover){.card:hover{box-shadow:0 8px 22px rgba(0,0,0,.12);transform:translateY(-2px)}}
+  .btn,.chip,.fab,.row,.nav-btn,.sw,.icon-btn,.vrow,.vbtn-big,.pchip{transition:transform .12s ease,background .2s,box-shadow .2s}
+  .btn:active,.chip:active,.fab:active,.sw:active,.icon-btn:active,.vrow:active,.vbtn-big:active{transform:scale(.95)}
+  .row:active{transform:scale(.985)}
+  .fab{animation:fabin .5s .15s cubic-bezier(.2,.9,.3,1.3) both}
+  .fav .pop,#detailFav .pop{animation:heart .45s}
+  .nav-btn.on .ind{animation:pill .3s}
+  .sheet-wrap{animation:fade .2s}
+  .empty .material-symbols-rounded{animation:float 3s ease-in-out infinite}
+  #toast{animation:toastin .25s}
+  .sk{border-radius:20px;aspect-ratio:3/4;background:linear-gradient(90deg,var(--high) 25%,var(--card) 50%,var(--high) 75%);background-size:200% 100%;animation:shimmer 1.4s linear infinite}
+  @media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-delay:0s!important;transition-duration:.01ms!important}}
+
+  /* ---------- Выбор села (крупно, для всех) ---------- */
+  .vbtn-big{display:flex;align-items:center;gap:10px;width:100%;min-height:54px;margin-top:10px;padding:0 14px 0 16px;border-radius:18px;border:1.5px solid var(--line);background:var(--card);cursor:pointer;font-weight:700;font-size:17px;text-align:left}
+  .vbtn-big .material-symbols-rounded:first-child{color:var(--primary)}
+  .lbl-s{color:var(--muted);font-weight:600;font-size:14px}
+  .vrow{display:flex;align-items:center;gap:14px;width:100%;min-height:62px;padding:0 16px;border:0;border-radius:18px;background:transparent;cursor:pointer;font-size:19px;font-weight:600;text-align:left}
+  .vrow .material-symbols-rounded{color:var(--primary)}
+  .vrow.on{background:var(--pc);color:var(--on-pc)}
+  .vrow small{margin-left:auto;color:var(--muted);font-weight:600;font-size:14px}
+  .chip.big{height:48px;padding:0 20px;font-size:16px;border-radius:14px}
+  .sheet-foot{flex-wrap:wrap}
+
+  /* ---------- Профиль ---------- */
+  .pcard{background:var(--card);border:1px solid var(--line);border-radius:28px;margin:12px 16px;overflow:hidden}
+  .pcover{height:84px;background:linear-gradient(135deg,var(--primary),color-mix(in srgb,var(--primary) 45%,#000))}
+  .pbody{padding:0 18px 18px;margin-top:-38px}
+  .pava{width:76px;height:76px;border-radius:26px;background:var(--pc);color:var(--on-pc);border:4px solid var(--card);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:30px}
+  .pname{font-size:22px;font-weight:800;margin-top:10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .pchips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+  .pchip{display:inline-flex;align-items:center;gap:6px;background:var(--high);border-radius:12px;padding:8px 12px;font-size:14px;font-weight:600;border:0}
+  .pchip .material-symbols-rounded{font-size:18px;color:var(--primary)}
+  .pchip.add{cursor:pointer;color:var(--primary);border:1.5px dashed var(--primary);background:transparent}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px}
+  .stat{background:var(--high);border-radius:16px;padding:12px 6px;text-align:center}
+  .stat b{display:block;font-size:20px;font-weight:800}
+  .stat span{font-size:12px;color:var(--muted);font-weight:600}
+  .pedit{margin-top:14px;width:100%}
+  .tag-admin{background:var(--primary);color:var(--on-primary);font-size:11px;font-weight:700;padding:3px 9px;border-radius:8px}
+
+  /* ---------- Админ-панель ---------- */
+  .seg{display:flex;gap:6px;background:var(--high);border-radius:16px;padding:4px;margin-bottom:12px}
+  .seg button{flex:1;height:42px;border:0;border-radius:12px;background:transparent;font-weight:700;cursor:pointer;color:var(--muted)}
+  .seg button.on{background:var(--card);color:var(--on);box-shadow:0 1px 4px rgba(0,0,0,.15)}
+  .row-btn.red{color:var(--red)}
+  .row .icon-btn.danger{background:var(--redbg);color:var(--red)}
 </style>
 </head>
 <body>
@@ -224,7 +284,7 @@
       <input class="q-input" type="search" placeholder="Молоко, дрова, диван, ремонт…" enterkeyhint="search">
       <button class="x" data-act="clearq" aria-label="Очистить"><span class="material-symbols-rounded">close</span></button>
     </div>
-    <div class="chips" id="villageChips"></div>
+    <button class="vbtn-big" id="villageBtn" data-act="vsheet" aria-label="Выбрать село"></button>
     <div class="chips" id="catChips"></div>
   </div>
 
@@ -248,9 +308,9 @@
     <div id="feedGrid" class="grid"></div>
     <div id="feedEmpty" class="empty hidden">
       <span class="material-symbols-rounded">campaign</span>
-      <p>Здесь пока пусто</p>
-      <small>Станьте первым — это бесплатно и займёт минуту</small>
-      <button class="btn btn-filled" data-act="new"><span class="material-symbols-rounded">add</span>Выложить товар</button>
+      <p id="feedEmptyTitle">Здесь пока пусто</p>
+      <small id="feedEmptyText">Станьте первым — это бесплатно и займёт минуту</small>
+      <button class="btn btn-filled" id="feedEmptyBtn" data-act="new"><span class="material-symbols-rounded">add</span>Выложить товар</button>
     </div>
   </section>
 
@@ -272,7 +332,7 @@
 
   <!-- ПРОФИЛЬ -->
   <section id="view-profile" class="view hidden">
-    <div class="card-plain" id="profileCard"></div>
+    <div id="profileCard"></div>
 
     <div class="sec">Мои объявления</div>
     <div id="myList" class="list"></div>
@@ -292,8 +352,8 @@
           <button class="sw violet" data-act="seed" data-v="violet" aria-label="Фиолетовый"></button>
         </div>
       </div>
-      <button class="row-btn" data-act="editprofile"><span class="material-symbols-rounded">edit</span>Изменить профиль</button>
-      <button class="row-btn" data-act="rules"><span class="material-symbols-rounded">gavel</span>Правила группы</button>
+      <button class="row-btn" data-act="rules"><span class="material-symbols-rounded">gavel</span>Правила сайта</button>
+      <div id="adminRows"></div>
     </div>
   </section>
 </main>
@@ -356,6 +416,7 @@
     <form id="newForm" class="sheet-body" autocomplete="off">
       <label class="lbl2">Село</label>
       <div class="chips-wrap" id="dVillages"></div>
+      <input class="field hidden" id="dVillageOther" type="text" maxlength="30" placeholder="Напишите название села" style="margin-top:10px">
 
       <label class="lbl2">Фото (до 5)</label>
       <div class="photos" id="dPhotos"></div>
@@ -381,10 +442,11 @@
 
       <label class="lbl2">Телефон (начинается на +7)</label>
       <input class="field" id="dPhone1" type="tel" placeholder="+7 900 000-00-00" required>
-      <button type="button" class="btn btn-outlined sm" style="margin-top:10px" data-act="p2">+ Второй номер</button>
+      <button type="button" id="p2Add" class="btn btn-outlined sm" style="margin-top:10px" data-act="p2">+ Второй номер</button>
       <div id="p2Wrap" class="hidden">
         <label class="lbl2">Второй номер</label>
         <input class="field" id="dPhone2" type="tel" placeholder="+7 999 000-00-00">
+        <button type="button" class="btn btn-danger sm" style="margin-top:10px" data-act="p2off"><span class="material-symbols-rounded">close</span>Убрать второй номер</button>
       </div>
 
       <label class="check">
@@ -403,7 +465,7 @@
   <div class="sheet" style="height:auto;max-height:94vh">
     <div class="sheet-head">
       <button class="icon-btn hidden" id="regClose" data-close="#sheetReg" aria-label="Закрыть"><span class="material-symbols-rounded">close</span></button>
-      <h2>Знакомство</h2>
+      <h2 id="regTitle">Знакомство</h2>
     </div>
     <form id="regForm" class="sheet-body">
       <label class="lbl2">Имя</label>
@@ -411,9 +473,11 @@
       <label class="lbl2">Фамилия (необязательно)</label>
       <input class="field" id="rLast" type="text" maxlength="30">
       <label class="lbl2">Родное село</label>
-      <select class="field" id="rVillage">
-        <option>Новороманово</option><option>Зимари</option><option>Алтай</option><option>Панфилово</option>
-      </select>
+      <div class="chips-wrap" id="rVillages"></div>
+      <input class="field hidden" id="rVillageOther" type="text" maxlength="30" placeholder="Напишите название села" style="margin-top:10px">
+      <label class="lbl2">Телефон (необязательно)</label>
+      <input class="field" id="rPhone" type="tel" placeholder="+7 900 000-00-00">
+      <p class="hint">Он подставится в ваши объявления, чтобы не вводить каждый раз.</p>
       <div style="height:20px"></div>
       <button class="btn btn-filled" type="submit" style="width:100%">Сохранить</button>
     </form>
@@ -453,7 +517,7 @@
   <div class="sheet" style="height:auto;max-height:90vh">
     <div class="sheet-head">
       <button class="icon-btn" data-close="#sheetRules" aria-label="Закрыть"><span class="material-symbols-rounded">close</span></button>
-      <h2>Правила группы</h2>
+      <h2>Правила сайта</h2>
     </div>
     <div class="sheet-body">
       <p style="margin-top:0">В объявлениях запрещено:</p>
@@ -462,7 +526,54 @@
         <li>табак и вейпы;</li>
         <li>лекарства и другие товары, запрещённые законом.</li>
       </ul>
-      <p class="muted-sm">Нарушения можно сообщить администратору группы.</p>
+      <p class="muted-sm">Нарушения можно сообщить администратору сайта.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SHEET: ВЫБОР СЕЛА ============ -->
+<div id="sheetVillage" class="sheet-wrap hidden">
+  <div class="sheet" style="height:auto;max-height:88vh">
+    <div class="sheet-head">
+      <button class="icon-btn" data-close="#sheetVillage" aria-label="Закрыть"><span class="material-symbols-rounded">close</span></button>
+      <h2>Выберите село</h2>
+    </div>
+    <div class="sheet-body" id="villageList" style="padding:10px"></div>
+  </div>
+</div>
+
+<!-- ============ SHEET: ВХОД АДМИНА ============ -->
+<div id="sheetAdminCode" class="sheet-wrap hidden">
+  <div class="sheet" style="height:auto">
+    <div class="sheet-head">
+      <button class="icon-btn" data-close="#sheetAdminCode" aria-label="Закрыть"><span class="material-symbols-rounded">close</span></button>
+      <h2>Вход для администратора</h2>
+    </div>
+    <form id="adminForm" class="sheet-body">
+      <label class="lbl2" style="margin-top:0">Код доступа</label>
+      <input class="field" id="adminCode" type="password" inputmode="numeric" autocomplete="off" placeholder="••••">
+      <div style="height:20px"></div>
+      <button class="btn btn-filled" type="submit" style="width:100%">Войти</button>
+    </form>
+  </div>
+</div>
+
+<!-- ============ SHEET: АДМИН-ПАНЕЛЬ ============ -->
+<div id="sheetAdmin" class="sheet-wrap hidden">
+  <div class="sheet">
+    <div class="sheet-head">
+      <button class="icon-btn" data-close="#sheetAdmin" aria-label="Закрыть"><span class="material-symbols-rounded">close</span></button>
+      <h2>Админ-панель</h2>
+    </div>
+    <div class="sheet-body">
+      <div class="seg" id="admTabs">
+        <button data-act="admtab" data-v="listings">Объявления</button>
+        <button data-act="admtab" data-v="ratings">Оценки</button>
+      </div>
+      <div id="admList" class="list" style="padding:0"></div>
+    </div>
+    <div class="sheet-foot">
+      <button class="btn btn-danger" style="width:100%" data-act="admout"><span class="material-symbols-rounded">logout</span>Выйти из админ-панели</button>
     </div>
   </div>
 </div>
@@ -500,7 +611,9 @@ const S = {
   me: null, profile: null, listings: [], chats: [], ratings: [], favs: {},
   msgs: [], activeChat: null, activeListing: null, rateTo: null, stars: 0,
   tab: 'feed', village: ALL, cat: 'all', qRaw: '', q: '', sort: 'new',
-  draft: { village: 'Новороманово', deal: 'sell', photos: [] },
+  admin: false, admTab: 'listings', loaded: false, pop: null,
+  reg: { village: 'Новороманово', other: false },
+  draft: { village: 'Новороманово', other: false, deal: 'sell', photos: [] },
   viewer: { list: [], i: 0, zoom: false }
 };
 let db, unsubMsgs = null, started = false;
@@ -516,6 +629,47 @@ const pname = () => { const p = S.profile || {}; return [p.firstName, p.lastName
 const isOpen = sel => !$(sel).classList.contains('hidden');
 const openSheet = sel => $(sel).classList.remove('hidden');
 const closeSheet = sel => $(sel).classList.add('hidden');
+
+/* ---------- Села (можно писать своё) ---------- */
+const normVillage = s => {
+  const v = String(s || '').trim().replace(/\s+/g, ' ').slice(0, 30);
+  if (!v) return '';
+  return VILLAGES.find(x => x.toLowerCase() === v.toLowerCase()) || v[0].toUpperCase() + v.slice(1);
+};
+function allVillages() {
+  const m = new Map(VILLAGES.map(v => [v.toLowerCase(), v]));
+  S.listings.filter(l => l.status !== 'removed').forEach(l => {
+    const v = normVillage(l.village);
+    if (v && !m.has(v.toLowerCase())) m.set(v.toLowerCase(), v);
+  });
+  return [...m.values()];
+}
+const PK = () => ({
+  draft: [S.draft, '#dVillages', '#dVillageOther'],
+  reg: [S.reg, '#rVillages', '#rVillageOther']
+});
+function setVillageState(st, inputSel, v) {
+  v = normVillage(v);
+  const known = VILLAGES.includes(v);
+  st.other = !!v && !known;
+  st.village = known ? v : (v ? '' : VILLAGES[0]);
+  $(inputSel).value = known ? '' : v;
+}
+function renderPicker(box, inputSel, st, key) {
+  $(box).innerHTML = VILLAGES.map(v =>
+    `<button type="button" class="chip big${!st.other && st.village === v ? ' on' : ''}" data-act="vpick" data-k="${key}" data-v="${v}">${v}</button>`).join('')
+    + `<button type="button" class="chip big${st.other ? ' on' : ''}" data-act="vother" data-k="${key}"><span class="material-symbols-rounded" style="font-size:18px;vertical-align:-4px">edit</span> Другое село</button>`;
+  $(inputSel).classList.toggle('hidden', !st.other);
+}
+const readVillage = (st, inputSel) => st.other ? normVillage($(inputSel).value) : st.village;
+function renderVillageSheet() {
+  const act = S.listings.filter(l => l.status !== 'removed');
+  const rows = [[ALL, act.length], ...allVillages().map(v => [v, act.filter(l => normVillage(l.village) === v).length])];
+  $('#villageList').innerHTML = rows.map(([v, c]) => `
+    <button class="vrow${S.village === v ? ' on' : ''}" data-act="vsel" data-v="${esc(v)}">
+      <span class="material-symbols-rounded${S.village === v ? ' f' : ''}">${v === ALL ? 'public' : 'location_on'}</span>${esc(v)}<small>${c}</small>
+    </button>`).join('');
+}
 
 function toast(msg) {
   const t = $('#toast');
@@ -629,7 +783,10 @@ initFirebase();
 function listen() {
   onValue(ref(db, 'listings'), s => {
     S.listings = arr(s.val()).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+    const first = !S.loaded;
+    S.loaded = true;
     renderAll();
+    if (first) renderFeed(true);
     if (isOpen('#sheetDetail') && S.activeListing) fillDetail(S.activeListing);
   });
   onValue(ref(db, 'chats'), s => {
@@ -658,6 +815,11 @@ function listen() {
     renderAll();
     if (!S.profile) openReg();
   });
+  onValue(ref(db, `admins/${S.me}`), s => {
+    S.admin = !!s.val();
+    renderAll();
+    if (isOpen('#sheetDetail') && S.activeListing) fillDetail(S.activeListing);
+  }, () => { S.admin = false; });
 }
 
 /* ---------- Render ---------- */
@@ -668,23 +830,24 @@ function renderAll() {
   renderChats();
   renderProfile();
   syncDetailFav();
+  if (isOpen('#sheetAdmin')) renderAdmin();
 }
 function renderAvatar() {
   $('#avatar').textContent = ((S.profile && S.profile.firstName) || '?')[0].toUpperCase();
 }
-function card(l) {
+function card(l, idx) {
   const fav = !!S.favs[l.id];
   const p = l.photos && l.photos[0];
   const n = l.photos ? l.photos.length : 0;
   const gone = l.status === 'removed';
   return `
-    <article class="card${gone ? ' dim' : ''}" data-act="open" data-id="${l.id}">
+    <article class="card${gone ? ' dim' : ''}" data-act="open" data-id="${l.id}" style="--i:${Math.min(idx || 0, 12)}">
       <div class="thumb">
         ${p ? `<img src="${p}" alt="" loading="lazy">` : `<span class="material-symbols-rounded">image</span>`}
         ${gone ? `<span class="badge gray">Снято</span>` : `<span class="badge">${esc(DEAL_LABEL[l.dealMode] || '')}</span>`}
         ${n > 1 ? `<span class="count">${n} фото</span>` : ''}
         <button class="fav${fav ? ' on' : ''}" data-act="fav" data-id="${l.id}" aria-label="В избранное">
-          <span class="material-symbols-rounded${fav ? ' f' : ''}">favorite</span>
+          <span class="material-symbols-rounded${fav ? ' f' : ''}${fav && S.pop === l.id ? ' pop' : ''}">favorite</span>
         </button>
       </div>
       <div class="cbody">
@@ -694,18 +857,34 @@ function card(l) {
       </div>
     </article>`;
 }
-function renderFeed() {
-  const list = sorted(S.listings.filter(l =>
-    (S.village === ALL || l.village === S.village) &&
+function renderFeed(anim) {
+  const active = S.listings.filter(l => l.status !== 'removed');
+  $('#villageBtn').innerHTML = `<span class="material-symbols-rounded f">location_on</span><span class="grow"><span class="lbl-s">Село: </span>${esc(S.village)}</span><span class="material-symbols-rounded">expand_more</span>`;
+  $('#catChips').innerHTML = [{ id: 'all', label: 'Все' }, ...DEALS].map(d =>
+    `<button class="chip${S.cat === d.id ? ' on' : ''}" data-act="cat" data-v="${d.id}">${d.label}</button>`).join('');
+  const grid = $('#feedGrid');
+  if (!S.loaded) {
+    grid.innerHTML = '<div class="sk"></div>'.repeat(4);
+    $('#feedEmpty').classList.add('hidden');
+    $('#feedCount').textContent = 'Загрузка…';
+    return;
+  }
+  const list = sorted(active.filter(l =>
+    (S.village === ALL || normVillage(l.village) === S.village) &&
     (S.cat === 'all' || l.dealMode === S.cat) && matchQ(l)));
   $('#feedCount').textContent = `Найдено: ${list.length}`;
   $('#sortLabel').textContent = S.sort === 'cheap' ? 'Сначала дешевле' : 'Сначала новые';
-  $('#feedGrid').innerHTML = list.map(card).join('');
-  $('#feedEmpty').classList.toggle('hidden', list.length > 0);
-  $('#villageChips').innerHTML = [ALL, ...VILLAGES].map(v =>
-    `<button class="chip${S.village === v ? ' on' : ''}" data-act="village" data-v="${v}">${v}</button>`).join('');
-  $('#catChips').innerHTML = [{ id: 'all', label: 'Все' }, ...DEALS].map(d =>
-    `<button class="chip${S.cat === d.id ? ' on' : ''}" data-act="cat" data-v="${d.id}">${d.label}</button>`).join('');
+  grid.innerHTML = list.map(card).join('');
+  if (anim) {
+    grid.classList.remove('anim'); void grid.offsetWidth; grid.classList.add('anim');
+    clearTimeout(renderFeed.t);
+    renderFeed.t = setTimeout(() => grid.classList.remove('anim'), 900);
+  }
+  const none = list.length === 0, hasAny = active.length > 0;
+  $('#feedEmpty').classList.toggle('hidden', !none);
+  $('#feedEmptyTitle').textContent = hasAny ? 'Ничего не найдено' : 'Здесь пока пусто';
+  $('#feedEmptyText').textContent = hasAny ? 'Попробуйте другое слово или выберите «Все сёла»' : 'Станьте первым — это бесплатно и займёт минуту';
+  $('#feedEmptyBtn').classList.toggle('hidden', hasAny);
 }
 function renderFav() {
   const list = sorted(S.listings.filter(l => S.favs[l.id] && matchQ(l)));
@@ -745,17 +924,25 @@ function renderProfile() {
   const card = $('#profileCard');
   if (!p) { card.innerHTML = ''; return; }
   const r = ratingOf(S.me);
+  const activeN = S.listings.filter(l => l.sellerId === S.me && l.status !== 'removed').length;
   card.innerHTML = `
-    <div class="profile-top">
-      <div class="avatar lg">${esc((p.firstName || '?')[0].toUpperCase())}</div>
-      <div class="grow">
-        <div class="name">${esc(pname())}</div>
-        <div class="muted-sm">Родное село: ${esc(p.homeVillage || '—')}</div>
-        <div class="rating">
-          ${r
-            ? `<span class="material-symbols-rounded f" style="color:#f59e0b;font-size:20px">star</span><b>${r.avg}</b><span class="muted-sm">(${r.count} оц.)</span>`
-            : `<span class="muted-sm">Пока нет оценок</span>`}
+    <div class="pcard">
+      <div class="pcover"></div>
+      <div class="pbody">
+        <div class="pava">${esc((p.firstName || '?')[0].toUpperCase())}</div>
+        <div class="pname">${esc(pname())}${S.admin ? '<span class="tag-admin">Админ</span>' : ''}</div>
+        <div class="pchips">
+          <span class="pchip"><span class="material-symbols-rounded f">location_on</span>${esc(p.homeVillage || '—')}</span>
+          ${p.phone
+            ? `<span class="pchip"><span class="material-symbols-rounded f">call</span>${esc(p.phone)}</span>`
+            : `<button class="pchip add" data-act="editprofile">+ добавить телефон</button>`}
         </div>
+        <div class="stats">
+          <div class="stat"><b>${activeN}</b><span>объявлений</span></div>
+          <div class="stat"><b>${r ? '★ ' + r.avg : '—'}</b><span>рейтинг</span></div>
+          <div class="stat"><b>${r ? r.count : 0}</b><span>оценок</span></div>
+        </div>
+        <button class="btn btn-tonal pedit" data-act="editprofile"><span class="material-symbols-rounded">edit</span>Изменить профиль</button>
       </div>
     </div>`;
   const mine = S.listings.filter(l => l.sellerId === S.me);
@@ -772,17 +959,27 @@ function renderProfile() {
   const dark = document.documentElement.classList.contains('dark');
   $('.switch').classList.toggle('on', dark);
   $$('.sw').forEach(b => b.classList.toggle('on', b.dataset.v === document.documentElement.dataset.seed));
+  $('#adminRows').innerHTML = S.admin
+    ? `<button class="row-btn" data-act="admopen"><span class="material-symbols-rounded">admin_panel_settings</span>Админ-панель</button>
+       <button class="row-btn red" data-act="admout"><span class="material-symbols-rounded">logout</span>Выйти из админ-панели</button>`
+    : '';
 }
 
 /* ---------- Navigation ---------- */
 function go(tab) {
   S.tab = tab;
-  $$('.view').forEach(v => v.classList.toggle('hidden', v.id !== 'view-' + tab));
+  $$('.view').forEach(v => {
+    const show = v.id === 'view-' + tab;
+    v.classList.toggle('hidden', !show);
+    v.classList.remove('enter');
+    if (show) { void v.offsetWidth; v.classList.add('enter'); }
+  });
   $$('.nav-btn').forEach(b => b.classList.toggle('on', b.dataset.tab === tab));
   $('#topTitle').textContent = TITLES[tab];
   $('#feedBar').classList.toggle('hidden', tab !== 'feed');
   $('#favBar').classList.toggle('hidden', tab !== 'favorites');
   $('#fab').classList.toggle('hidden', tab !== 'feed');
+  if (tab === 'feed') renderFeed(true);
   window.scrollTo(0, 0);
 }
 
@@ -836,7 +1033,8 @@ function fillDetail(id) {
   $('#detailActions').innerHTML = mine
     ? `<button class="btn btn-tonal grow" data-act="toggle" data-id="${id}">${gone ? 'Вернуть в продажу' : 'Снять с публикации'}</button>
        <button class="btn btn-danger" data-act="dellist" data-id="${id}">Удалить</button>`
-    : `<a class="btn btn-tonal grow${phones[0] ? '' : ' disabled'}" href="${phones[0] ? 'tel:' + phones[0] : '#'}"><span class="material-symbols-rounded">call</span>Позвонить</a>
+    : `${S.admin ? `<button class="btn btn-danger" style="width:100%" data-act="dellist" data-id="${id}"><span class="material-symbols-rounded">delete</span>Удалить (админ)</button>` : ''}
+       <a class="btn btn-tonal grow${phones[0] ? '' : ' disabled'}" href="${phones[0] ? 'tel:' + phones[0] : '#'}"><span class="material-symbols-rounded">call</span>Позвонить</a>
        <button class="btn btn-filled grow" data-act="chat" data-id="${id}"${gone ? ' disabled' : ''}><span class="material-symbols-rounded">chat</span>Написать</button>`;
   syncDetailFav();
 }
@@ -848,11 +1046,12 @@ function syncDetailFav() {
   if (!S.activeListing) return;
   const b = $('#detailFav');
   b.dataset.id = S.activeListing;
-  b.querySelector('span').className = 'material-symbols-rounded' + (S.favs[S.activeListing] ? ' f' : '');
+  b.querySelector('span').className = 'material-symbols-rounded' + (S.favs[S.activeListing] ? ' f' : '') + (S.favs[S.activeListing] && S.pop === S.activeListing ? ' pop' : '');
 }
 async function toggleFav(id) {
   if (!S.me) return;
   const on = !S.favs[id];
+  if (on) { S.pop = id; clearTimeout(toggleFav.t); toggleFav.t = setTimeout(() => { S.pop = null; }, 900); }
   await set(ref(db, `users/${S.me}/favorites/${id}`), on ? true : null);
   toast(on ? 'Добавлено в избранное' : 'Убрано из избранного');
 }
@@ -865,9 +1064,13 @@ async function toggleListing(id) {
 }
 async function deleteListing(id) {
   if (!confirm('Удалить объявление навсегда?')) return;
-  await remove(ref(db, `listings/${id}`));
-  closeSheet('#sheetDetail');
-  toast('Объявление удалено');
+  try {
+    await remove(ref(db, `listings/${id}`));
+    closeSheet('#sheetDetail');
+    toast('Объявление удалено');
+  } catch (err) {
+    toast('Не удалось удалить: ' + err.message);
+  }
 }
 
 /* ---------- Chats ---------- */
@@ -1007,7 +1210,7 @@ async function submitRate() {
   if (!S.stars || !S.rateTo || !S.me) return;
   const uid = S.rateTo.uid;
   await set(ref(db, `ratings/${uid}_${S.me}`), {
-    targetUserId: uid, raterId: S.me, stars: S.stars, createdAt: Date.now()
+    targetUserId: uid, targetName: S.rateTo.name || '', raterId: S.me, raterName: pname(), stars: S.stars, createdAt: Date.now()
   });
   closeSheet('#sheetRate');
   toast(`Ваша оценка: ${S.stars} ★`);
@@ -1017,16 +1220,18 @@ async function submitRate() {
 function openNew() {
   if (!S.me) return;
   if (!S.profile) return openReg();
-  S.draft = { village: S.profile.homeVillage || 'Новороманово', deal: 'sell', photos: [] };
+  S.draft = { village: VILLAGES[0], other: false, deal: 'sell', photos: [] };
   $('#newForm').reset();
+  setVillageState(S.draft, '#dVillageOther', S.profile.homeVillage || '');
+  $('#dPhone1').value = S.profile.phone || '';
   $('#p2Wrap').classList.add('hidden');
+  $('#p2Add').classList.remove('hidden');
   renderDraft();
   openSheet('#sheetNew');
 }
 function renderDraft() {
   const d = S.draft;
-  $('#dVillages').innerHTML = VILLAGES.map(v =>
-    `<button type="button" class="chip${d.village === v ? ' on' : ''}" data-act="dvillage" data-v="${v}">${v}</button>`).join('');
+  renderPicker('#dVillages', '#dVillageOther', d, 'draft');
   $('#dDeals').innerHTML = DEALS.map(x =>
     `<button type="button" class="chip${d.deal === x.id ? ' on' : ''}" data-act="ddeal" data-v="${x.id}">${x.label}</button>`).join('');
   $('#dPhotos').innerHTML = d.photos.map((p, i) => `
@@ -1047,13 +1252,16 @@ $('#newForm').addEventListener('submit', async e => {
   const p2 = normPhone($('#dPhone2').value);
   if (!title || !desc) return toast('Заполните название и описание');
   if (!PHONE_RE.test(p1)) return toast('Телефон должен начинаться с +7 и содержать 11 цифр');
+  if (p2 && !PHONE_RE.test(p2)) return toast('Второй номер указан неверно. Исправьте или уберите его');
+  const village = readVillage(d, '#dVillageOther');
+  if (!village) return toast('Напишите название села');
   if (!$('#dRules').checked) return toast('Подтвердите правила группы');
   const phones = [p1, PHONE_RE.test(p2) ? p2 : null].filter(Boolean);
   const price = (d.deal === 'free' || d.deal === 'exchange') ? 0 : (Number($('#dPrice').value) || 0);
   const obj = {
     title, description: desc, price, dealMode: d.deal,
     exchangeFor: d.deal === 'exchange' ? $('#dExch').value.trim() : '',
-    village: d.village, photos: d.photos, phones,
+    village, photos: d.photos, phones,
     sellerId: S.me, sellerName: pname(), status: 'active', createdAt: Date.now()
   };
   try {
@@ -1071,7 +1279,11 @@ function openReg() {
   const p = S.profile || {};
   $('#rFirst').value = p.firstName || '';
   $('#rLast').value = p.lastName || '';
-  $('#rVillage').value = p.homeVillage || 'Новороманово';
+  $('#rPhone').value = p.phone || '';
+  $('#regTitle').textContent = S.profile ? 'Мой профиль' : 'Знакомство';
+  S.reg = { village: VILLAGES[0], other: false };
+  setVillageState(S.reg, '#rVillageOther', p.homeVillage || '');
+  renderPicker('#rVillages', '#rVillageOther', S.reg, 'reg');
   $('#regClose').classList.toggle('hidden', !S.profile);
   openSheet('#sheetReg');
 }
@@ -1079,10 +1291,16 @@ $('#regForm').addEventListener('submit', async e => {
   e.preventDefault();
   const firstName = $('#rFirst').value.trim();
   if (!firstName) return toast('Введите имя');
+  const homeVillage = readVillage(S.reg, '#rVillageOther');
+  if (!homeVillage) return toast('Напишите название села');
+  const phoneRaw = $('#rPhone').value.trim();
+  const phone = phoneRaw ? normPhone(phoneRaw) : '';
+  if (phone && !PHONE_RE.test(phone)) return toast('Телефон должен начинаться с +7 и содержать 11 цифр');
   const profile = {
     firstName,
     lastName: $('#rLast').value.trim(),
-    homeVillage: $('#rVillage').value
+    homeVillage,
+    phone
   };
   try {
     await set(ref(db, `users/${S.me}/profile`), profile);
@@ -1102,6 +1320,69 @@ function setSeed(s) {
   document.documentElement.dataset.seed = s;
   localStorage.setItem('seed', s);
 }
+
+/* ---------- Админ-панель ---------- */
+let rulesTaps = 0, rulesTimer = null;
+function tapRules() {
+  rulesTaps++;
+  clearTimeout(rulesTimer);
+  if (rulesTaps >= 5) {
+    rulesTaps = 0;
+    if (S.admin) { renderAdmin(); openSheet('#sheetAdmin'); return; }
+    $('#adminCode').value = '';
+    openSheet('#sheetAdminCode');
+    setTimeout(() => $('#adminCode').focus(), 200);
+    return;
+  }
+  rulesTimer = setTimeout(() => { rulesTaps = 0; openSheet('#sheetRules'); }, 500);
+}
+const nameOf = (uid, fb) => (S.listings.find(l => l.sellerId === uid) || {}).sellerName || fb || 'Житель';
+function renderAdmin() {
+  if (!S.admin) { closeSheet('#sheetAdmin'); return; }
+  $$('#admTabs button').forEach(b => b.classList.toggle('on', b.dataset.v === S.admTab));
+  const box = $('#admList');
+  if (S.admTab === 'ratings') {
+    const rs = [...S.ratings].sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+    box.innerHTML = rs.length ? rs.map(r => `
+      <div class="row" style="cursor:default">
+        <div class="grow">
+          <div class="row-title">${esc(nameOf(r.targetUserId, r.targetName))} · <span class="star-val">${'★'.repeat(Number(r.stars) || 0)}</span></div>
+          <div class="row-sub">от: ${esc(r.raterName || 'Житель')} · ${ago(r.createdAt)}</div>
+        </div>
+        <button class="icon-btn danger" data-act="admdelrate" data-id="${r.id}" aria-label="Удалить оценку"><span class="material-symbols-rounded">delete</span></button>
+      </div>`).join('') : '<p class="muted-sm center pad">Оценок пока нет</p>';
+  } else {
+    box.innerHTML = S.listings.length ? S.listings.map(l => `
+      <div class="row" style="cursor:default">
+        <div class="thumb sm">${l.photos && l.photos[0] ? `<img src="${l.photos[0]}" alt="">` : `<span class="material-symbols-rounded">image</span>`}</div>
+        <div class="grow">
+          <div class="row-title">${esc(l.title)}</div>
+          <div class="row-sub">${esc(l.sellerName || 'Житель')} · ${esc(l.village)} · ${esc(priceText(l))}</div>
+          ${l.status === 'removed' ? '<div class="red small">Снято с публикации</div>' : ''}
+        </div>
+        <button class="icon-btn danger" data-act="admdel" data-id="${l.id}" aria-label="Удалить объявление"><span class="material-symbols-rounded">delete</span></button>
+      </div>`).join('') : '<p class="muted-sm center pad">Объявлений нет</p>';
+  }
+}
+async function adminLogout() {
+  try {
+    await remove(ref(db, `admins/${S.me}`));
+    closeSheet('#sheetAdmin');
+    toast('Вы вышли из админ-панели');
+  } catch (err) { toast('Не удалось выйти: ' + err.message); }
+}
+$('#adminForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const code = $('#adminCode').value.trim();
+  if (!code || !S.me) return;
+  try {
+    await set(ref(db, `admins/${S.me}`), code);
+    closeSheet('#sheetAdminCode');
+    toast('Вы вошли как администратор');
+  } catch (err) {
+    toast('Неверный код');
+  }
+});
 
 /* ---------- Events (делегирование) ---------- */
 document.addEventListener('input', e => {
@@ -1142,16 +1423,19 @@ document.addEventListener('click', async e => {
   if (el.dataset.tab) return go(el.dataset.tab);
   if (el.dataset.close) return closeSheet(el.dataset.close);
 
-  const { act, id, v, n, i, mid } = el.dataset;
-  if (!db && /^(fav|chat|toggle|dellist|delchat|ratesubmit|openchat)$/.test(act)) {
+  const { act, id, v, n, i, mid, k } = el.dataset;
+  if (!db && /^(fav|chat|toggle|dellist|delchat|ratesubmit|openchat|admdel|admdelrate|admout)$/.test(act)) {
     return toast('Нет связи с сервером. Обновите страницу');
   }
   switch (act) {
     case 'open':       return openDetail(id);
     case 'fav':        return toggleFav(id);
-    case 'village':    S.village = v; return renderFeed();
-    case 'cat':        S.cat = v; return renderFeed();
-    case 'sort':       S.sort = S.sort === 'new' ? 'cheap' : 'new'; return renderFeed();
+    case 'vsheet':     renderVillageSheet(); return openSheet('#sheetVillage');
+    case 'vsel':       S.village = v; closeSheet('#sheetVillage'); return renderFeed(true);
+    case 'vpick': { const [st, box, inp] = PK()[k]; st.other = false; st.village = v; return renderPicker(box, inp, st, k); }
+    case 'vother': { const [st, box, inp] = PK()[k]; st.other = true; renderPicker(box, inp, st, k); $(inp).focus(); return; }
+    case 'cat':        S.cat = v; return renderFeed(true);
+    case 'sort':       S.sort = S.sort === 'new' ? 'cheap' : 'new'; return renderFeed(true);
     case 'clearq':     return setQ('');
     case 'new':        return openNew();
     case 'viewer': {
@@ -1179,17 +1463,28 @@ document.addEventListener('click', async e => {
     case 'dark':       toggleDark(); return renderProfile();
     case 'seed':       setSeed(v); return renderProfile();
     case 'editprofile':return openReg();
-    case 'rules':      return openSheet('#sheetRules');
-    case 'dvillage':   S.draft.village = v; return renderDraft();
+    case 'rules':      return tapRules();
+    case 'admopen':    renderAdmin(); return openSheet('#sheetAdmin');
+    case 'admout':     return adminLogout();
+    case 'admtab':     S.admTab = v; return renderAdmin();
+    case 'admdel':     return deleteListing(id);
+    case 'admdelrate': {
+      if (!confirm('Удалить эту оценку?')) return;
+      try { await remove(ref(db, `ratings/${id}`)); toast('Оценка удалена'); }
+      catch (err) { toast('Не удалось удалить: ' + err.message); }
+      return;
+    }
     case 'ddeal':      S.draft.deal = v; return renderDraft();
     case 'rmphoto':    S.draft.photos.splice(Number(i), 1); return renderDraft();
-    case 'p2':         $('#p2Wrap').classList.remove('hidden'); el.classList.add('hidden'); return;
+    case 'p2':         $('#p2Wrap').classList.remove('hidden'); el.classList.add('hidden'); $('#dPhone2').focus(); return;
+    case 'p2off':      $('#dPhone2').value = ''; $('#p2Wrap').classList.add('hidden'); $('#p2Add').classList.remove('hidden'); return;
   }
 });
 
 /* ---------- Start ---------- */
 go('feed');
 renderAll();
+setTimeout(() => { if (!S.loaded) { S.loaded = true; renderFeed(); } }, 10000);
 </script>
 </body>
 </html>
