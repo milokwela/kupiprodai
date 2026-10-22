@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0f766e">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Купи • Продай">
 <title>Купи • Продай • Услуга • Отдам</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -112,6 +118,7 @@
   .sw{width:36px;height:36px;border-radius:50%;border:3px solid transparent;cursor:pointer}
   .sw.on{border-color:var(--on)}
   .sw.green{background:#0f766e}.sw.blue{background:#1d4ed8}.sw.amber{background:#b45309}.sw.violet{background:#6d28d9}
+  .sw.pink{background:#db2777}.sw.blackpink{background:linear-gradient(135deg,#000 50%,#ff2d95 50%)}
   .switch{width:52px;height:30px;border-radius:16px;border:2px solid var(--primary);background:transparent;position:relative;cursor:pointer}
   .switch i{position:absolute;top:4px;left:4px;width:18px;height:18px;border-radius:50%;background:var(--primary);transition:left .2s}
   html.dark .switch i{left:26px}
@@ -206,6 +213,27 @@
   #vCount{color:#fff;font-weight:600;font-size:14px}
 
   #toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(96px + env(safe-area-inset-bottom));background:#1f2d2b;color:#fff;padding:12px 18px;border-radius:14px;z-index:90;font-weight:600;font-size:14px;max-width:90%;box-shadow:0 6px 18px rgba(0,0,0,.25);text-align:center}
+  /* ---------- Розовый и Black Pink ---------- */
+  html[data-seed=pink]{--primary:#db2777;--pc:#fce7f3;--on-pc:#831843}
+  html.dark[data-seed=pink]{--primary:#f472b6;--on-primary:#2d0a1c;--pc:#831843;--on-pc:#fce7f3}
+  html[data-seed=blackpink],html.dark[data-seed=blackpink]{--primary:#ff2d95;--on-primary:#000;--pc:#3a0a24;--on-pc:#ffb3da;--surface:#000;--card:#111;--high:#1c1c1c;--on:#fff;--muted:#b8a1ad;--line:#2e2e2e;--red:#ff8a8a;--redbg:#3a1414}
+
+  /* ---------- Подсказка, шаринг, установка ---------- */
+  .tour{text-align:center;padding:8px 8px 0}
+  .tour .big-ic{width:96px;height:96px;border-radius:32px;background:var(--pc);color:var(--on-pc);display:flex;align-items:center;justify-content:center;margin:8px auto 18px;animation:pop .4s both}
+  .tour .big-ic .material-symbols-rounded{font-size:52px}
+  .tour h3{margin:0 0 8px;font-size:22px;font-weight:800}
+  .tour p{margin:0 auto;max-width:320px;font-size:17px;line-height:1.5;color:var(--muted)}
+  .dots{display:flex;justify-content:center;gap:8px;margin:20px 0 4px}
+  .dots i{width:9px;height:9px;border-radius:50%;background:var(--line);transition:all .2s}
+  .dots i.on{width:26px;border-radius:5px;background:var(--primary)}
+  .btn-text{background:transparent;color:var(--muted)}
+  .share-btn{display:flex;align-items:center;gap:14px;width:100%;min-height:60px;padding:0 16px;border-radius:18px;border:1px solid var(--line);background:var(--card);font-size:17px;font-weight:700;cursor:pointer;margin-bottom:10px;color:var(--on)}
+  .share-btn .material-symbols-rounded{color:var(--primary)}
+  .install-bar{display:flex;align-items:center;gap:12px;margin:10px 16px 0;padding:12px 14px;border-radius:18px;background:var(--pc);color:var(--on-pc);font-weight:600;font-size:14px;animation:pop .4s both}
+  .install-bar .grow{line-height:1.3}
+  .install-bar .x{border:0;background:transparent;color:inherit;cursor:pointer;width:32px;height:32px}
+
   /* ---------- Анимации и «живость» ---------- */
   @keyframes pop{from{opacity:0;transform:translateY(14px) scale(.96)}to{opacity:1;transform:none}}
   @keyframes fade{from{opacity:0}to{opacity:1}}
@@ -301,6 +329,12 @@
 <main>
   <!-- ГЛАВНАЯ -->
   <section id="view-feed" class="view">
+    <div id="installBar" class="install-bar hidden">
+      <span class="material-symbols-rounded">install_mobile</span>
+      <span class="grow">Установите сайт как приложение — иконка будет на экране телефона</span>
+      <button class="btn btn-filled sm" data-act="install">Установить</button>
+      <button class="x" data-act="installclose" aria-label="Скрыть"><span class="material-symbols-rounded">close</span></button>
+    </div>
     <div class="info-row">
       <span id="feedCount"></span>
       <button class="sort" data-act="sort"><span class="material-symbols-rounded">swap_vert</span><span id="sortLabel">Новые</span></button>
@@ -350,8 +384,13 @@
           <button class="sw blue" data-act="seed" data-v="blue" aria-label="Синий"></button>
           <button class="sw amber" data-act="seed" data-v="amber" aria-label="Янтарный"></button>
           <button class="sw violet" data-act="seed" data-v="violet" aria-label="Фиолетовый"></button>
+          <button class="sw pink" data-act="seed" data-v="pink" aria-label="Розовый"></button>
+          <button class="sw blackpink" data-act="seed" data-v="blackpink" aria-label="Чёрно-розовый"></button>
         </div>
       </div>
+      <button class="row-btn" data-act="notif" id="notifRow"></button>
+      <button class="row-btn hidden" data-act="install" id="installRow"><span class="material-symbols-rounded">install_mobile</span>Установить как приложение</button>
+      <button class="row-btn" data-act="tour"><span class="material-symbols-rounded">help</span>Как пользоваться сайтом</button>
       <button class="row-btn" data-act="rules"><span class="material-symbols-rounded">gavel</span>Правила сайта</button>
       <div id="adminRows"></div>
     </div>
@@ -374,6 +413,7 @@
     <div class="sheet-head">
       <button class="icon-btn" data-close="#sheetDetail" aria-label="Назад"><span class="material-symbols-rounded">arrow_back</span></button>
       <h2>Объявление</h2>
+      <button class="icon-btn" data-act="share" aria-label="Поделиться"><span class="material-symbols-rounded">share</span></button>
       <button class="icon-btn" id="detailFav" data-act="fav" data-id=""><span class="material-symbols-rounded">favorite</span></button>
     </div>
     <div class="sheet-body" id="detailBody"></div>
@@ -578,10 +618,39 @@
   </div>
 </div>
 
+<!-- ============ SHEET: ПОДСКАЗКА ============ -->
+<div id="sheetTour" class="sheet-wrap hidden">
+  <div class="sheet" style="height:auto">
+    <div class="sheet-body">
+      <div class="tour" id="tourBody"></div>
+      <div class="dots" id="tourDots"></div>
+    </div>
+    <div class="sheet-foot">
+      <button class="btn btn-text" data-act="tourskip">Пропустить</button>
+      <button class="btn btn-filled grow" id="tourNext" data-act="tournext">Далее</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SHEET: ПОДЕЛИТЬСЯ ============ -->
+<div id="sheetShare" class="sheet-wrap hidden">
+  <div class="sheet" style="height:auto">
+    <div class="sheet-head">
+      <button class="icon-btn" data-close="#sheetShare" aria-label="Закрыть"><span class="material-symbols-rounded">close</span></button>
+      <h2>Поделиться объявлением</h2>
+    </div>
+    <div class="sheet-body">
+      <a class="share-btn" id="shWa" target="_blank" rel="noopener"><span class="material-symbols-rounded">chat</span>WhatsApp</a>
+      <a class="share-btn" id="shTg" target="_blank" rel="noopener"><span class="material-symbols-rounded">send</span>Telegram</a>
+      <button class="share-btn" data-act="sharecopy"><span class="material-symbols-rounded">content_copy</span>Скопировать ссылку (для MAX, ВК и других)</button>
+    </div>
+  </div>
+</div>
+
 <div id="toast" class="hidden"></div>
 
 <script>
-let initializeApp, getAuth, signInAnonymously, onAuthStateChanged, setPersistence, indexedDBLocalPersistence, getDatabase, ref, onValue, push, set, update, remove;
+let initializeApp, getAuth, signInAnonymously, onAuthStateChanged, setPersistence, indexedDBLocalPersistence, getDatabase, ref, onValue, push, set, update, remove, query, orderByChild, equalTo;
 
 /* ВСТАВЬТЕ СЮДА ВАШ КОНФИГ FIREBASE (тот же, что был в старом файле) */
 const FIREBASE_CONFIG = {
@@ -630,6 +699,19 @@ const isOpen = sel => !$(sel).classList.contains('hidden');
 const openSheet = sel => $(sel).classList.remove('hidden');
 const closeSheet = sel => $(sel).classList.add('hidden');
 
+/* ---------- Состояния объявления ---------- */
+const STALE_MS = 30 * 86400000;
+function state(l) {
+  if (l.status === 'removed') return 'removed';
+  if (l.status === 'sold') return 'sold';
+  const t = l.renewedAt || l.createdAt;
+  if (t && Date.now() - t > STALE_MS) return 'stale';
+  return 'live';
+}
+const live = l => state(l) === 'live';
+const STATE_LABEL = { removed: 'Снято с публикации', sold: 'Продано', stale: 'Неактуально — подтвердите' };
+const STATE_SHORT = { removed: 'Снято', sold: 'Продано', stale: 'Неактуально' };
+
 /* ---------- Села (можно писать своё) ---------- */
 const normVillage = s => {
   const v = String(s || '').trim().replace(/\s+/g, ' ').slice(0, 30);
@@ -638,7 +720,7 @@ const normVillage = s => {
 };
 function allVillages() {
   const m = new Map(VILLAGES.map(v => [v.toLowerCase(), v]));
-  S.listings.filter(l => l.status !== 'removed').forEach(l => {
+  S.listings.filter(live).forEach(l => {
     const v = normVillage(l.village);
     if (v && !m.has(v.toLowerCase())) m.set(v.toLowerCase(), v);
   });
@@ -663,7 +745,7 @@ function renderPicker(box, inputSel, st, key) {
 }
 const readVillage = (st, inputSel) => st.other ? normVillage($(inputSel).value) : st.village;
 function renderVillageSheet() {
-  const act = S.listings.filter(l => l.status !== 'removed');
+  const act = S.listings.filter(live);
   const rows = [[ALL, act.length], ...allVillages().map(v => [v, act.filter(l => normVillage(l.village) === v).length])];
   $('#villageList').innerHTML = rows.map(([v, c]) => `
     <button class="vrow${S.village === v ? ' on' : ''}" data-act="vsel" data-v="${esc(v)}">
@@ -745,7 +827,18 @@ function isUnread(c) {
   return !!c.lastSenderId && c.lastSenderId !== S.me && (c.updatedAt || 0) > (getSeen()[c.id] || 0);
 }
 function askNotif() {
-  if ('Notification' in window && Notification.permission === 'default') Notification.requestPermission();
+  if ('Notification' in window && Notification.permission === 'default') Notification.requestPermission().then(renderProfile).catch(() => {});
+}
+async function notify(title, body, cid) {
+  if (!('Notification' in window) || Notification.permission !== 'granted') return;
+  try {
+    const reg = navigator.serviceWorker && await navigator.serviceWorker.getRegistration();
+    if (reg) {
+      await reg.showNotification(title, { body, icon: 'icon-192.png', badge: 'icon-192.png', tag: 'chat-' + cid, data: { cid }, vibrate: [120, 60, 120] });
+      return;
+    }
+  } catch (e) {}
+  try { new Notification(title, { body }); } catch (e) {}
 }
 
 /* ---------- Firebase ---------- */
@@ -758,7 +851,7 @@ async function initFirebase() {
     ]);
     ({ initializeApp } = appM);
     ({ getAuth, signInAnonymously, onAuthStateChanged, setPersistence, indexedDBLocalPersistence } = authM);
-    ({ getDatabase, ref, onValue, push, set, update, remove } = dbM);
+    ({ getDatabase, ref, onValue, push, set, update, remove, query, orderByChild, equalTo } = dbM);
 
     const app = initializeApp(FIREBASE_CONFIG);
     db = getDatabase(app);
@@ -786,26 +879,33 @@ function listen() {
     const first = !S.loaded;
     S.loaded = true;
     renderAll();
-    if (first) renderFeed(true);
+    if (first) {
+      renderFeed(true);
+      const m = location.hash.match(/^#l=(.+)$/);
+      if (m && S.listings.find(x => x.id === m[1])) { openDetail(m[1]); history.replaceState(null, '', location.pathname); }
+    }
     if (isOpen('#sheetDetail') && S.activeListing) fillDetail(S.activeListing);
   });
-  onValue(ref(db, 'chats'), s => {
+  let chatBuy = {}, chatSell = {};
+  const onChats = () => {
     const prev = S.prevUpdated || {};
-    S.chats = arr(s.val())
-      .filter(c => c.buyerId === S.me || c.sellerId === S.me)
-      .sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+    const map = new Map([...arr(chatBuy), ...arr(chatSell)].map(c => [c.id, c]));
+    S.chats = [...map.values()].sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
     S.chats.forEach(c => {
       const isNew = prev[c.id] !== undefined && (c.updatedAt || 0) > prev[c.id];
       const fromOther = c.lastSenderId && c.lastSenderId !== S.me;
-      if (isNew && fromOther && c.id !== S.activeChat && 'Notification' in window && Notification.permission === 'granted') {
-        new Notification(c.lastSenderName || 'Новое сообщение', { body: c.lastMessage || '📷 Фото' });
+      if (isNew && fromOther && (c.id !== S.activeChat || document.hidden)) {
+        notify(c.lastSenderName || 'Новое сообщение', c.lastMessage || '📷 Фото', c.id);
       }
     });
     S.prevUpdated = Object.fromEntries(S.chats.map(c => [c.id, c.updatedAt || 0]));
     if (S.activeChat) markSeen(S.activeChat);
     renderChats();
     if (S.activeChat) renderChatHead();
-  });
+    if (S.pendingChat && S.chats.find(c => c.id === S.pendingChat)) { const id = S.pendingChat; S.pendingChat = null; openChat(id); }
+  };
+  onValue(query(ref(db, 'chats'), orderByChild('buyerId'), equalTo(S.me)), s => { chatBuy = s.val() || {}; onChats(); }, () => {});
+  onValue(query(ref(db, 'chats'), orderByChild('sellerId'), equalTo(S.me)), s => { chatSell = s.val() || {}; onChats(); }, () => {});
   onValue(ref(db, 'ratings'), s => { S.ratings = arr(s.val()); renderAll(); });
   onValue(ref(db, `users/${S.me}/favorites`), s => { S.favs = s.val() || {}; renderAll(); });
   onValue(ref(db, `users/${S.me}/profile`), s => {
@@ -839,12 +939,12 @@ function card(l, idx) {
   const fav = !!S.favs[l.id];
   const p = l.photos && l.photos[0];
   const n = l.photos ? l.photos.length : 0;
-  const gone = l.status === 'removed';
+  const st = state(l), gone = st !== 'live';
   return `
     <article class="card${gone ? ' dim' : ''}" data-act="open" data-id="${l.id}" style="--i:${Math.min(idx || 0, 12)}">
       <div class="thumb">
         ${p ? `<img src="${p}" alt="" loading="lazy">` : `<span class="material-symbols-rounded">image</span>`}
-        ${gone ? `<span class="badge gray">Снято</span>` : `<span class="badge">${esc(DEAL_LABEL[l.dealMode] || '')}</span>`}
+        ${gone ? `<span class="badge gray">${STATE_SHORT[st]}</span>` : `<span class="badge">${esc(DEAL_LABEL[l.dealMode] || '')}</span>`}
         ${n > 1 ? `<span class="count">${n} фото</span>` : ''}
         <button class="fav${fav ? ' on' : ''}" data-act="fav" data-id="${l.id}" aria-label="В избранное">
           <span class="material-symbols-rounded${fav ? ' f' : ''}${fav && S.pop === l.id ? ' pop' : ''}">favorite</span>
@@ -858,7 +958,7 @@ function card(l, idx) {
     </article>`;
 }
 function renderFeed(anim) {
-  const active = S.listings.filter(l => l.status !== 'removed');
+  const active = S.listings.filter(live);
   $('#villageBtn').innerHTML = `<span class="material-symbols-rounded f">location_on</span><span class="grow"><span class="lbl-s">Село: </span>${esc(S.village)}</span><span class="material-symbols-rounded">expand_more</span>`;
   $('#catChips').innerHTML = [{ id: 'all', label: 'Все' }, ...DEALS].map(d =>
     `<button class="chip${S.cat === d.id ? ' on' : ''}" data-act="cat" data-v="${d.id}">${d.label}</button>`).join('');
@@ -897,7 +997,9 @@ function renderFav() {
   $('#favEmptyText').textContent = searching ? 'Попробуйте другое слово' : 'Нажмите сердечко на объявлении, чтобы сохранить его';
 }
 function renderChats() {
-  $('#chatDot').classList.toggle('hidden', !S.chats.some(isUnread));
+  const unreadN = S.chats.filter(isUnread).length;
+  $('#chatDot').classList.toggle('hidden', !unreadN);
+  document.title = (unreadN ? `(${unreadN}) ` : '') + 'Купи • Продай • Услуга • Отдам';
   const box = $('#chatList');
   if (!S.chats.length) {
     box.innerHTML = `<div class="empty"><span class="material-symbols-rounded">chat</span><p>Чатов пока нет</p><small>Откройте объявление и нажмите «Написать»</small></div>`;
@@ -906,13 +1008,14 @@ function renderChats() {
   box.innerHTML = S.chats.map(c => {
     const name = c.buyerId === S.me ? c.sellerName : c.buyerName;
     const l = S.listings.find(x => x.id === c.listingId);
-    const gone = l && l.status === 'removed';
+    const st = l ? state(l) : 'live';
+    const gone = st !== 'live';
     return `
       <div class="row" data-act="openchat" data-id="${c.id}">
         <div class="avatar sm">${esc((name || '?')[0].toUpperCase())}</div>
         <div class="grow">
           <div class="row-title">${esc(name || 'Житель')}</div>
-          <div class="row-sub">${esc(c.listingTitle || '')}${gone ? ' · <b class="red">снято</b>' : ''}</div>
+          <div class="row-sub">${esc(c.listingTitle || '')}${gone ? ` · <b class="red">${STATE_SHORT[st].toLowerCase()}</b>` : ''}</div>
           <div class="row-last">${esc(c.lastMessage || 'Нет сообщений')}</div>
         </div>
         <button class="icon-btn ghost" data-act="delchat" data-id="${c.id}" aria-label="Удалить чат"><span class="material-symbols-rounded">delete</span></button>
@@ -924,7 +1027,7 @@ function renderProfile() {
   const card = $('#profileCard');
   if (!p) { card.innerHTML = ''; return; }
   const r = ratingOf(S.me);
-  const activeN = S.listings.filter(l => l.sellerId === S.me && l.status !== 'removed').length;
+  const activeN = S.listings.filter(l => l.sellerId === S.me && live(l)).length;
   card.innerHTML = `
     <div class="pcard">
       <div class="pcover"></div>
@@ -952,13 +1055,20 @@ function renderProfile() {
       <div class="grow">
         <div class="row-title">${esc(l.title)}</div>
         <div class="row-sub">${esc(priceText(l))} · ${esc(l.village)}</div>
-        ${l.status === 'removed' ? `<div class="red small">Снято с публикации</div>` : ''}
+        ${state(l) !== 'live' ? `<div class="${state(l) === 'sold' ? 'muted-sm' : 'red small'}">${STATE_LABEL[state(l)]}</div>` : ''}
       </div>
       <span class="material-symbols-rounded muted">chevron_right</span>
     </div>`).join('') : `<p class="muted-sm pad" style="padding:0 16px">Вы ещё ничего не выложили</p>`;
   const dark = document.documentElement.classList.contains('dark');
   $('.switch').classList.toggle('on', dark);
   $$('.sw').forEach(b => b.classList.toggle('on', b.dataset.v === document.documentElement.dataset.seed));
+  const perm = 'Notification' in window ? Notification.permission : 'unsupported';
+  $('#notifRow').innerHTML = perm === 'granted'
+    ? `<span class="material-symbols-rounded f" style="color:var(--primary)">notifications_active</span>Уведомления о сообщениях включены`
+    : perm === 'denied'
+      ? `<span class="material-symbols-rounded">notifications_off</span>Уведомления запрещены в настройках браузера`
+      : `<span class="material-symbols-rounded">notifications</span>Включить уведомления о сообщениях`;
+  $('#installRow').classList.toggle('hidden', !canInstall());
   $('#adminRows').innerHTML = S.admin
     ? `<button class="row-btn" data-act="admopen"><span class="material-symbols-rounded">admin_panel_settings</span>Админ-панель</button>
        <button class="row-btn red" data-act="admout"><span class="material-symbols-rounded">logout</span>Выйти из админ-панели</button>`
@@ -998,11 +1108,14 @@ function fillDetail(id) {
   if (!l) return;
   S.activeListing = id;
   const mine = l.sellerId === S.me;
-  const gone = l.status === 'removed';
+  const st = state(l), gone = st !== 'live', closed = st === 'removed' || st === 'sold';
+  const banner = st === 'stale'
+    ? (mine ? 'Прошло 30 дней. Подтвердите, что объявление ещё актуально' : 'Объявление давно не обновлялось, возможно, оно неактуально')
+    : st === 'sold' ? 'Товар продан' : 'Объявление снято с публикации';
   const photos = l.photos || [];
   const phones = l.phones || [];
   $('#detailBody').innerHTML = `
-    ${gone ? `<div class="banner"><span class="material-symbols-rounded f">block</span>Объявление снято с публикации</div>` : ''}
+    ${gone ? `<div class="banner"><span class="material-symbols-rounded f">${st === 'stale' ? 'schedule' : 'block'}</span>${banner}</div>` : ''}
     ${photos.length
       ? `<div class="carousel">${photos.map((p, i) => `<img src="${p}" alt="" data-act="viewer" data-id="${id}" data-i="${i}">`).join('')}</div>`
       : `<div class="nophoto"><span class="material-symbols-rounded">image</span>Без фото</div>`}
@@ -1031,11 +1144,13 @@ function fillDetail(id) {
     </div>`;
 
   $('#detailActions').innerHTML = mine
-    ? `<button class="btn btn-tonal grow" data-act="toggle" data-id="${id}">${gone ? 'Вернуть в продажу' : 'Снять с публикации'}</button>
+    ? `${st === 'stale' ? `<button class="btn btn-filled" style="width:100%" data-act="renew" data-id="${id}"><span class="material-symbols-rounded">check_circle</span>Ещё актуально</button>`
+         : st === 'live' ? `<button class="btn btn-filled" style="width:100%" data-act="sold" data-id="${id}"><span class="material-symbols-rounded">sell</span>Продано</button>` : ''}
+       <button class="btn btn-tonal grow" data-act="toggle" data-id="${id}">${closed ? 'Вернуть в продажу' : 'Снять с публикации'}</button>
        <button class="btn btn-danger" data-act="dellist" data-id="${id}">Удалить</button>`
     : `${S.admin ? `<button class="btn btn-danger" style="width:100%" data-act="dellist" data-id="${id}"><span class="material-symbols-rounded">delete</span>Удалить (админ)</button>` : ''}
        <a class="btn btn-tonal grow${phones[0] ? '' : ' disabled'}" href="${phones[0] ? 'tel:' + phones[0] : '#'}"><span class="material-symbols-rounded">call</span>Позвонить</a>
-       <button class="btn btn-filled grow" data-act="chat" data-id="${id}"${gone ? ' disabled' : ''}><span class="material-symbols-rounded">chat</span>Написать</button>`;
+       <button class="btn btn-filled grow" data-act="chat" data-id="${id}"${closed ? ' disabled' : ''}><span class="material-symbols-rounded">chat</span>Написать</button>`;
   syncDetailFav();
 }
 function openDetail(id) {
@@ -1058,9 +1173,18 @@ async function toggleFav(id) {
 async function toggleListing(id) {
   const l = S.listings.find(x => x.id === id);
   if (!l) return;
-  const hide = l.status !== 'removed';
-  await update(ref(db, `listings/${id}`), { status: hide ? 'removed' : 'active' });
+  const hide = state(l) === 'live' || state(l) === 'stale';
+  await update(ref(db, `listings/${id}`), hide ? { status: 'removed' } : { status: 'active', renewedAt: Date.now() });
   toast(hide ? 'Объявление снято с публикации' : 'Объявление снова в продаже');
+}
+async function markSold(id) {
+  if (!confirm('Отметить как проданное? Объявление пропадёт из ленты.')) return;
+  try { await update(ref(db, `listings/${id}`), { status: 'sold' }); toast('Отлично! Отмечено как проданное'); }
+  catch (err) { toast('Не удалось: ' + err.message); }
+}
+async function renewListing(id) {
+  try { await update(ref(db, `listings/${id}`), { status: 'active', renewedAt: Date.now() }); toast('Объявление снова в ленте на 30 дней'); }
+  catch (err) { toast('Не удалось: ' + err.message); }
 }
 async function deleteListing(id) {
   if (!confirm('Удалить объявление навсегда?')) return;
@@ -1114,7 +1238,9 @@ function renderChatHead() {
   $('#chatName').textContent = partner || 'Житель';
   $('#chatAva').textContent = (partner || '?')[0].toUpperCase();
   $('#chatSub').textContent = c.listingTitle || '';
-  $('#chatBanner').classList.toggle('hidden', !(l && l.status === 'removed'));
+  const stc = l ? state(l) : 'live';
+  $('#chatBanner').classList.toggle('hidden', !(stc === 'removed' || stc === 'sold'));
+  $('#chatBanner').lastChild.textContent = stc === 'sold' ? 'Товар продан' : 'Объявление снято с публикации';
   $('#chatDel').dataset.id = c.id;
 }
 function renderMsgs() {
@@ -1145,8 +1271,10 @@ async function sendMsg(text, photo) {
 }
 async function deleteChat(cid) {
   if (!confirm('Удалить чат? Переписка пропадёт у обоих.')) return;
-  await remove(ref(db, `chats/${cid}`));
-  await remove(ref(db, `messages/${cid}`));
+  try {
+    await remove(ref(db, `messages/${cid}`));
+    await remove(ref(db, `chats/${cid}`));
+  } catch (err) { return toast('Не удалось удалить: ' + err.message); }
   if (S.activeChat === cid) closeChat();
   toast('Чат удалён');
 }
@@ -1302,10 +1430,12 @@ $('#regForm').addEventListener('submit', async e => {
     homeVillage,
     phone
   };
+  const wasNew = !S.profile;
   try {
     await set(ref(db, `users/${S.me}/profile`), profile);
     closeSheet('#sheetReg');
     toast(`Приятно познакомиться, ${firstName}!`);
+    if (wasNew && !localStorage.getItem('tourSeen')) setTimeout(openTour, 500);
   } catch (err) {
     toast('Не удалось сохранить: ' + err.message);
   }
@@ -1320,6 +1450,83 @@ function setSeed(s) {
   document.documentElement.dataset.seed = s;
   localStorage.setItem('seed', s);
 }
+
+/* ---------- Подсказка для новичков ---------- */
+const TOUR = [
+  { icon: 'add_circle', title: 'Как выложить', text: 'На главной нажмите «Выложить», добавьте фото, цену и телефон. Это бесплатно.' },
+  { icon: 'call', title: 'Как позвонить', text: 'Откройте объявление и нажмите «Позвонить» — телефон сам наберёт номер.' },
+  { icon: 'chat', title: 'Как написать', text: 'В объявлении нажмите «Написать». Ответы придут во вкладку «Чаты».' }
+];
+function openTour() { S.tourI = 0; renderTour(); openSheet('#sheetTour'); }
+function renderTour() {
+  const t = TOUR[S.tourI];
+  $('#tourBody').innerHTML = `<div class="big-ic"><span class="material-symbols-rounded f">${t.icon}</span></div><h3>${t.title}</h3><p>${t.text}</p>`;
+  $('#tourDots').innerHTML = TOUR.map((_, i) => `<i class="${i === S.tourI ? 'on' : ''}"></i>`).join('');
+  $('#tourNext').textContent = S.tourI === TOUR.length - 1 ? 'Готово' : 'Далее';
+}
+function closeTour() { localStorage.setItem('tourSeen', '1'); closeSheet('#sheetTour'); }
+
+/* ---------- Поделиться ---------- */
+async function shareListing() {
+  const l = S.listings.find(x => x.id === S.activeListing);
+  if (!l) return;
+  const url = location.origin + location.pathname + '#l=' + l.id;
+  const text = `${l.title} — ${priceText(l)} (${l.village})`;
+  S.share = { url, text };
+  if (navigator.share) {
+    try { await navigator.share({ title: l.title, text, url }); } catch (e) {}
+    return;
+  }
+  $('#shWa').href = 'https://wa.me/?text=' + encodeURIComponent(text + '\n' + url);
+  $('#shTg').href = 'https://t.me/share/url?url=' + encodeURIComponent(url) + '&text=' + encodeURIComponent(text);
+  openSheet('#sheetShare');
+}
+async function copyShare() {
+  const t = S.share ? S.share.text + '\n' + S.share.url : '';
+  try { await navigator.clipboard.writeText(t); }
+  catch (e) {
+    const ta = document.createElement('textarea'); ta.value = t; document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); } catch (_) {}
+    ta.remove();
+  }
+  closeSheet('#sheetShare');
+  toast('Ссылка скопирована — вставьте её в чат');
+}
+
+/* ---------- Установка как приложение (PWA) ---------- */
+let installEvt = null;
+const isStandalone = () => matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+const isIOS = () => /iphone|ipad|ipod/i.test(navigator.userAgent);
+const canInstall = () => !isStandalone() && (!!installEvt || isIOS());
+function syncInstallBar() {
+  const dismissed = localStorage.getItem('installDismissed') === '1';
+  $('#installBar').classList.toggle('hidden', !(canInstall() && !dismissed));
+  $('#installRow').classList.toggle('hidden', !canInstall());
+}
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); installEvt = e; syncInstallBar(); });
+window.addEventListener('appinstalled', () => { installEvt = null; syncInstallBar(); toast('Приложение установлено!'); });
+async function doInstall() {
+  if (installEvt) {
+    installEvt.prompt();
+    try { await installEvt.userChoice; } catch (e) {}
+    installEvt = null; syncInstallBar();
+  } else if (isIOS()) {
+    alert('Чтобы установить: нажмите кнопку «Поделиться» внизу Safari, затем «На экран Домой».');
+  }
+}
+if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+  navigator.serviceWorker.addEventListener('message', e => {
+    if (e.data && e.data.type === 'openchat' && e.data.cid) {
+      if (S.chats.find(c => c.id === e.data.cid)) openChat(e.data.cid); else S.pendingChat = e.data.cid;
+    }
+  });
+}
+{
+  const m = location.hash.match(/^#c=(.+)$/);
+  if (m) { S.pendingChat = m[1]; history.replaceState(null, '', location.pathname); }
+}
+syncInstallBar();
 
 /* ---------- Админ-панель ---------- */
 let rulesTaps = 0, rulesTimer = null;
@@ -1358,7 +1565,7 @@ function renderAdmin() {
         <div class="grow">
           <div class="row-title">${esc(l.title)}</div>
           <div class="row-sub">${esc(l.sellerName || 'Житель')} · ${esc(l.village)} · ${esc(priceText(l))}</div>
-          ${l.status === 'removed' ? '<div class="red small">Снято с публикации</div>' : ''}
+          ${state(l) !== 'live' ? `<div class="red small">${STATE_LABEL[state(l)]}</div>` : ''}
         </div>
         <button class="icon-btn danger" data-act="admdel" data-id="${l.id}" aria-label="Удалить объявление"><span class="material-symbols-rounded">delete</span></button>
       </div>`).join('') : '<p class="muted-sm center pad">Объявлений нет</p>';
@@ -1424,7 +1631,7 @@ document.addEventListener('click', async e => {
   if (el.dataset.close) return closeSheet(el.dataset.close);
 
   const { act, id, v, n, i, mid, k } = el.dataset;
-  if (!db && /^(fav|chat|toggle|dellist|delchat|ratesubmit|openchat|admdel|admdelrate|admout)$/.test(act)) {
+  if (!db && /^(fav|chat|toggle|dellist|delchat|ratesubmit|openchat|admdel|admdelrate|admout|sold|renew)$/.test(act)) {
     return toast('Нет связи с сервером. Обновите страницу');
   }
   switch (act) {
@@ -1464,6 +1671,21 @@ document.addEventListener('click', async e => {
     case 'seed':       setSeed(v); return renderProfile();
     case 'editprofile':return openReg();
     case 'rules':      return tapRules();
+    case 'share':      return shareListing();
+    case 'sharecopy':  return copyShare();
+    case 'sold':       return markSold(id);
+    case 'renew':      return renewListing(id);
+    case 'tour':       return openTour();
+    case 'tourskip':   return closeTour();
+    case 'tournext':   if (S.tourI >= TOUR.length - 1) return closeTour(); S.tourI++; return renderTour();
+    case 'install':    return doInstall();
+    case 'installclose': localStorage.setItem('installDismissed', '1'); return syncInstallBar();
+    case 'notif': {
+      if (!('Notification' in window)) return toast('Ваш браузер не поддерживает уведомления');
+      if (Notification.permission === 'denied') return toast('Разрешите уведомления в настройках браузера для этого сайта');
+      if (Notification.permission === 'granted') return toast('Уведомления уже включены');
+      return askNotif();
+    }
     case 'admopen':    renderAdmin(); return openSheet('#sheetAdmin');
     case 'admout':     return adminLogout();
     case 'admtab':     S.admTab = v; return renderAdmin();
