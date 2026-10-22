@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0f766e">
+<meta http-equiv="Content-Security-Policy" content="object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta name="referrer" content="no-referrer">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -440,7 +442,7 @@
         <span class="material-symbols-rounded">image</span>
         <input type="file" id="chatPhoto" accept="image/*" hidden>
       </label>
-      <input type="text" id="chatInput" placeholder="Сообщение…" autocomplete="off">
+      <input type="text" id="chatInput" maxlength="1000" placeholder="Сообщение…" autocomplete="off">
       <button class="send" type="submit" aria-label="Отправить"><span class="material-symbols-rounded f">send</span></button>
     </form>
   </div>
@@ -478,7 +480,7 @@
       <input class="field" id="dTitle" type="text" maxlength="70" placeholder="Например: Домашнее молоко 3 л" required>
 
       <label class="lbl2">Описание</label>
-      <textarea class="field" id="dDesc" placeholder="Состояние, размеры, есть ли доставка по селу…" required></textarea>
+      <textarea class="field" id="dDesc" maxlength="1500" placeholder="Состояние, размеры, есть ли доставка по селу…" required></textarea>
 
       <label class="lbl2">Телефон (начинается на +7)</label>
       <input class="field" id="dPhone1" type="tel" placeholder="+7 900 000-00-00" required>
@@ -591,7 +593,7 @@
     </div>
     <form id="adminForm" class="sheet-body">
       <label class="lbl2" style="margin-top:0">Код доступа</label>
-      <input class="field" id="adminCode" type="password" inputmode="numeric" autocomplete="off" placeholder="••••">
+      <input class="field" id="adminCode" type="password" autocomplete="off" placeholder="Код доступа">
       <div style="height:20px"></div>
       <button class="btn btn-filled" type="submit" style="width:100%">Войти</button>
     </form>
@@ -686,14 +688,18 @@ const S = {
   viewer: { list: [], i: 0, zoom: false }
 };
 let db, unsubMsgs = null, started = false;
-S.profile = JSON.parse(localStorage.getItem('profile') || 'null');
 
 /* ---------- helpers ---------- */
 const $ = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const money = n => Number(n).toLocaleString('ru-RU') + ' ₽';
-const arr = o => Object.entries(o || {}).map(([id, v]) => ({ id, ...v }));
+const arr = o => Object.entries(o || {}).map(([id, v]) => ({ ...(v && typeof v === 'object' ? v : {}), id }));
+/* Фото принимаем только как настоящую картинку data:image — иначе пусто (защита от внедрения кода) */
+const safeImg = p => (typeof p === 'string' && p.length < 600000 && /^data:image\/(jpeg|png|webp|gif);base64,[A-Za-z0-9+\/=]+$/.test(p)) ? p : '';
+const imgTag = (src, extra) => '<im' + 'g src="' + src + '" alt="" ' + (extra || '') + '>';
+const safeJSON = (k, d) => { try { return JSON.parse(localStorage.getItem(k) || 'null') ?? d; } catch (e) { return d; } };
+S.profile = safeJSON('profile', null);
 const pname = () => { const p = S.profile || {}; return [p.firstName, p.lastName].filter(Boolean).join(' ') || 'Житель'; };
 const isOpen = sel => !$(sel).classList.contains('hidden');
 const openSheet = sel => $(sel).classList.remove('hidden');
@@ -817,7 +823,7 @@ function sorted(list) {
 }
 
 /* ---------- Уведомления и непрочитанные ---------- */
-function getSeen() { return JSON.parse(localStorage.getItem('seen') || '{}'); }
+function getSeen() { return safeJSON('seen', {}); }
 function markSeen(cid) {
   const s = getSeen();
   s[cid] = Date.now();
@@ -937,16 +943,17 @@ function renderAvatar() {
 }
 function card(l, idx) {
   const fav = !!S.favs[l.id];
-  const p = l.photos && l.photos[0];
-  const n = l.photos ? l.photos.length : 0;
+  const phs = (Array.isArray(l.photos) ? l.photos : Object.values(l.photos || {})).filter(safeImg);
+  const p = phs[0];
+  const n = phs.length;
   const st = state(l), gone = st !== 'live';
   return `
-    <article class="card${gone ? ' dim' : ''}" data-act="open" data-id="${l.id}" style="--i:${Math.min(idx || 0, 12)}">
+    <article class="card${gone ? ' dim' : ''}" data-act="open" data-id="${esc(l.id)}" style="--i:${Math.min(idx || 0, 12)}">
       <div class="thumb">
-        ${p ? `<img src="${p}" alt="" loading="lazy">` : `<span class="material-symbols-rounded">image</span>`}
+        ${safeImg(p) ? imgTag(safeImg(p), 'loading="lazy"') : `<span class="material-symbols-rounded">image</span>`}
         ${gone ? `<span class="badge gray">${STATE_SHORT[st]}</span>` : `<span class="badge">${esc(DEAL_LABEL[l.dealMode] || '')}</span>`}
         ${n > 1 ? `<span class="count">${n} фото</span>` : ''}
-        <button class="fav${fav ? ' on' : ''}" data-act="fav" data-id="${l.id}" aria-label="В избранное">
+        <button class="fav${fav ? ' on' : ''}" data-act="fav" data-id="${esc(l.id)}" aria-label="В избранное">
           <span class="material-symbols-rounded${fav ? ' f' : ''}${fav && S.pop === l.id ? ' pop' : ''}">favorite</span>
         </button>
       </div>
@@ -1011,14 +1018,14 @@ function renderChats() {
     const st = l ? state(l) : 'live';
     const gone = st !== 'live';
     return `
-      <div class="row" data-act="openchat" data-id="${c.id}">
+      <div class="row" data-act="openchat" data-id="${esc(c.id)}">
         <div class="avatar sm">${esc((name || '?')[0].toUpperCase())}</div>
         <div class="grow">
           <div class="row-title">${esc(name || 'Житель')}</div>
           <div class="row-sub">${esc(c.listingTitle || '')}${gone ? ` · <b class="red">${STATE_SHORT[st].toLowerCase()}</b>` : ''}</div>
           <div class="row-last">${esc(c.lastMessage || 'Нет сообщений')}</div>
         </div>
-        <button class="icon-btn ghost" data-act="delchat" data-id="${c.id}" aria-label="Удалить чат"><span class="material-symbols-rounded">delete</span></button>
+        <button class="icon-btn ghost" data-act="delchat" data-id="${esc(c.id)}" aria-label="Удалить чат"><span class="material-symbols-rounded">delete</span></button>
       </div>`;
   }).join('');
 }
@@ -1050,8 +1057,8 @@ function renderProfile() {
     </div>`;
   const mine = S.listings.filter(l => l.sellerId === S.me);
   $('#myList').innerHTML = mine.length ? mine.map(l => `
-    <div class="row" data-act="open" data-id="${l.id}">
-      <div class="thumb sm">${l.photos && l.photos[0] ? `<img src="${l.photos[0]}" alt="">` : `<span class="material-symbols-rounded">image</span>`}</div>
+    <div class="row" data-act="open" data-id="${esc(l.id)}">
+      <div class="thumb sm">${safeImg(l.photos && l.photos[0]) ? imgTag(safeImg(l.photos[0])) : `<span class="material-symbols-rounded">image</span>`}</div>
       <div class="grow">
         <div class="row-title">${esc(l.title)}</div>
         <div class="row-sub">${esc(priceText(l))} · ${esc(l.village)}</div>
@@ -1112,12 +1119,12 @@ function fillDetail(id) {
   const banner = st === 'stale'
     ? (mine ? 'Прошло 30 дней. Подтвердите, что объявление ещё актуально' : 'Объявление давно не обновлялось, возможно, оно неактуально')
     : st === 'sold' ? 'Товар продан' : 'Объявление снято с публикации';
-  const photos = l.photos || [];
-  const phones = l.phones || [];
+  const photos = (Array.isArray(l.photos) ? l.photos : Object.values(l.photos || {})).filter(safeImg);
+  const phones = (Array.isArray(l.phones) ? l.phones : Object.values(l.phones || {})).filter(p => PHONE_RE.test(String(p)));
   $('#detailBody').innerHTML = `
     ${gone ? `<div class="banner"><span class="material-symbols-rounded f">${st === 'stale' ? 'schedule' : 'block'}</span>${banner}</div>` : ''}
     ${photos.length
-      ? `<div class="carousel">${photos.map((p, i) => `<img src="${p}" alt="" data-act="viewer" data-id="${id}" data-i="${i}">`).join('')}</div>`
+      ? `<div class="carousel">${photos.map((p, i) => imgTag(safeImg(p), `data-act="viewer" data-id="${esc(id)}" data-i="${i}"`)).join('')}</div>`
       : `<div class="nophoto"><span class="material-symbols-rounded">image</span>Без фото</div>`}
     <div class="price big">${esc(priceText(l))}</div>
     <h2 class="dtitle">${esc(l.title)}</h2>
@@ -1144,13 +1151,13 @@ function fillDetail(id) {
     </div>`;
 
   $('#detailActions').innerHTML = mine
-    ? `${st === 'stale' ? `<button class="btn btn-filled" style="width:100%" data-act="renew" data-id="${id}"><span class="material-symbols-rounded">check_circle</span>Ещё актуально</button>`
-         : st === 'live' ? `<button class="btn btn-filled" style="width:100%" data-act="sold" data-id="${id}"><span class="material-symbols-rounded">sell</span>Продано</button>` : ''}
-       <button class="btn btn-tonal grow" data-act="toggle" data-id="${id}">${closed ? 'Вернуть в продажу' : 'Снять с публикации'}</button>
-       <button class="btn btn-danger" data-act="dellist" data-id="${id}">Удалить</button>`
-    : `${S.admin ? `<button class="btn btn-danger" style="width:100%" data-act="dellist" data-id="${id}"><span class="material-symbols-rounded">delete</span>Удалить (админ)</button>` : ''}
-       <a class="btn btn-tonal grow${phones[0] ? '' : ' disabled'}" href="${phones[0] ? 'tel:' + phones[0] : '#'}"><span class="material-symbols-rounded">call</span>Позвонить</a>
-       <button class="btn btn-filled grow" data-act="chat" data-id="${id}"${closed ? ' disabled' : ''}><span class="material-symbols-rounded">chat</span>Написать</button>`;
+    ? `${st === 'stale' ? `<button class="btn btn-filled" style="width:100%" data-act="renew" data-id="${esc(id)}"><span class="material-symbols-rounded">check_circle</span>Ещё актуально</button>`
+         : st === 'live' ? `<button class="btn btn-filled" style="width:100%" data-act="sold" data-id="${esc(id)}"><span class="material-symbols-rounded">sell</span>Продано</button>` : ''}
+       <button class="btn btn-tonal grow" data-act="toggle" data-id="${esc(id)}">${closed ? 'Вернуть в продажу' : 'Снять с публикации'}</button>
+       <button class="btn btn-danger" data-act="dellist" data-id="${esc(id)}">Удалить</button>`
+    : `${S.admin ? `<button class="btn btn-danger" style="width:100%" data-act="dellist" data-id="${esc(id)}"><span class="material-symbols-rounded">delete</span>Удалить (админ)</button>` : ''}
+       <a class="btn btn-tonal grow${phones[0] ? '' : ' disabled'}" href="${phones[0] ? 'tel:' + esc(phones[0]) : '#'}"><span class="material-symbols-rounded">call</span>Позвонить</a>
+       <button class="btn btn-filled grow" data-act="chat" data-id="${esc(id)}"${closed ? ' disabled' : ''}><span class="material-symbols-rounded">chat</span>Написать</button>`;
   syncDetailFav();
 }
 function openDetail(id) {
@@ -1248,7 +1255,7 @@ function renderMsgs() {
   box.innerHTML = S.msgs.length
     ? S.msgs.map(m => `
         <div class="msg ${m.senderId === S.me ? 'me' : 'them'}">
-          ${m.photo ? `<img src="${m.photo}" alt="" data-act="viewer" data-mid="${m.id}">` : ''}
+          ${safeImg(m.photo) ? imgTag(safeImg(m.photo), `data-act="viewer" data-mid="${esc(m.id)}"`) : ''}
           ${m.text ? esc(m.text) : ''}
           <div class="time">${new Date(m.createdAt).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}</div>
         </div>`).join('')
@@ -1363,7 +1370,7 @@ function renderDraft() {
   $('#dDeals').innerHTML = DEALS.map(x =>
     `<button type="button" class="chip${d.deal === x.id ? ' on' : ''}" data-act="ddeal" data-v="${x.id}">${x.label}</button>`).join('');
   $('#dPhotos').innerHTML = d.photos.map((p, i) => `
-      <div class="ph"><img src="${p}" alt=""><button type="button" class="ph-x" data-act="rmphoto" data-i="${i}"><span class="material-symbols-rounded">close</span></button></div>`).join('')
+      <div class="ph">${imgTag(safeImg(p))}<button type="button" class="ph-x" data-act="rmphoto" data-i="${i}"><span class="material-symbols-rounded">close</span></button></div>`).join('')
     + (d.photos.length < 5
       ? `<label class="ph add"><span class="material-symbols-rounded">add_a_photo</span><small>${d.photos.length}/5</small><input type="file" id="dFile" accept="image/*" multiple hidden></label>`
       : '');
@@ -1556,18 +1563,18 @@ function renderAdmin() {
           <div class="row-title">${esc(nameOf(r.targetUserId, r.targetName))} · <span class="star-val">${'★'.repeat(Number(r.stars) || 0)}</span></div>
           <div class="row-sub">от: ${esc(r.raterName || 'Житель')} · ${ago(r.createdAt)}</div>
         </div>
-        <button class="icon-btn danger" data-act="admdelrate" data-id="${r.id}" aria-label="Удалить оценку"><span class="material-symbols-rounded">delete</span></button>
+        <button class="icon-btn danger" data-act="admdelrate" data-id="${esc(r.id)}" aria-label="Удалить оценку"><span class="material-symbols-rounded">delete</span></button>
       </div>`).join('') : '<p class="muted-sm center pad">Оценок пока нет</p>';
   } else {
     box.innerHTML = S.listings.length ? S.listings.map(l => `
       <div class="row" style="cursor:default">
-        <div class="thumb sm">${l.photos && l.photos[0] ? `<img src="${l.photos[0]}" alt="">` : `<span class="material-symbols-rounded">image</span>`}</div>
+        <div class="thumb sm">${safeImg(l.photos && l.photos[0]) ? imgTag(safeImg(l.photos[0])) : `<span class="material-symbols-rounded">image</span>`}</div>
         <div class="grow">
           <div class="row-title">${esc(l.title)}</div>
           <div class="row-sub">${esc(l.sellerName || 'Житель')} · ${esc(l.village)} · ${esc(priceText(l))}</div>
           ${state(l) !== 'live' ? `<div class="red small">${STATE_LABEL[state(l)]}</div>` : ''}
         </div>
-        <button class="icon-btn danger" data-act="admdel" data-id="${l.id}" aria-label="Удалить объявление"><span class="material-symbols-rounded">delete</span></button>
+        <button class="icon-btn danger" data-act="admdel" data-id="${esc(l.id)}" aria-label="Удалить объявление"><span class="material-symbols-rounded">delete</span></button>
       </div>`).join('') : '<p class="muted-sm center pad">Объявлений нет</p>';
   }
 }
@@ -1648,10 +1655,10 @@ document.addEventListener('click', async e => {
     case 'viewer': {
       if (mid) {
         const m = S.msgs.find(x => x.id === mid);
-        if (m) openViewer([m.photo], 0);
+        if (m && safeImg(m.photo)) openViewer([m.photo], 0);
       } else {
         const l = S.listings.find(x => x.id === id);
-        if (l) openViewer(l.photos, Number(i) || 0);
+        if (l) { const ph = (Array.isArray(l.photos) ? l.photos : Object.values(l.photos || {})).filter(safeImg); if (ph.length) openViewer(ph, Number(i) || 0); }
       }
       return;
     }
